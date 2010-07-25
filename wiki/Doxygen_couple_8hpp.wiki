@@ -1,0 +1,13 @@
+#summary Documentation for the couple.hpp file
+
+= couple.hpp =
+
+
+
+== Detailed Description ==
+
+
+
+
+---
+|| [Doxygen Main Page] || [Doxygen_files Files] ||

@@ -1,0 +1,13 @@
+#summary Documentation for the byte_color.hpp file
+
+= byte_color.hpp =
+
+
+
+== Detailed Description ==
+
+
+
+
+---
+|| [Doxygen Main Page] || [Doxygen_files Files] ||

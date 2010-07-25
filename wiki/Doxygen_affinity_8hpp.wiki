@@ -1,0 +1,13 @@
+#summary Documentation for the affinity.hpp file
+
+= affinity.hpp =
+
+
+
+== Detailed Description ==
+
+
+
+
+---
+|| [Doxygen Main Page] || [Doxygen_files Files] ||

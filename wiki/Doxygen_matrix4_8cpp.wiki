@@ -1,0 +1,32 @@
+#summary Documentation for the matrix4.cpp file
+
+= matrix4.cpp =
+
+
+
+== Functions ==
+
+ operator*(const  & p, const  & m)
+  **
+
+== Detailed Description ==
+
+
+
+
+== Function Documentation ==
+
+{{{
+# operator*   (
+  const  & p,
+  const  & m  )
+}}}
+  
+  
+
+*Parameters*:
+  a   And two parameters. 
+  b   Here's the second. 
+
+---
+|| [Doxygen Main Page] || [Doxygen_files Files] ||

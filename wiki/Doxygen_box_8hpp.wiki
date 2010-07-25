@@ -1,0 +1,50 @@
+#summary Documentation for the box.hpp file
+
+= box.hpp =
+
+
+
+== Functions ==
+
+class stream_type operator<<(stream_type & stream, const < data_type > & x)
+  **
+class stream_type operator>>(stream_type & stream, < data_type > & x)
+  **
+
+== Detailed Description ==
+
+
+
+
+== Function Documentation ==
+
+{{{
+#class stream_type operator<<   (
+  stream_type & stream,
+  const < data_type > & x  )
+}}}
+  
+  
+
+*Parameters*:
+  a   And two parameters. 
+  b   Here's the second. 
+*Returns*:
+  And a return value!
+
+{{{
+#class stream_type operator>>   (
+  stream_type & stream,
+  < data_type > & x  )
+}}}
+  
+  
+
+*Parameters*:
+  a   And two parameters. 
+  b   Here's the second. 
+*Returns*:
+  And a return value!
+
+---
+|| [Doxygen Main Page] || [Doxygen_files Files] ||

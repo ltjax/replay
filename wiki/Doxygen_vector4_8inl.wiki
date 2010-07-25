@@ -1,0 +1,13 @@
+#summary Documentation for the vector4.inl file
+
+= vector4.inl =
+
+
+
+== Detailed Description ==
+
+
+
+
+---
+|| [Doxygen Main Page] || [Doxygen_files Files] ||

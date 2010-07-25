@@ -1,0 +1,13 @@
+#summary Documentation for the vector4.hpp file
+
+= vector4.hpp =
+
+
+
+== Detailed Description ==
+
+
+
+
+---
+|| [Doxygen Main Page] || [Doxygen_files Files] ||

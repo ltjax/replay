@@ -1,0 +1,13 @@
+#summary Documentation for the bstream.hpp file
+
+= bstream.hpp =
+
+
+
+== Detailed Description ==
+
+
+
+
+---
+|| [Doxygen Main Page] || [Doxygen_files Files] ||

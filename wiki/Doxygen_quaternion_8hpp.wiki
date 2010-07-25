@@ -1,0 +1,13 @@
+#summary Documentation for the quaternion.hpp file
+
+= quaternion.hpp =
+
+
+
+== Detailed Description ==
+
+
+
+
+---
+|| [Doxygen Main Page] || [Doxygen_files Files] ||

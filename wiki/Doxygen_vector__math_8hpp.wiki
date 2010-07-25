@@ -1,0 +1,13 @@
+#summary Documentation for the vector_math.hpp file
+
+= vector_math.hpp =
+
+
+
+== Detailed Description ==
+
+
+
+
+---
+|| [Doxygen Main Page] || [Doxygen_files Files] ||

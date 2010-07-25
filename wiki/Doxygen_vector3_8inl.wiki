@@ -1,0 +1,13 @@
+#summary Documentation for the vector3.inl file
+
+= vector3.inl =
+
+
+
+== Detailed Description ==
+
+
+
+
+---
+|| [Doxygen Main Page] || [Doxygen_files Files] ||

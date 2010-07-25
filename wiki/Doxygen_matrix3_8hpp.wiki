@@ -1,0 +1,13 @@
+#summary Documentation for the matrix3.hpp file
+
+= matrix3.hpp =
+
+
+
+== Detailed Description ==
+
+
+
+
+---
+|| [Doxygen Main Page] || [Doxygen_files Files] ||

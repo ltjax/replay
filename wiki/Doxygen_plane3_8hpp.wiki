@@ -1,0 +1,13 @@
+#summary Documentation for the plane3.hpp file
+
+= plane3.hpp =
+
+
+
+== Detailed Description ==
+
+
+
+
+---
+|| [Doxygen Main Page] || [Doxygen_files Files] ||
