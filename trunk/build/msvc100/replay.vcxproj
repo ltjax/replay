@@ -212,6 +212,8 @@
     <ClCompile Include="..\..\source\matrix2.cpp" />
     <ClCompile Include="..\..\source\matrix3.cpp" />
     <ClCompile Include="..\..\source\matrix4.cpp" />
+    <ClCompile Include="..\..\source\pixbuf.cpp" />
+    <ClCompile Include="..\..\source\pixbuf_io.cpp" />
     <ClCompile Include="..\..\source\plane3.cpp" />
     <ClCompile Include="..\..\source\quaternion.cpp" />
     <ClCompile Include="..\..\source\vector_math.cpp" />
@@ -231,6 +233,8 @@
     <ClInclude Include="..\..\include\replay\matrix3.hpp" />
     <ClInclude Include="..\..\include\replay\matrix4.hpp" />
     <ClInclude Include="..\..\include\replay\minimal_sphere.hpp" />
+    <ClInclude Include="..\..\include\replay\pixbuf.hpp" />
+    <ClInclude Include="..\..\include\replay\pixbuf_io.hpp" />
     <ClInclude Include="..\..\include\replay\plane3.hpp" />
     <ClInclude Include="..\..\include\replay\quaternion.hpp" />
     <ClInclude Include="..\..\include\replay\table.hpp" />
