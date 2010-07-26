@@ -65,6 +65,14 @@ public:
 	*/
 	static byte_color4		lerp( const byte_color4& color0, const byte_color4& color1, byte x );
 
+	/** Get a pointer to the raw data.
+	*/
+	byte*					ptr() { return data; }
+	
+	/** Get a pointer to the raw data.
+	*/
+	const byte*				ptr() const { return data; }
+
 private:
 	byte					data[4];
 
