@@ -27,6 +27,8 @@ Copyright (c) 2010 Marius Elvert
 #ifndef replay_byte_color_hpp
 #define replay_byte_color_hpp
 
+#include <memory>
+
 namespace replay {
 
 /** Represents a 32-bit color as a 4 byte array in RGBA.
@@ -72,6 +74,18 @@ public:
 	/** Get a pointer to the raw data.
 	*/
 	const byte*				ptr() const { return data; }
+
+	
+	/** Access a color element.
+	*/
+	const byte				operator[]( std::size_t i ) const { return data[i]; }
+
+
+	/** Access a color element.
+	*/
+	byte&					operator[]( std::size_t i ) { return data[i]; }
+
+
 
 private:
 	byte					data[4];
