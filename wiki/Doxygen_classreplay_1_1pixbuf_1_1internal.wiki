@@ -1,0 +1,103 @@
+
+==replay::pixbuf::internal Reference==
+
+====uint====
+{{{
+  typedef unsigned int replay::pixbuf::internal::uint
+}}}
+  
+====uint16====
+{{{
+  typedef unsigned short replay::pixbuf::internal::uint16
+}}}
+  
+====uint8====
+{{{
+  typedef unsigned char replay::pixbuf::internal::uint8
+}}}
+  
+====channels====
+{{{
+  unsigned int replay::pixbuf::internal::channels
+}}}
+  
+====data====
+{{{
+  unsigned char* replay::pixbuf::internal::data
+}}}
+  
+====height====
+{{{
+  unsigned int replay::pixbuf::internal::height
+}}}
+  
+====width====
+{{{
+  unsigned int replay::pixbuf::internal::width
+}}}
+  
+====internal====
+{{{
+  replay::pixbuf::internal::internal()
+}}}
+  
+====~internal====
+{{{
+  replay::pixbuf::internal::~internal()
+}}}
+  
+====blit====
+{{{
+  bool replay::pixbuf::internal::blit(unsigned int dx, unsigned int dy, unsigned int w, unsigned int h, unsigned int sx, unsigned int sy, const internal &source)
+}}}
+  
+====create====
+{{{
+  void replay::pixbuf::internal::create(unsigned int w, unsigned int h, unsigned int c)
+}}}
+  
+====fill====
+{{{
+  void replay::pixbuf::internal::fill(const uint8 *color)
+}}}
+  
+====flip====
+{{{
+  void replay::pixbuf::internal::flip()
+}}}
+  
+====free====
+{{{
+  void replay::pixbuf::internal::free()
+}}}
+  
+====get_pixel_count====
+{{{
+  uint replay::pixbuf::internal::get_pixel_count() const 
+}}}
+  
+====operator()====
+{{{
+  const uint8* replay::pixbuf::internal::operator()(const uint x, const uint y) const 
+}}}
+  
+====operator()====
+{{{
+  uint8* replay::pixbuf::internal::operator()(const unsigned int n)
+}}}
+  
+====operator()====
+{{{
+  const uint8* replay::pixbuf::internal::operator()(const unsigned int n) const 
+}}}
+  
+====operator()====
+{{{
+  uint8* replay::pixbuf::internal::operator()(const uint x, const uint y)
+}}}
+  
+====set_pixel====
+{{{
+  void replay::pixbuf::internal::set_pixel(unsigned int x, unsigned int y, const byte *color)
+}}}
+  

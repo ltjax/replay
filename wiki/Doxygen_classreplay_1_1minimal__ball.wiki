@@ -1,0 +1,57 @@
+
+==replay::minimal_ball Reference==
+
+{{{
+#include minimal_sphere.hpp
+}}}
+Implementation of Welzl's randomized minimal ball algorithm. The code is based on the paper 'Fast and Robust Smallest Enclosing Balls' by Bernd Gaertner. It employs the move-to-front heuristic. However, this heuristic is only 'cheap' for std::list containers - otherwise std::rotate is used. 
+====m_center====
+{{{
+  VectorType replay::minimal_ball< RealType, VectorType, d >::m_center
+}}}
+  
+====m_square_radius====
+{{{
+  RealType replay::minimal_ball< RealType, VectorType, d >::m_square_radius
+}}}
+  
+====minimal_ball====
+{{{
+  replay::minimal_ball< RealType, VectorType, d >::minimal_ball(ContainerType &p, RealType epsilon)
+}}}
+  Generate a minimal bounding ball. 
+====center====
+{{{
+  const VectorType& replay::minimal_ball< RealType, VectorType, d >::center() const 
+}}}
+  Get the center of the minimal ball. 
+====contains====
+{{{
+  bool replay::minimal_ball< RealType, VectorType, d >::contains(const VectorType &v)
+}}}
+  Test whether the given point is contained in this sphere. 
+====square_radius====
+{{{
+  RealType replay::minimal_ball< RealType, VectorType, d >::square_radius() const 
+}}}
+  Get the square radius of the minimal ball. 
+====move_to_front====
+{{{
+  static void replay::minimal_ball< RealType, VectorType, d >::move_to_front(std::list< T > &c, typename std::list< T >::iterator i)
+}}}
+  
+====move_to_front====
+{{{
+  static void replay::minimal_ball< RealType, VectorType, d >::move_to_front(ContainerType &c, typename ContainerType::iterator i)
+}}}
+  
+====mft_ball====
+{{{
+  void replay::minimal_ball< RealType, VectorType, d >::mft_ball(ContainerType &p, typename ContainerType::iterator e, equisphere< float, d > &B)
+}}}
+  
+====update====
+{{{
+  void replay::minimal_ball< RealType, VectorType, d >::update(const equisphere< RealType, d > &B)
+}}}
+  

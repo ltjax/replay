@@ -1,0 +1,3 @@
+
+==std::deque::const_iterator Reference==
+STL iterator class. 

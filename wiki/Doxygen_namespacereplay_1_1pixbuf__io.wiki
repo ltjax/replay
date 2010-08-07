@@ -1,0 +1,33 @@
+
+==replay::pixbuf_io Reference==
+
+====load_from_file====
+{{{
+  replay::shared_pixbuf replay::pixbuf_io::load_from_file(const boost::filesystem::path &filename)
+}}}
+  Load an image. Format is guessed by the filename extension. 
+====load_from_png_file====
+{{{
+  replay::shared_pixbuf replay::pixbuf_io::load_from_png_file(std::istream &file)
+}}}
+  Deserialize a PNG encoded file. 
+====load_from_tga_file====
+{{{
+  replay::shared_pixbuf replay::pixbuf_io::load_from_tga_file(std::istream &file)
+}}}
+  Deserialize a TGA encoded file. 
+====save_to_file====
+{{{
+  void replay::pixbuf_io::save_to_file(const boost::filesystem::path &filename, const pixbuf &source)
+}}}
+  Save an image. Only TGA and PNG are supported right now. 
+====save_to_png_file====
+{{{
+  void replay::pixbuf_io::save_to_png_file(std::ostream &file, const pixbuf &source, int level=1)
+}}}
+  Serialize by encoding a PNG file via libpng. 
+====save_to_tga_file====
+{{{
+  void replay::pixbuf_io::save_to_tga_file(std::ostream &file, const pixbuf &source)
+}}}
+  Serialize by encoding a TGA file. 

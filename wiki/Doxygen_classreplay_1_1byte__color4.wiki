@@ -1,0 +1,72 @@
+
+==replay::byte_color4 Reference==
+
+{{{
+#include byte_color.hpp
+}}}
+Represents a 32-bit color as a 4 byte array in RGBA. 
+====byte====
+{{{
+  typedef unsigned char replay::byte_color4::byte
+}}}
+  
+====uint32====
+{{{
+  typedef unsigned int replay::byte_color4::uint32
+}}}
+  32-bit unsigned integer. 
+====data====
+{{{
+  byte replay::byte_color4::data[4][4]
+}}}
+  
+====byte_color4====
+{{{
+  replay::byte_color4::byte_color4()
+}}}
+  Default ctor that does nothing. this also leaves this color uninitialized. 
+====byte_color4====
+{{{
+  replay::byte_color4::byte_color4(const uint32 rgba)
+}}}
+  Initialize the color from a uint32 code. 
+====byte_color4====
+{{{
+  replay::byte_color4::byte_color4(const byte r, const byte g, const byte b, const byte a=255)
+}}}
+  Construct the color from the components. 
+====negate====
+{{{
+  void replay::byte_color4::negate()
+}}}
+  Invert all channels. 
+====operator[]====
+{{{
+  const byte replay::byte_color4::operator[](std::size_t i) const 
+}}}
+  Access a color element. 
+====operator[]====
+{{{
+  byte& replay::byte_color4::operator[](std::size_t i)
+}}}
+  Access a color element. 
+====ptr====
+{{{
+  const byte* replay::byte_color4::ptr() const 
+}}}
+  Get a pointer to the raw data. 
+====ptr====
+{{{
+  byte* replay::byte_color4::ptr()
+}}}
+  Get a pointer to the raw data. 
+====set====
+{{{
+  void replay::byte_color4::set(const byte r, const byte g, const byte b, const byte a=255)
+}}}
+  Set the color via components. 
+====lerp====
+{{{
+  replay::byte_color4 replay::byte_color4::lerp(const byte_color4 &color0, const byte_color4 &color1, byte x)
+}}}
+  Linear interpolation. 

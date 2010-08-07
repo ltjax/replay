@@ -1,13 +1,18 @@
-#summary Documentation for the aabb.hpp file
 
-= aabb.hpp =
+==aabb.hpp Reference==
 
+{{{
+#include algorithm
+}}}
 
+{{{
+#include replay/couple.hpp
+}}}
 
-== Detailed Description ==
+{{{
+#include replay/vector3.hpp
+}}}
 
-
-
-
----
-|| [Doxygen Main Page] || [Doxygen_files Files] ||
+{{{
+#include replay/plane3.hpp
+}}}

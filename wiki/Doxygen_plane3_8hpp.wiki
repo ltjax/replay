@@ -1,13 +1,10 @@
-#summary Documentation for the plane3.hpp file
 
-= plane3.hpp =
+==plane3.hpp Reference==
 
+{{{
+#include replay/math.hpp
+}}}
 
-
-== Detailed Description ==
-
-
-
-
----
-|| [Doxygen Main Page] || [Doxygen_files Files] ||
+{{{
+#include replay/vector3.hpp
+}}}

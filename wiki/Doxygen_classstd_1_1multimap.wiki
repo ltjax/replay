@@ -1,0 +1,13 @@
+
+==std::multimap Reference==
+STL class. 
+====elements====
+{{{
+  T std::multimap< K, T >::elements
+}}}
+  STL member. 
+====keys====
+{{{
+  K std::multimap< K, T >::keys
+}}}
+  STL member. 

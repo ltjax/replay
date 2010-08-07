@@ -1,13 +1,10 @@
-#summary Documentation for the matrix2.cpp file
 
-= matrix2.cpp =
+==matrix2.cpp Reference==
 
+{{{
+#include cmath
+}}}
 
-
-== Detailed Description ==
-
-
-
-
----
-|| [Doxygen Main Page] || [Doxygen_files Files] ||
+{{{
+#include replay/matrix2.hpp
+}}}

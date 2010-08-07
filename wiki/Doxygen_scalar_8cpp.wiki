@@ -1,13 +1,22 @@
-#summary Documentation for the scalar.cpp file
 
-= scalar.cpp =
+==scalar.cpp Reference==
 
+{{{
+#include boost/algorithm/string/predicate.hpp
+}}}
 
+{{{
+#include boost/algorithm/string/classification.hpp
+}}}
 
-== Detailed Description ==
+{{{
+#include replay/math.hpp
+}}}
 
+{{{
+#include replay/scalar.hpp
+}}}
 
-
-
----
-|| [Doxygen Main Page] || [Doxygen_files Files] ||
+{{{
+#include cctype
+}}}

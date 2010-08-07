@@ -1,0 +1,197 @@
+
+==replay::quaternion Reference==
+
+{{{
+#include quaternion.hpp
+}}}
+A quaternion is a 4-dimensional vector extended with a multiplication operation. A unit-length quaternion can be intuitively mapped to an axis-angle 3-dimensional rotation, although this mapping is ambiguous (a negative of a quaternion represents the same rotation). 
+====w====
+{{{
+  float replay::quaternion::w
+}}}
+  w 
+====x====
+{{{
+  float replay::quaternion::x
+}}}
+  x 
+====y====
+{{{
+  float replay::quaternion::y
+}}}
+  y 
+====z====
+{{{
+  float replay::quaternion::z
+}}}
+  z 
+====quaternion====
+{{{
+  replay::quaternion::quaternion()
+}}}
+  Create an identity quaternion. 
+====quaternion====
+{{{
+  replay::quaternion::quaternion(const float angle, const vector3f &v)
+}}}
+  Create a rotational quaternion. set_rotation, rotate, convert_to_axis_angle
+====quaternion====
+{{{
+  replay::quaternion::quaternion(const float w, const float x, const float y, const float z)
+}}}
+  Create a quaternion by setting all individual components. 
+====conjugate====
+{{{
+  replay::quaternion & replay::quaternion::conjugate()
+}}}
+  Negate all imaginary numbers. A reference to this object. conjugated
+====conjugated====
+{{{
+  const replay::quaternion replay::quaternion::conjugated() const 
+}}}
+  Return a quaternion with all imaginary components negated. conjugate
+====get_transformed_x====
+{{{
+  const replay::vector3f replay::quaternion::get_transformed_x() const 
+}}}
+  Get the x vector after transformation by this rotation. 
+====get_transformed_y====
+{{{
+  const replay::vector3f replay::quaternion::get_transformed_y() const 
+}}}
+  Get the y vector after transformation by this rotation. 
+====get_transformed_z====
+{{{
+  const replay::vector3f replay::quaternion::get_transformed_z() const 
+}}}
+  Get the z vector after transformation by this rotation. 
+====magnitude====
+{{{
+  const float replay::quaternion::magnitude() const 
+}}}
+  Euclidean 2-Norm. This is the square-root of this 
+====negate====
+{{{
+  replay::quaternion & replay::quaternion::negate()
+}}}
+  Negate. A reference to this object. 
+====negated====
+{{{
+  const replay::quaternion replay::quaternion::negated() const 
+}}}
+  Negated. 
+====normalize====
+{{{
+  replay::quaternion & replay::quaternion::normalize()
+}}}
+  Make this quaterion unit-length. A reference to this object. If the quaternion is zero, the results of this operation are undefined. 
+====operator*====
+{{{
+  const replay::quaternion replay::quaternion::operator*(const float v) const 
+}}}
+  Scalar multiplication. 
+====operator*====
+{{{
+  const replay::quaternion replay::quaternion::operator*(const quaternion &q) const 
+}}}
+  Multiply two quaternions. 
+====operator*=====
+{{{
+  replay::quaternion & replay::quaternion::operator*=(const float v)
+}}}
+  Scale. A reference to this object. 
+====operator*=====
+{{{
+  replay::quaternion & replay::quaternion::operator*=(const quaternion &q)
+}}}
+  Multiplicative assign of another quaternion. A reference to this object. 
+====operator+====
+{{{
+  const replay::quaternion replay::quaternion::operator+(const quaternion &q) const 
+}}}
+  Add two quaternions. 
+====operator-====
+{{{
+  const replay::quaternion replay::quaternion::operator-(const quaternion &q) const 
+}}}
+  Subtract two quaternions. 
+====operator/====
+{{{
+  const replay::quaternion replay::quaternion::operator/(const float v) const 
+}}}
+  Scalar division. 
+====operator/=====
+{{{
+  replay::quaternion & replay::quaternion::operator/=(const float v)
+}}}
+  Divide. A reference to this object. 
+====set====
+{{{
+  replay::quaternion & replay::quaternion::set(const float w, const float x, const float y, const float z)
+}}}
+  Set all individual components. A reference to this object. 
+====set_identity====
+{{{
+  replay::quaternion & replay::quaternion::set_identity()
+}}}
+  Set this to the identity rotation. 
+====set_rotation====
+{{{
+  replay::quaternion & replay::quaternion::set_rotation(float angle, const vector3f &v)
+}}}
+  Set this to a rotation around an axis. Converts from an axis/angle rotation. angleAngle of the rotation, in radians. vAxis of the rotation. Has to be unit length. A reference to this object. convert_to_axis_angle, rotate
+====squared====
+{{{
+  const float replay::quaternion::squared() const 
+}}}
+  Square this quaternion. This is equivalent to the inner product with itself, or the product with its conjugate. inner_product, conjugate, conjugated
+====convert_to_axis_angle====
+{{{
+  void replay::quaternion::convert_to_axis_angle(const quaternion &q, float &angle_result, vector3f &axis_result)
+}}}
+  Convert a quaternion rotation to an axis angle rotation. qThe quaternion to be converted. angle_resultThe angle part of the result, in radians. axis_resultThe axis part of the result. Will be unit-length. The result is undefined if the quaternion is not unit-length. set_rotation, rotate
+====inner_product====
+{{{
+  const float replay::quaternion::inner_product(const quaternion &a, const quaternion &b)
+}}}
+  Inner/Dot product. 
+====inverse====
+{{{
+  const replay::quaternion replay::quaternion::inverse(const quaternion &a)
+}}}
+  Compute the multiplicative inverse of a quaternion. aQuaternion to compute the inverse of. The inverse to the given quaternion. Results are undefined for the zero quaternion. 
+====multiply====
+{{{
+  replay::quaternion & replay::quaternion::multiply(const quaternion &a, const quaternion &b, quaternion &result)
+}}}
+  Multiply a quaterion. 
+====nlerp====
+{{{
+  const replay::quaternion replay::quaternion::nlerp(const quaternion &a, const quaternion &b, const float x)
+}}}
+  Quaternion linear interpolation. Computes are renormalized linear combination of the two given quaternions. When b is not originally in the neighbourhood of a, this will behave as if the negative of b was used. aThe quaternion the defines the result when x equals zero. bThe quaternion the defines the result when x equals one. xThe weight factor from $[0..1]$. The interpolated and renormalized rotational quaternion. 
+====rotate====
+{{{
+  void replay::quaternion::rotate(quaternion &q, const float angle, const vector3f &axis)
+}}}
+  Concaternate a rotation to a given quaternion. This is equivalent to creating a new quaternion with the given axis/angle pair, inplace multiplying it from the right, and renormalizing. qThe quaternion to be modified. angleThe angle to rotate, in radians. axisThe axis to rotate around. Has to be unit-length. 
+====short_rotation====
+{{{
+  const replay::quaternion replay::quaternion::short_rotation(const quaternion &a, const quaternion &b)
+}}}
+  Create a short arc rotation from rotation a to rotation b. If the dot product of the two reference rotations is negative, this will negate the result. 
+====shortest_arc====
+{{{
+  const replay::quaternion replay::quaternion::shortest_arc(const vector3f &a, const vector3f &b)
+}}}
+  Find the shortest arc rotation that maps vector a to vector b. 
+====slerp====
+{{{
+  const replay::quaternion replay::quaternion::slerp(const quaternion &a, const quaternion &b, const float x)
+}}}
+  Quaternion spherical interpolation. 
+====transform====
+{{{
+  replay::vector3f replay::quaternion::transform(const quaternion &a, const vector3f &operand)
+}}}
+  Transform a vector by a quaternion. 

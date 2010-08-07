@@ -1,0 +1,3 @@
+
+==std::basic_stringstream Reference==
+STL class. 

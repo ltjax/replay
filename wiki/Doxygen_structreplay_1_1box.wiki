@@ -1,0 +1,102 @@
+
+==replay::box Reference==
+
+{{{
+#include box.hpp
+}}}
+2-dimensional rectangle. 
+====bottom====
+{{{
+  T replay::box< T >::bottom
+}}}
+  y0 
+====left====
+{{{
+  T replay::box< T >::left
+}}}
+  x0 
+====right====
+{{{
+  T replay::box< T >::right
+}}}
+  x1 
+====top====
+{{{
+  T replay::box< T >::top
+}}}
+  y1 
+====box====
+{{{
+  replay::box< T >::box()
+}}}
+  default ctor. leaves the values uninitialized. 
+====box====
+{{{
+  replay::box< T >::box(const box< U > &x)
+}}}
+  cast ctor. 
+====box====
+{{{
+  replay::box< T >::box(const T width, const T height)
+}}}
+  create a box from given sizes. 
+====box====
+{{{
+  replay::box< T >::box(const T left, const T bottom, const T right, const T top)
+}}}
+  create a box by giving it's constraints. 
+====clamp_into====
+{{{
+  void replay::box< T >::clamp_into(const box< T > &b)
+}}}
+  clamp this box into another. 
+====expanded====
+{{{
+  box< T > replay::box< T >::expanded(const T margin) const 
+}}}
+  expand this box by a margin. 
+====get_height====
+{{{
+  T replay::box< T >::get_height() const 
+}}}
+  get the height of the box. 
+====get_width====
+{{{
+  T replay::box< T >::get_width() const 
+}}}
+  get the width of the box. 
+====insert====
+{{{
+  void replay::box< T >::insert(const T x, const T y)
+}}}
+  insert a point so that the box encloses the box. 
+====intersects====
+{{{
+  bool replay::box< T >::intersects(const box< T > &b) const 
+}}}
+  check whether this box intersects the other one. 
+====is_inside====
+{{{
+  bool replay::box< T >::is_inside(const T x, const T y) const 
+}}}
+  check whether a given point is inside the box. 
+====set====
+{{{
+  void replay::box< T >::set(const T x1, const T y1, const T x2, const T y2)
+}}}
+  set the box by constraints. 
+====set_origin====
+{{{
+  void replay::box< T >::set_origin(const T x, const T y)
+}}}
+  set the origin of the box. 
+====set_size====
+{{{
+  void replay::box< T >::set_size(const T w, const T h)
+}}}
+  set the size of the box. 
+====translate====
+{{{
+  void replay::box< T >::translate(const T x, const T y)
+}}}
+  move the box. 

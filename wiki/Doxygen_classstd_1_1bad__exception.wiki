@@ -1,0 +1,3 @@
+
+==std::bad_exception Reference==
+STL class. 

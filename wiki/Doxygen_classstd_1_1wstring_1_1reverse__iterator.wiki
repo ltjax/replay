@@ -1,0 +1,3 @@
+
+==std::wstring::reverse_iterator Reference==
+STL iterator class. 

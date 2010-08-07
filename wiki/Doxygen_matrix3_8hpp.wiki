@@ -1,13 +1,6 @@
-#summary Documentation for the matrix3.hpp file
 
-= matrix3.hpp =
+==matrix3.hpp Reference==
 
-
-
-== Detailed Description ==
-
-
-
-
----
-|| [Doxygen Main Page] || [Doxygen_files Files] ||
+{{{
+#include replay/vector3.hpp
+}}}

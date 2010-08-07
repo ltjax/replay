@@ -1,13 +1,10 @@
-#summary Documentation for the transformation.hpp file
 
-= transformation.hpp =
+==transformation.hpp Reference==
 
+{{{
+#include replay/affinity.hpp
+}}}
 
-
-== Detailed Description ==
-
-
-
-
----
-|| [Doxygen Main Page] || [Doxygen_files Files] ||
+{{{
+#include replay/vector_math.hpp
+}}}

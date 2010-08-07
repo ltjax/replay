@@ -1,0 +1,18 @@
+
+==replay::equisphere::upper_unitriangular_matrix Reference==
+
+====v====
+{{{
+  RealType replay::equisphere< RealType, d >::upper_unitriangular_matrix< row_size >::v[((row_size+1)*row_size)/2][((row_size+1)*row_size)/2]
+}}}
+  
+====operator()====
+{{{
+  RealType replay::equisphere< RealType, d >::upper_unitriangular_matrix< row_size >::operator()(std::size_t r, std::size_t c) const 
+}}}
+  
+====operator()====
+{{{
+  RealType& replay::equisphere< RealType, d >::upper_unitriangular_matrix< row_size >::operator()(std::size_t r, std::size_t c)
+}}}
+  

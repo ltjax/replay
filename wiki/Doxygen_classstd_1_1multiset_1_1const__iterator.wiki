@@ -1,0 +1,3 @@
+
+==std::multiset::const_iterator Reference==
+STL iterator class. 

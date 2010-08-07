@@ -1,0 +1,3 @@
+
+==std::wofstream Reference==
+STL class. 

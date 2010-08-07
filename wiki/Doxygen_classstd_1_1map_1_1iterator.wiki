@@ -1,0 +1,3 @@
+
+==std::map::iterator Reference==
+STL iterator class. 

@@ -1,0 +1,8 @@
+
+==std::allocator Reference==
+STL class. 
+====elements====
+{{{
+  T std::allocator< T >::elements
+}}}
+  STL member. 

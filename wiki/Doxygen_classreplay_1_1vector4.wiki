@@ -1,0 +1,137 @@
+
+==replay::vector4 Reference==
+
+{{{
+#include vector4.hpp
+}}}
+4-dimensional vector. 
+====data====
+{{{
+  type replay::vector4< type >::data[4][4]
+}}}
+  the actual data. 
+====vector4====
+{{{
+  replay::vector4< type >::vector4()
+}}}
+  Default Constructor. 
+====vector4====
+{{{
+  replay::vector4< type >::vector4(const type *array)
+}}}
+  Convert an array into a vector. arrayArray to copy the values from. The values will be copied from the first four elements. 
+====vector4====
+{{{
+  replay::vector4< type >::vector4(const type value)
+}}}
+  Initialize the vector by setting all elements to a single value. 
+====vector4====
+{{{
+  replay::vector4< type >::vector4(const vector3< type > &abc, const type d)
+}}}
+  Convert a 3-tuple and a 4th element into a vector. 
+====vector4====
+{{{
+  replay::vector4< type >::vector4(const vector2< type > &ab, const vector2< type > &cd)
+}}}
+  Convert two 2-tuples into a vector,. 
+====vector4====
+{{{
+  replay::vector4< type >::vector4(const type a, const type b, const type c, const type d)
+}}}
+  Create a new vector from seperate values. xThe first component. yThe second component. zThe third component. wThe fourth component. 
+====clear====
+{{{
+  void replay::vector4< type >::clear()
+}}}
+  Clear. Reset all values to zero. 
+====negate====
+{{{
+  replay::vector4< type > & replay::vector4< type >::negate()
+}}}
+  Negate. Negate each component of this vector. 
+====operator*====
+{{{
+  replay::vector4< type > replay::vector4< type >::operator*(const type value) const 
+}}}
+  Multiplication. 
+====operator*=====
+{{{
+  replay::vector4< type > & replay::vector4< type >::operator*=(const type value)
+}}}
+  Multiplication. 
+====operator+====
+{{{
+  replay::vector4< type > replay::vector4< type >::operator+(const vector4< type > &operand) const 
+}}}
+  Addition. 
+====operator+=====
+{{{
+  replay::vector4< type > & replay::vector4< type >::operator+=(const vector4< type > &rhs)
+}}}
+  Addition. 
+====operator-====
+{{{
+  replay::vector4< type > replay::vector4< type >::operator-(const vector4< type > &operand) const 
+}}}
+  Subtraction. 
+====operator-====
+{{{
+  replay::vector4< type > replay::vector4< type >::operator-() const 
+}}}
+  Negated. 
+====operator-=====
+{{{
+  replay::vector4< type > & replay::vector4< type >::operator-=(const vector4< type > &rhs)
+}}}
+  Subtraction. 
+====operator/====
+{{{
+  replay::vector4< type > replay::vector4< type >::operator/(const type value) const 
+}}}
+  Division. 
+====operator/=====
+{{{
+  replay::vector4< type > & replay::vector4< type >::operator/=(const type value)
+}}}
+  Division. 
+====operator[]====
+{{{
+  const type& replay::vector4< type >::operator[](const index_type i) const 
+}}}
+  Index access operator. 
+====operator[]====
+{{{
+  type& replay::vector4< type >::operator[](const index_type i)
+}}}
+  Index access operator. 
+====operator|====
+{{{
+  type replay::vector4< type >::operator|(const vector4< type > &operand) const 
+}}}
+  Dot product. 
+====ptr====
+{{{
+  const type* replay::vector4< type >::ptr() const 
+}}}
+  Get a pointer to the internal array. 
+====ptr====
+{{{
+  type* replay::vector4< type >::ptr()
+}}}
+  Get a pointer to the internal array. 
+====set====
+{{{
+  void replay::vector4< type >::set(const type a, const type b, const type c, const type d)
+}}}
+  Set the values of the vector. xThe first component. yThe second component. zThe third component. wThe fourth component. 
+====slice3====
+{{{
+  vector3< type > replay::vector4< type >::slice3() const 
+}}}
+  Slice the first three elements into a 3 element vector. 
+====sum====
+{{{
+  type replay::vector4< type >::sum()
+}}}
+  Compute the sum of all elements. 

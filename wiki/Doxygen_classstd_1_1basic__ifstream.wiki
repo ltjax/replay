@@ -1,0 +1,3 @@
+
+==std::basic_ifstream Reference==
+STL class. 

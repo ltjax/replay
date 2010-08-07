@@ -1,0 +1,3 @@
+
+==std::wostream Reference==
+STL class. 

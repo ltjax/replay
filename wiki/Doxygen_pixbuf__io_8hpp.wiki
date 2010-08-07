@@ -1,13 +1,14 @@
-#summary Documentation for the pixbuf_io.hpp file
 
-= pixbuf_io.hpp =
+==pixbuf_io.hpp Reference==
 
+{{{
+#include string
+}}}
 
+{{{
+#include boost/filesystem/path.hpp
+}}}
 
-== Detailed Description ==
-
-
-
-
----
-|| [Doxygen Main Page] || [Doxygen_files Files] ||
+{{{
+#include Pixbuf.hpp
+}}}

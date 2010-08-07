@@ -1,0 +1,3 @@
+
+==std::range_error Reference==
+STL class. 

@@ -1,13 +1,14 @@
-#summary Documentation for the bstream.hpp file
 
-= bstream.hpp =
+==bstream.hpp Reference==
 
+{{{
+#include iostream
+}}}
 
+{{{
+#include fstream
+}}}
 
-== Detailed Description ==
-
-
-
-
----
-|| [Doxygen Main Page] || [Doxygen_files Files] ||
+{{{
+#include string
+}}}

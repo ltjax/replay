@@ -1,0 +1,72 @@
+
+==replay::transformation Reference==
+
+{{{
+#include transformation.hpp
+}}}
+Describe orthogonal affine transformations. This is a bit more generic and powerful than affinity, since it can also represent mirrors. 
+====orientation====
+{{{
+  quaternion replay::transformation::orientation
+}}}
+  Rotational part of this transformation. 
+====position====
+{{{
+  vector3f replay::transformation::position
+}}}
+  Offset part of this transformation. 
+====sign====
+{{{
+  float replay::transformation::sign
+}}}
+  Sign for multiplication. has to be either 1 or -1. If the value is neither of the above, it is handled as if the number is -1 if sign is negative and as 1 otherwise. 
+====transformation====
+{{{
+  replay::transformation::transformation()
+}}}
+  Construct a default Id transformation. 
+====transformation====
+{{{
+  replay::transformation::transformation(const affinity &rhs)
+}}}
+  Construct a transformation from an affinity. 
+====transformation====
+{{{
+  replay::transformation::transformation(const quaternion &orientation)
+}}}
+  Construct a transformation based on an orientation. 
+====transformation====
+{{{
+  replay::transformation::transformation(const quaternion &orientation, const vector3f &position)
+}}}
+  Construct a transformation based on an orientation and an offset. 
+====transformation====
+{{{
+  replay::transformation::transformation(const quaternion &orientation, const vector3f &position, float sign)
+}}}
+  Construct a transformation based on an orientation, a sign, and an offset. 
+====transformation====
+{{{
+  replay::transformation::transformation(const vector3f &position)
+}}}
+  Construct a transformation based on an offset. 
+====matrix====
+{{{
+  matrix4 replay::transformation::matrix() const 
+}}}
+  Get this transformation as a homogenous 4x4 matrix. 
+====operator*====
+{{{
+  transformation replay::transformation::operator*(const transformation &other) const 
+}}}
+  Concaternate two transformations a and b. the effect is as if b and a were executed in that order. 
+====operator*=====
+{{{
+  transformation& replay::transformation::operator*=(const transformation &other)
+}}}
+  Concaternate two transformations a and b. the effect is as if b and a were executed in that order. 
+====inverse====
+{{{
+  static transformation replay::transformation::inverse(const transformation &t)
+}}}
+  Find the inverse of the given transformation. tThe transformation of which to find the inverse. The inverse of the transformation 

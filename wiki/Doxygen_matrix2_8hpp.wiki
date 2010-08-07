@@ -1,13 +1,6 @@
-#summary Documentation for the matrix2.hpp file
 
-= matrix2.hpp =
+==matrix2.hpp Reference==
 
-
-
-== Detailed Description ==
-
-
-
-
----
-|| [Doxygen Main Page] || [Doxygen_files Files] ||
+{{{
+#include replay/vector2.hpp
+}}}

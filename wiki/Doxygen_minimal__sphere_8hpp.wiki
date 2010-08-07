@@ -1,13 +1,6 @@
-#summary Documentation for the minimal_sphere.hpp file
 
-= minimal_sphere.hpp =
+==minimal_sphere.hpp Reference==
 
-
-
-== Detailed Description ==
-
-
-
-
----
-|| [Doxygen Main Page] || [Doxygen_files Files] ||
+{{{
+#include list
+}}}

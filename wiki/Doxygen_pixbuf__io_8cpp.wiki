@@ -1,13 +1,32 @@
-#summary Documentation for the pixbuf_io.cpp file
 
-= pixbuf_io.cpp =
+==pixbuf_io.cpp Reference==
 
+{{{
+#include replay/pixbuf_io.hpp
+}}}
 
+{{{
+#include png.h
+}}}
 
-== Detailed Description ==
+{{{
+#include boost/scoped_array.hpp
+}}}
 
+{{{
+#include replay/bstream.hpp
+}}}
 
+{{{
+#include boost/filesystem/convenience.hpp
+}}}
 
+{{{
+#include boost/filesystem/fstream.hpp
+}}}
 
----
-|| [Doxygen Main Page] || [Doxygen_files Files] ||
+====PNG_SIGNATURE_BYTES====
+{{{
+  
+}}}
+  

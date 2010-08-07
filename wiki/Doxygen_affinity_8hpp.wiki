@@ -1,13 +1,14 @@
-#summary Documentation for the affinity.hpp file
 
-= affinity.hpp =
+==affinity.hpp Reference==
 
+{{{
+#include replay/vector3.hpp
+}}}
 
+{{{
+#include replay/quaternion.hpp
+}}}
 
-== Detailed Description ==
-
-
-
-
----
-|| [Doxygen Main Page] || [Doxygen_files Files] ||
+{{{
+#include replay/matrix4.hpp
+}}}

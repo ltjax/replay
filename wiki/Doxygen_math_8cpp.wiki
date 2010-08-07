@@ -1,13 +1,10 @@
-#summary Documentation for the math.cpp file
 
-= math.cpp =
+==math.cpp Reference==
 
+{{{
+#include cmath
+}}}
 
-
-== Detailed Description ==
-
-
-
-
----
-|| [Doxygen Main Page] || [Doxygen_files Files] ||
+{{{
+#include replay/math.hpp
+}}}

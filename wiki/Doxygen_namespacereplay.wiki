@@ -1,0 +1,163 @@
+
+==replay Reference==
+Replay namespace. 
+====fcouple====
+{{{
+  typedef couple< float > replay::fcouple
+}}}
+  Couple of floats. 
+====shared_pixbuf====
+{{{
+  typedef pixbuf::shared_pixbuf replay::shared_pixbuf
+}}}
+  
+====vector2f====
+{{{
+  typedef vector2< float > replay::vector2f
+}}}
+  Shorthandle for a 2D float vector. 
+====vector2i====
+{{{
+  typedef vector2< int > replay::vector2i
+}}}
+  Shorthandle for a 2D int vector. 
+====vector3d====
+{{{
+  typedef vector3< double > replay::vector3d
+}}}
+  A convenience typedef for a 2d double-precision floating-point vector. 
+====vector3f====
+{{{
+  typedef vector3< float > replay::vector3f
+}}}
+  A convenience typedef for a 3d floating-point vector. 
+====vector4d====
+{{{
+  typedef vector4< double > replay::vector4d
+}}}
+  A convenience typedef for a 4d double-precision floating-point vector. 
+====vector4f====
+{{{
+  typedef vector4< float > replay::vector4f
+}}}
+  A convenience typedef for a 4d floating-point vector. 
+====distance====
+{{{
+  float replay::distance(const line3 &line, const vector3f &point)
+}}}
+  finds the euclidean distance of a line and a point. 
+====distance====
+{{{
+  float replay::distance(const vector3f &lhs, const vector3f &rhs)
+}}}
+  Compute the euclidean distance of two points. 
+====distance====
+{{{
+  float replay::distance(const plane3 &p, const vector3f &point)
+}}}
+  Compute the signed distance of a plane and a point. If the plane's normal is unit-length, the absolute of this distance is the euclidean distance. 
+====dot====
+{{{
+  float replay::dot(const vector4f &a, const vector4f &b)
+}}}
+  Compute the scalar product of two 4d vectors. 
+====dot====
+{{{
+  float replay::dot(const vector2f &a, const vector2f &b)
+}}}
+  Compute the scalar product of two 2d vectors. 
+====dot====
+{{{
+  float replay::dot(const vector3f &a, const vector3f &b)
+}}}
+  Compute the scalar product of two 3d vectors. 
+====find_closest_point====
+{{{
+  replay::vector3f replay::find_closest_point(const line3 &line, const vector3f &point)
+}}}
+  find the closest point. lineline on which to look for the closest point. pointwhere to find the closest point to. 
+====magnitude====
+{{{
+  float replay::magnitude(const vector2f &vector)
+}}}
+  compute the length of a vector. (2-norm) 
+====magnitude====
+{{{
+  float replay::magnitude(const vector3f &vector)
+}}}
+  compute the length of a vector. (2-norm) 
+====make_couple====
+{{{
+  couple< T > replay::make_couple(const T &a, const T &b)
+}}}
+  Make a couple without providing template parameters. aThe first value. bThe second value. The new couple object. 
+====normalize====
+{{{
+  void replay::normalize(vector3f &vector)
+}}}
+  normalize the given vector. 
+====normalize====
+{{{
+  void replay::normalize(vector2f &vector)
+}}}
+  normalize the given vector. 
+====normalized====
+{{{
+  replay::vector3f replay::normalized(const vector3f &vector)
+}}}
+  return a normalized vector. 
+====normalized====
+{{{
+  replay::vector2f replay::normalized(const vector2f &vector)
+}}}
+  return a normalized vector. 
+====operator*====
+{{{
+  vector3< type > replay::operator*(const type &a, const vector3< type > &b)
+}}}
+  scalar product. 
+====operator*====
+{{{
+  plane3 replay::operator*(const plane3 &l, const matrix4 &r)
+}}}
+  Plane by matrix multiplication. Treats the the plane as a left sided row vector. 
+====operator*====
+{{{
+  vector2< type > replay::operator*(const type &a, const vector2< type > &b)
+}}}
+  Scalar product. 
+====operator*====
+{{{
+  vector4< type > replay::operator*(const type &a, const vector4< type > &b)
+}}}
+  Scalar product. 
+====operator<<====
+{{{
+  std::ostream & replay::operator<<(std::ostream &cout, const replay::vector2f &v)
+}}}
+  vector2f stream-out operator. 
+====operator<<====
+{{{
+  std::ostream & replay::operator<<(std::ostream &cout, const replay::vector3f &v)
+}}}
+  vector3f stream-out operator. 
+====square_distance====
+{{{
+  float replay::square_distance(const line3 &la, const line3 &lb)
+}}}
+  finds the square of the euclidean distance of two 3d lines. 
+====square_distance====
+{{{
+  float replay::square_distance(const vector3f &point, const boost::array< vector3f, 3 > &triangle)
+}}}
+  Compute the square distance of a point to a polygon. 
+====square_distance====
+{{{
+  float replay::square_distance(const vector3f &point0, const vector3f &point1)
+}}}
+  Compute the square of the euclidean distance of two points. 
+====square_distance====
+{{{
+  float replay::square_distance(const line3 &line, const vector3f &point)
+}}}
+  finds the square of the euclidean distance of a line and a point. 

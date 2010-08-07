@@ -1,32 +1,32 @@
-#summary Documentation for the matrix4.cpp file
 
-= matrix4.cpp =
-
-
-
-== Functions ==
-
- operator*(const  & p, const  & m)
-  **
-
-== Detailed Description ==
-
-
-
-
-== Function Documentation ==
+==matrix4.cpp Reference==
 
 {{{
-# operator*   (
-  const  & p,
-  const  & m  )
+#include cmath
+}}}
+
+{{{
+#include algorithm
+}}}
+
+{{{
+#include replay/math.hpp
+}}}
+
+{{{
+#include replay/matrix4.hpp
+}}}
+
+{{{
+#include replay/plane3.hpp
+}}}
+
+{{{
+#include replay/quaternion.hpp
+}}}
+
+====operator*====
+{{{
+  replay::plane3 operator*(const replay::plane3 &p, const replay::matrix4 &m)
 }}}
   
-  
-
-*Parameters*:
-  a   And two parameters. 
-  b   Here's the second. 
-
----
-|| [Doxygen Main Page] || [Doxygen_files Files] ||

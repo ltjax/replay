@@ -1,13 +1,14 @@
-#summary Documentation for the quaternion.cpp file
 
-= quaternion.cpp =
+==quaternion.cpp Reference==
 
+{{{
+#include cmath
+}}}
 
+{{{
+#include replay/quaternion.hpp
+}}}
 
-== Detailed Description ==
-
-
-
-
----
-|| [Doxygen Main Page] || [Doxygen_files Files] ||
+{{{
+#include replay/vector_math.hpp
+}}}

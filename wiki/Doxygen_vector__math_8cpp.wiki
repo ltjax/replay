@@ -1,13 +1,38 @@
-#summary Documentation for the vector_math.cpp file
 
-= vector_math.cpp =
+==vector_math.cpp Reference==
 
+{{{
+#include iostream
+}}}
 
+{{{
+#include cmath
+}}}
 
-== Detailed Description ==
+{{{
+#include replay/vector_math.hpp
+}}}
 
+{{{
+#include replay/matrix3.hpp
+}}}
 
+{{{
+#include replay/quaternion.hpp
+}}}
 
+{{{
+#include boost/tuple/tuple.hpp
+}}}
 
----
-|| [Doxygen Main Page] || [Doxygen_files Files] ||
+{{{
+#include boost/array.hpp
+}}}
+
+{{{
+#include boost/range/iterator_range.hpp
+}}}
+
+{{{
+#include replay/minimal_sphere.hpp
+}}}

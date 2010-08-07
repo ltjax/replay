@@ -1,0 +1,3 @@
+
+==std::wstringstream Reference==
+STL class. 

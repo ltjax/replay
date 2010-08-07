@@ -1,0 +1,32 @@
+
+==replay::line2 Reference==
+
+{{{
+#include vector_math.hpp
+}}}
+A two dimensional parametric line. 
+====direction====
+{{{
+  vector2f replay::line2::direction
+}}}
+  direction of the line. 
+====origin====
+{{{
+  vector2f replay::line2::origin
+}}}
+  origin of the line. 
+====line2====
+{{{
+  replay::line2::line2()
+}}}
+  Create a degenerated line. 
+====line2====
+{{{
+  replay::line2::line2(const vector2f &p, const vector2f &d)
+}}}
+  Create a line by setting the origin and direction. 
+====get_point====
+{{{
+  vector2f replay::line2::get_point(float x) const 
+}}}
+  Get a point on the line. 

@@ -1,13 +1,14 @@
-#summary Documentation for the vector4.hpp file
 
-= vector4.hpp =
+==vector4.hpp Reference==
 
+{{{
+#include replay/vector2.hpp
+}}}
 
+{{{
+#include replay/vector3.hpp
+}}}
 
-== Detailed Description ==
-
-
-
-
----
-|| [Doxygen Main Page] || [Doxygen_files Files] ||
+{{{
+#include vector4.inl
+}}}

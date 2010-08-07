@@ -1,13 +1,10 @@
-#summary Documentation for the pixbuf.cpp file
 
-= pixbuf.cpp =
+==pixbuf.cpp Reference==
 
+{{{
+#include replay/pixbuf.hpp
+}}}
 
-
-== Detailed Description ==
-
-
-
-
----
-|| [Doxygen Main Page] || [Doxygen_files Files] ||
+{{{
+#include vector
+}}}

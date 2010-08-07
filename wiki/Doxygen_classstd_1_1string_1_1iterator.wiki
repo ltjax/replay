@@ -1,0 +1,3 @@
+
+==std::string::iterator Reference==
+STL iterator class. 

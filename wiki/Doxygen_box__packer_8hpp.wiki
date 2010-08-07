@@ -1,13 +1,18 @@
-#summary Documentation for the box_packer.hpp file
 
-= box_packer.hpp =
+==box_packer.hpp Reference==
 
+{{{
+#include stdexcept
+}}}
 
+{{{
+#include boost/utility.hpp
+}}}
 
-== Detailed Description ==
+{{{
+#include replay/box.hpp
+}}}
 
-
-
-
----
-|| [Doxygen Main Page] || [Doxygen_files Files] ||
+{{{
+#include replay/couple.hpp
+}}}

@@ -1,0 +1,7 @@
+
+==replay::box_packer::pack_overflow Reference==
+
+{{{
+#include box_packer.hpp
+}}}
+Exception class that is thrown when a rect cannot be packed. pixbuf_packer::pack 

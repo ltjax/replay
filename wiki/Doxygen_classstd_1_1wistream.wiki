@@ -1,0 +1,3 @@
+
+==std::wistream Reference==
+STL class. 

@@ -1,0 +1,8 @@
+
+==std::valarray Reference==
+STL class. 
+====elements====
+{{{
+  T std::valarray< T >::elements
+}}}
+  STL member. 

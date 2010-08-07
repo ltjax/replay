@@ -1,0 +1,3 @@
+
+==std::bad_alloc Reference==
+STL class. 

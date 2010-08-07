@@ -1,0 +1,42 @@
+
+==replay::linear_component3 Reference==
+
+{{{
+#include lines3.hpp
+}}}
+Base class for parametric line-like objects, like lines, rays and segments. Represents a function $R \longrightarrow R^3$. 
+====direction====
+{{{
+  vector3f replay::linear_component3::direction
+}}}
+  Direction. Corresponds to a difference of 1 in the parameter. 
+====origin====
+{{{
+  vector3f replay::linear_component3::origin
+}}}
+  Origin. Point at parameter 0. 
+====get_point====
+{{{
+  vector3f replay::linear_component3::get_point(const float t) const 
+}}}
+  Get the point: $origin + t * direction$. tThe parameter to the equation. 
+====set====
+{{{
+  void replay::linear_component3::set(const vector3f &origin, const vector3f &direction)
+}}}
+  Set via origin and direction. 
+====set====
+{{{
+  void replay::linear_component3::set(const linear_component3 &line)
+}}}
+  Set this by another linear component. 
+====linear_component3====
+{{{
+  replay::linear_component3::linear_component3()
+}}}
+  Create an uninitialized linear component. 
+====linear_component3====
+{{{
+  replay::linear_component3::linear_component3(const vector3f &origin, const vector3f &direction)
+}}}
+  Create a linear component by origin and direction. 

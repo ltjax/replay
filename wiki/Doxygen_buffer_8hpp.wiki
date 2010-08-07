@@ -1,13 +1,6 @@
-#summary Documentation for the buffer.hpp file
 
-= buffer.hpp =
+==buffer.hpp Reference==
 
-
-
-== Detailed Description ==
-
-
-
-
----
-|| [Doxygen Main Page] || [Doxygen_files Files] ||
+{{{
+#include cstddef
+}}}

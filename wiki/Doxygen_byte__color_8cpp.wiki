@@ -1,13 +1,6 @@
-#summary Documentation for the byte_color.cpp file
 
-= byte_color.cpp =
+==byte_color.cpp Reference==
 
-
-
-== Detailed Description ==
-
-
-
-
----
-|| [Doxygen Main Page] || [Doxygen_files Files] ||
+{{{
+#include replay/byte_color.hpp
+}}}

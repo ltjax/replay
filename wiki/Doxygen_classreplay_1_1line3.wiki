@@ -1,0 +1,27 @@
+
+==replay::line3 Reference==
+
+{{{
+#include lines3.hpp
+}}}
+Linear Component that exceeds to infinity in both directions. 
+====line3====
+{{{
+  replay::line3::line3()
+}}}
+  Create an uninitialized line. 
+====line3====
+{{{
+  replay::line3::line3(const vector3f &origin, const vector3f &direction)
+}}}
+  Create a line from origin and direction. 
+====line3====
+{{{
+  replay::line3::line3(const linear_component3 &line)
+}}}
+  Cast a linear component to a line. 
+====from_points====
+{{{
+  static line3 replay::line3::from_points(const vector3f &a, const vector3f &b)
+}}}
+  Create a line from two points on the line. These points must not be colinear. 

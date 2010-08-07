@@ -1,0 +1,3 @@
+
+==std::ios_base::failure Reference==
+STL class. 

@@ -1,13 +1,6 @@
-#summary Documentation for the vector3.hpp file
 
-= vector3.hpp =
+==vector3.hpp Reference==
 
-
-
-== Detailed Description ==
-
-
-
-
----
-|| [Doxygen Main Page] || [Doxygen_files Files] ||
+{{{
+#include vector3.inl
+}}}

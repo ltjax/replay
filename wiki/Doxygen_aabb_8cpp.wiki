@@ -1,13 +1,18 @@
-#summary Documentation for the aabb.cpp file
 
-= aabb.cpp =
+==aabb.cpp Reference==
 
+{{{
+#include limits
+}}}
 
+{{{
+#include cmath
+}}}
 
-== Detailed Description ==
+{{{
+#include replay/aabb.hpp
+}}}
 
-
-
-
----
-|| [Doxygen Main Page] || [Doxygen_files Files] ||
+{{{
+#include replay/math.hpp
+}}}

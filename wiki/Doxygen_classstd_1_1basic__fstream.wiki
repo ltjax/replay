@@ -1,0 +1,3 @@
+
+==std::basic_fstream Reference==
+STL class. 

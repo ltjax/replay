@@ -1,0 +1,3 @@
+
+==std::wstring::const_iterator Reference==
+STL iterator class. 

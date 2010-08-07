@@ -1,0 +1,22 @@
+
+==replay::segment3 Reference==
+
+{{{
+#include lines3.hpp
+}}}
+Linear Component in the $[0..1]$ interval. 
+====segment3====
+{{{
+  replay::segment3::segment3()
+}}}
+  Create an uninitialized segment. 
+====segment3====
+{{{
+  replay::segment3::segment3(const vector3f &origin, const vector3f &direction)
+}}}
+  Create a segment from origin and difference to the second point. 
+====segment3====
+{{{
+  replay::segment3::segment3(const linear_component3 &line)
+}}}
+  Cast a linear component to a segment. 

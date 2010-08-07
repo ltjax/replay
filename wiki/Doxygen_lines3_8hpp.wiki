@@ -1,13 +1,14 @@
-#summary Documentation for the lines3.hpp file
 
-= lines3.hpp =
+==lines3.hpp Reference==
 
+{{{
+#include limits
+}}}
 
+{{{
+#include replay/couple.hpp
+}}}
 
-== Detailed Description ==
-
-
-
-
----
-|| [Doxygen Main Page] || [Doxygen_files Files] ||
+{{{
+#include replay/vector3.hpp
+}}}

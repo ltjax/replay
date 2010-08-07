@@ -1,13 +1,10 @@
-#summary Documentation for the math.hpp file
 
-= math.hpp =
+==math.hpp Reference==
 
+{{{
+#include boost/math/special_functions/sign.hpp
+}}}
 
-
-== Detailed Description ==
-
-
-
-
----
-|| [Doxygen Main Page] || [Doxygen_files Files] ||
+{{{
+#include replay/couple.hpp
+}}}

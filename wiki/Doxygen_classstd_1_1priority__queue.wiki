@@ -1,0 +1,8 @@
+
+==std::priority_queue Reference==
+STL class. 
+====elements====
+{{{
+  T std::priority_queue< T >::elements
+}}}
+  STL member. 

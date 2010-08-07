@@ -1,0 +1,177 @@
+
+==replay::buffer Reference==
+
+{{{
+#include buffer.hpp
+}}}
+A dynamic sized one dimensional array class that comforms to a range interface. This is more lightweight than std::vector, since it only every allocated space once, but doesn't support resizing or insertion because of that. 
+====object_type====
+{{{
+  typedef T replay::buffer< T >::object_type
+}}}
+  
+====self_type====
+{{{
+  typedef buffer< T > replay::buffer< T >::self_type
+}}}
+  
+====size_type====
+{{{
+  typedef std::size_t replay::buffer< T >::size_type
+}}}
+  
+====const_iterator====
+{{{
+  typedef const object_type* replay::buffer< T >::const_iterator
+}}}
+  Const iterator type to reference the objects in the sequence for reading. 
+====iterator====
+{{{
+  typedef object_type* replay::buffer< T >::iterator
+}}}
+  Iterator type to reference the objects in the sequence for reading and writing. 
+====_data====
+{{{
+  object_type* replay::buffer< T >::_data
+}}}
+  
+====_size====
+{{{
+  size_type replay::buffer< T >::_size
+}}}
+  
+====buffer====
+{{{
+  replay::buffer< T >::buffer(const size_type num_elements)
+}}}
+  Construct a buffer of given size. 
+====buffer====
+{{{
+  replay::buffer< T >::buffer(IteratorType bi, IteratorType ei)
+}}}
+  Construct a buffer from a given iterator range. 
+====buffer====
+{{{
+  replay::buffer< T >::buffer()
+}}}
+  Default constructor. Creates an empty buffer. 
+====buffer====
+{{{
+  replay::buffer< T >::buffer(const buffer< object_type > &other)
+}}}
+  Copy constructor. Creates a per-value copy, all elements are copied. 
+====buffer====
+{{{
+  replay::buffer< T >::buffer(const size_type num_elements, const object_type &value)
+}}}
+  Construct a buffer of given size and fill it with the given value. 
+====~buffer====
+{{{
+  replay::buffer< T >::~buffer()
+}}}
+  dtor. 
+====alloc====
+{{{
+  void replay::buffer< T >::alloc(IteratorType bi, IteratorType ei)
+}}}
+  Allocate the buffer and set contents to those given in the iterator range. 
+====alloc====
+{{{
+  void replay::buffer< T >::alloc(const size_type size, const object_type &value)
+}}}
+  Allocate memory and write a value to all elements. Completely discards previous contents. sizeNumber of elements to allocate. valueValue the objects are initialized with. 
+====alloc====
+{{{
+  void replay::buffer< T >::alloc(const size_type size)
+}}}
+  Allocate memory. This will invalidate all previous contents. sizeNumber of elements to allocate. They are initialized with the default contructor. 
+====begin====
+{{{
+  const_iterator replay::buffer< T >::begin() const 
+}}}
+  Get an iterator to the beginning of the sequence. 
+====begin====
+{{{
+  iterator replay::buffer< T >::begin()
+}}}
+  Get an iterator to the beginning of the sequence. 
+====clear====
+{{{
+  void replay::buffer< T >::clear()
+}}}
+  Invalidate the buffer and free the memory. 
+====empty====
+{{{
+  bool replay::buffer< T >::empty() const 
+}}}
+  checks whether the buffer is empty. 
+====end====
+{{{
+  const_iterator replay::buffer< T >::end() const 
+}}}
+  Get an iterator past the end of the sequence. 
+====end====
+{{{
+  iterator replay::buffer< T >::end()
+}}}
+  Get an iterator past the end of the sequence. 
+====fill====
+{{{
+  void replay::buffer< T >::fill(const object_type &value)
+}}}
+  Fill the buffer with the given value. valueValue to be copied into all elements. 
+====get====
+{{{
+  object_type& replay::buffer< T >::get(const size_type i)
+}}}
+  Get an element via its offset. 
+====get====
+{{{
+  const object_type& replay::buffer< T >::get(const size_type i) const 
+}}}
+  Get an element via its offset. 
+====is_valid====
+{{{
+  bool replay::buffer< T >::is_valid() const 
+}}}
+  checks whether there is valid data. 
+====operator=====
+{{{
+  self_type& replay::buffer< T >::operator=(const self_type &other)
+}}}
+  Assign a buffer and copy the contained data. 
+====operator[]====
+{{{
+  object_type& replay::buffer< T >::operator[](const size_type i)
+}}}
+  access the buffer. 
+====operator[]====
+{{{
+  const object_type& replay::buffer< T >::operator[](const size_type i) const 
+}}}
+  Get an element via its offset. get
+====ptr====
+{{{
+  object_type* replay::buffer< T >::ptr()
+}}}
+  Return the raw buffer. 
+====ptr====
+{{{
+  const object_type* replay::buffer< T >::ptr() const 
+}}}
+  Return the raw buffer. 
+====size====
+{{{
+  size_type replay::buffer< T >::size() const 
+}}}
+  Get the number of elements in this buffer. 
+====swap====
+{{{
+  void replay::buffer< T >::swap(self_type &rhs)
+}}}
+  Swap the contents of this and another matrix. 
+====swap====
+{{{
+  static void replay::buffer< T >::swap(self_type &a, self_type &b)
+}}}
+  Swap the contents of two matrices. 

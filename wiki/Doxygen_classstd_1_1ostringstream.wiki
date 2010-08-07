@@ -1,0 +1,3 @@
+
+==std::ostringstream Reference==
+STL class. 

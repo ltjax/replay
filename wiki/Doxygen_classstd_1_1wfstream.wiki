@@ -1,0 +1,3 @@
+
+==std::wfstream Reference==
+STL class. 

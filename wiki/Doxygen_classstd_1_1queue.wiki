@@ -1,0 +1,8 @@
+
+==std::queue Reference==
+STL class. 
+====elements====
+{{{
+  T std::queue< T >::elements
+}}}
+  STL member. 

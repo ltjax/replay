@@ -1,0 +1,47 @@
+
+==Reference Documentation Index==
+===Files===
+  * aabb.cpp
+  * aabb.hpp
+  * affinity.hpp
+  * box.hpp
+  * box_packer.cpp
+  * box_packer.hpp
+  * bstream.hpp
+  * buffer.hpp
+  * byte_color.cpp
+  * byte_color.hpp
+  * couple.hpp
+  * lines3.hpp
+  * math.cpp
+  * math.hpp
+  * matrix2.cpp
+  * matrix2.hpp
+  * matrix3.cpp
+  * matrix3.hpp
+  * matrix4.cpp
+  * matrix4.hpp
+  * minimal_sphere.hpp
+  * pixbuf.cpp
+  * pixbuf.hpp
+  * pixbuf_io.cpp
+  * pixbuf_io.hpp
+  * plane3.cpp
+  * plane3.hpp
+  * quaternion.cpp
+  * quaternion.hpp
+  * scalar.cpp
+  * table.hpp
+  * transformation.hpp
+  * vector2.hpp
+  * vector2.inl
+  * vector3.hpp
+  * vector3.inl
+  * vector4.hpp
+  * vector4.inl
+  * vector_math.cpp
+  * vector_math.hpp
+
+===Structs===
+  * [[replay::box]]
+  * [[replay::couple::less]]

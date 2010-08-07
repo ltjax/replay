@@ -1,0 +1,87 @@
+
+==replay::ibstream Reference==
+
+{{{
+#include bstream.hpp
+}}}
+Binary IStream Wrapper. Allows wrapping of standard streams for binary reading. 
+====stream====
+{{{
+  istream& replay::ibstream< istream >::stream
+}}}
+  
+====ibstream====
+{{{
+  replay::ibstream< istream >::ibstream(istream &internal)
+}}}
+  construct the stream wrapper. 
+====operator>>====
+{{{
+  ibstream& replay::ibstream< istream >::operator>>(std::string &x)
+}}}
+  Reading operator for strings. 
+====operator>>====
+{{{
+  ibstream& replay::ibstream< istream >::operator>>(unsigned char &x)
+}}}
+  Binary stream reading operator for unsigned chars. 
+====operator>>====
+{{{
+  ibstream& replay::ibstream< istream >::operator>>(double &x)
+}}}
+  Reading operator for doubles. 
+====operator>>====
+{{{
+  ibstream& replay::ibstream< istream >::operator>>(signed char &x)
+}}}
+  Reading operator for signed chars. 
+====operator>>====
+{{{
+  ibstream& replay::ibstream< istream >::operator>>(unsigned short &x)
+}}}
+  Reading operator for unsigned shorts. 
+====operator>>====
+{{{
+  ibstream& replay::ibstream< istream >::operator>>(signed short &x)
+}}}
+  Reading operator for signed shorts. 
+====operator>>====
+{{{
+  ibstream& replay::ibstream< istream >::operator>>(unsigned int &x)
+}}}
+  Reading operator for unsigned ints. 
+====operator>>====
+{{{
+  ibstream& replay::ibstream< istream >::operator>>(float &x)
+}}}
+  Reading operator for floats. 
+====operator>>====
+{{{
+  ibstream& replay::ibstream< istream >::operator>>(signed int &x)
+}}}
+  Reading operator for signed ints. 
+====read====
+{{{
+  ibstream& replay::ibstream< istream >::read(void *pointer, std::streamsize s)
+}}}
+  Read the stream. pointerPointer to the stream. sSize *this 
+====read====
+{{{
+  ibstream& replay::ibstream< istream >::read(datatype &x)
+}}}
+  Reads the stream, size is calculated from the type. xThe stream to read. *this 
+====read_uint====
+{{{
+  unsigned int replay::ibstream< istream >::read_uint()
+}}}
+  Read a single unsigned int. 
+====seekg====
+{{{
+  ibstream& replay::ibstream< istream >::seekg(std::ios::off_type offset, std::ios_base::seekdir way)
+}}}
+  Seek to a relative position in the stream. offsetThe offset to seek to, this is relative to the way parameter. wayThe seek direction, can be ios_base::beg, ios_base::cur or ios_base::end. *this 
+====seekg====
+{{{
+  ibstream& replay::ibstream< istream >::seekg(std::ios::pos_type position)
+}}}
+  Seek to an absolute position in the stream. positionThe streampos object position to seek to. *this 

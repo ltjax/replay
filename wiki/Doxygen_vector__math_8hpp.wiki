@@ -1,13 +1,46 @@
-#summary Documentation for the vector_math.hpp file
 
-= vector_math.hpp =
+==vector_math.hpp Reference==
 
+{{{
+#include iosfwd
+}}}
 
+{{{
+#include algorithm
+}}}
 
-== Detailed Description ==
+{{{
+#include boost/tuple/tuple.hpp
+}}}
 
+{{{
+#include boost/array.hpp
+}}}
 
+{{{
+#include replay/math.hpp
+}}}
 
+{{{
+#include replay/vector2.hpp
+}}}
 
----
-|| [Doxygen Main Page] || [Doxygen_files Files] ||
+{{{
+#include replay/vector3.hpp
+}}}
+
+{{{
+#include replay/lines3.hpp
+}}}
+
+{{{
+#include replay/matrix3.hpp
+}}}
+
+{{{
+#include replay/matrix4.hpp
+}}}
+
+{{{
+#include replay/plane3.hpp
+}}}

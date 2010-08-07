@@ -1,0 +1,8 @@
+
+==std::stack Reference==
+STL class. 
+====elements====
+{{{
+  T std::stack< T >::elements
+}}}
+  STL member. 

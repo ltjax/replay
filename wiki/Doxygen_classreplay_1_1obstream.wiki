@@ -1,0 +1,82 @@
+
+==replay::obstream Reference==
+
+{{{
+#include bstream.hpp
+}}}
+Binary OStream Wrapper. Allows wrapping of standard streams for binary writing. 
+====stream====
+{{{
+  ostream& replay::obstream< ostream >::stream
+}}}
+  
+====obstream====
+{{{
+  replay::obstream< ostream >::obstream(ostream &internal)
+}}}
+  Construct the stream wrapper. 
+====operator<<====
+{{{
+  obstream& replay::obstream< ostream >::operator<<(const std::string &x)
+}}}
+  Writing operator for strings. 
+====operator<<====
+{{{
+  obstream& replay::obstream< ostream >::operator<<(const double &x)
+}}}
+  Writing operator for doubles. 
+====operator<<====
+{{{
+  obstream& replay::obstream< ostream >::operator<<(unsigned char x)
+}}}
+  Writing operator for unsigned chars. 
+====operator<<====
+{{{
+  obstream& replay::obstream< ostream >::operator<<(signed short x)
+}}}
+  Writing operator for signed shorts. 
+====operator<<====
+{{{
+  obstream& replay::obstream< ostream >::operator<<(signed char x)
+}}}
+  Writing operator for signed chars. 
+====operator<<====
+{{{
+  obstream& replay::obstream< ostream >::operator<<(unsigned short x)
+}}}
+  Writing operator for unsigned shorts. 
+====operator<<====
+{{{
+  obstream& replay::obstream< ostream >::operator<<(unsigned int x)
+}}}
+  Writing operator for unsigned ints. 
+====operator<<====
+{{{
+  obstream& replay::obstream< ostream >::operator<<(signed int x)
+}}}
+  Writing operator for signed ints. 
+====operator<<====
+{{{
+  obstream& replay::obstream< ostream >::operator<<(float x)
+}}}
+  Writing operator for floats. 
+====seekg====
+{{{
+  obstream& replay::obstream< ostream >::seekg(std::ios::off_type offset, std::ios_base::seekdir way)
+}}}
+  Seek to a relative position in the stream. offsetThe offset to seek to, this is relative to the way parameter. wayThe seek direction, can be ios_base::beg, ios_base::cur or ios_base::end. *this 
+====seekg====
+{{{
+  obstream& replay::obstream< ostream >::seekg(std::ios::pos_type position)
+}}}
+  Seek to an absolute position in the stream. positionThe streampos object position to seek to. *this 
+====write====
+{{{
+  obstream& replay::obstream< ostream >::write(const void *pointer, std::streamsize s)
+}}}
+  Write to the stream. pointerPointer to the stream. sSize *this 
+====write====
+{{{
+  obstream& replay::obstream< ostream >::write(const datatype &x)
+}}}
+  Writes to the stream, size is calculated from the type. xThe stream to write to. *this 

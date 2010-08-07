@@ -1,0 +1,82 @@
+
+==replay::plane3 Reference==
+
+{{{
+#include plane3.hpp
+}}}
+3-dimensional plane. All $x \in R^3$ that satisfy the equation $normal*x + d = 0$. 
+====d====
+{{{
+  float replay::plane3::d
+}}}
+  Distance of the plane to the origin. 
+====normal====
+{{{
+  vector3f replay::plane3::normal
+}}}
+  Normal of the plane. 
+====plane3====
+{{{
+  replay::plane3::plane3()
+}}}
+  Create a plane with all components set to 0. Represents the $R^3$. 
+====plane3====
+{{{
+  replay::plane3::plane3(const float a, const float b, const float c, const float d)
+}}}
+  Create the plane by setting the individual components. 
+====plane3====
+{{{
+  replay::plane3::plane3(const vector3f &normal, const float d)
+}}}
+  Create the plane by normal and distance to the origin. 
+====clear====
+{{{
+  void replay::plane3::clear()
+}}}
+  Clear all components to 0, effectively degenerating the plane into the $R^3$. 
+====flip====
+{{{
+  void replay::plane3::flip()
+}}}
+  Multiply the equation by -1. 
+====hnf====
+{{{
+  void replay::plane3::hnf(const float epsilon=math::default_epsilon)
+}}}
+  convert the equation into hessian normal form. 
+====scale====
+{{{
+  void replay::plane3::scale(const float factor)
+}}}
+  Multiply the equation by a factor. 
+====set====
+{{{
+  replay::plane3 & replay::plane3::set(const plane3 &plane)
+}}}
+  Set this plane to another plane. 
+====set====
+{{{
+  replay::plane3 & replay::plane3::set(const float a, const float b, const float c, const float d)
+}}}
+  Set the plane by setting all components individually. 
+====set====
+{{{
+  replay::plane3 & replay::plane3::set(const vector3f &normal, const float d)
+}}}
+  Set the plane via normal and distance. 
+====construct_from_pointnormal====
+{{{
+  replay::plane3 replay::plane3::construct_from_pointnormal(const vector3f &normal, const vector3f &point)
+}}}
+  Construct a plane from a point and a normal. 
+====construct_from_points====
+{{{
+  replay::plane3 replay::plane3::construct_from_points(const vector3f &p0, const vector3f &p1, const vector3f &p2)
+}}}
+  Construct a plane from 3 CCW ordered points. 
+====get_flipped====
+{{{
+  replay::plane3 replay::plane3::get_flipped(const plane3 &from)
+}}}
+  Get a flipped plane. 

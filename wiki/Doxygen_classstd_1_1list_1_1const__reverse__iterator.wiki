@@ -1,0 +1,3 @@
+
+==std::list::const_reverse_iterator Reference==
+STL iterator class. 

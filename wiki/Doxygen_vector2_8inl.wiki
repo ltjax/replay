@@ -1,13 +1,2 @@
-#summary Documentation for the vector2.inl file
 
-= vector2.inl =
-
-
-
-== Detailed Description ==
-
-
-
-
----
-|| [Doxygen Main Page] || [Doxygen_files Files] ||
+==vector2.inl Reference==

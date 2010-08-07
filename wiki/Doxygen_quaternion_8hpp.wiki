@@ -1,13 +1,6 @@
-#summary Documentation for the quaternion.hpp file
 
-= quaternion.hpp =
+==quaternion.hpp Reference==
 
-
-
-== Detailed Description ==
-
-
-
-
----
-|| [Doxygen Main Page] || [Doxygen_files Files] ||
+{{{
+#include replay/vector3.hpp
+}}}

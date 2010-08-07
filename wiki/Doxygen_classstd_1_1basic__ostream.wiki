@@ -1,0 +1,3 @@
+
+==std::basic_ostream Reference==
+STL class. 

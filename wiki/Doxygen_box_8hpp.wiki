@@ -1,50 +1,13 @@
-#summary Documentation for the box.hpp file
 
-= box.hpp =
+==box.hpp Reference==
 
-
-
-== Functions ==
-
-class stream_type operator<<(stream_type & stream, const < data_type > & x)
-  **
-class stream_type operator>>(stream_type & stream, < data_type > & x)
-  **
-
-== Detailed Description ==
-
-
-
-
-== Function Documentation ==
-
+====operator<<====
 {{{
-#class stream_type operator<<   (
-  stream_type & stream,
-  const < data_type > & x  )
+  stream_type& operator<<(stream_type &stream, const replay::box< data_type > &x)
 }}}
   
-  
-
-*Parameters*:
-  a   And two parameters. 
-  b   Here's the second. 
-*Returns*:
-  And a return value!
-
+====operator>>====
 {{{
-#class stream_type operator>>   (
-  stream_type & stream,
-  < data_type > & x  )
+  stream_type& operator>>(stream_type &stream, replay::box< data_type > &x)
 }}}
   
-  
-
-*Parameters*:
-  a   And two parameters. 
-  b   Here's the second. 
-*Returns*:
-  And a return value!
-
----
-|| [Doxygen Main Page] || [Doxygen_files Files] ||

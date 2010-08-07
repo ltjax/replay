@@ -1,0 +1,12 @@
+
+==replay::pixbuf_io::read_error Reference==
+
+{{{
+#include pixbuf_io.hpp
+}}}
+Exception that is thrown on read errors. 
+====read_error====
+{{{
+  replay::pixbuf_io::read_error::read_error(const std::string &str)
+}}}
+  
