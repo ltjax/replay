@@ -198,7 +198,7 @@ private:
 };
 
 
-/** Implementation of Welzl's randomized minimal ball algorithm.
+/** Welzl's randomized minimal ball algorithm.
 	The code is based on the paper 'Fast and Robust Smallest Enclosing Balls' by
 	Bernd Gaertner.
 	It employs the move-to-front heuristic. However, this heuristic

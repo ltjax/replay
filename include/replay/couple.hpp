@@ -40,21 +40,6 @@ private:
 	T			array[ 2 ];
 public:
 
-	/** A lexical less comparision functor type.
-	*/
-	struct less
-	{
-		/** Evaluate the predicate.
-			\param lhs The left-hand side of the operator.
-			\param rhs The right-hand side of the operator.
-			\returns The result of the comparison.
-		*/
-		bool operator()( const couple<T>& lhs, const couple<T>& rhs ) const
-		{
-			return lhs[0]<rhs[0] || (lhs[0]==rhs[0] && lhs[1]<rhs[1]);
-		}
-	};
-
 	/** Empty constructor.
 		Leave the elements default-initialized.
 	*/
@@ -69,11 +54,11 @@ public:
 
 	/** Get an element from the couple.
 	*/
-	inline T& operator[]( const unsigned int i ) { return array[ i ]; }
+	inline T& operator[]( const std::size_t i ) { return array[ i ]; }
 
 	/** Get an element from a couple.
 	*/
-	inline const T& operator[]( const unsigned int i ) const { return array[ i ]; }
+	inline const T& operator[]( const std::size_t i ) const { return array[ i ]; }
 
 	/** Get the first element.
 	*/

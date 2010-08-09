@@ -33,7 +33,7 @@ Copyright (c) 2010 Marius Elvert
 
 namespace replay {
 	
-/**Binary IStream Wrapper.
+/** Binary input stream wrapper.
 	Allows wrapping of standard streams for binary reading.
 */
 
@@ -109,7 +109,7 @@ public:
 
 };
 
-/**Binary OStream Wrapper.
+/** Binary output stream Wrapper.
 	Allows wrapping of standard streams for binary writing.
 */
 template < class ostream > class obstream

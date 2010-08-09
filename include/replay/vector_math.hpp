@@ -90,6 +90,9 @@ namespace replay {
 	{
 	public:
 		/** Evalutate the predicate.
+			\param lhs The left-hand side of the operator.
+			\param rhs The right-hand side of the operator.
+			\returns The result of the comparison.
 		*/
 		bool operator()( const ArrayType& lhs, const ArrayType& rhs ) const
 		{
