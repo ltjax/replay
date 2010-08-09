@@ -36,10 +36,15 @@ namespace replay {
 
 /** Compute a minimal-area bounding rectangle of a 2D convex hull using a rotating calipers algorithm.
 	This algorithm runs in linear time.
+	\note This does not work on simple point sets. Construct the convex hull before using this, e.g., using replay::math::gift_wrap().
 */
 class bounding_rectangle_algorithm
 {
 public:
+	/** Run the algorithm.
+		\param hull A pointer to the convex hull.
+		\param n The number of points on the convex hull.
+	*/
 	bounding_rectangle_algorithm( const vector2f* hull, std::size_t n )
 		: hull(hull),n(n)
 	{
@@ -83,11 +88,15 @@ public:
 		return result;
 	}
 
+	/** Return the minimum of the bounding box under the rotation given by the matrix.
+	*/
 	const vector2f& get_min() const
 	{
 		return best.min;
 	}
 
+	/** Return the maximum of the bounding box under the rotation given by the matrix.
+	*/
 	const vector2f& get_max() const
 	{
 		return best.max;
