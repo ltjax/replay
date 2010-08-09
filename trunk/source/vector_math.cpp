@@ -36,41 +36,6 @@ Copyright (c) 2010 Marius Elvert
 
 namespace {
 
-/** Compute the circumcenter of a triangle going through [0,0,0], u, and v.
-*/
-inline bool construct_circumcenter( const replay::vector3f& u, const replay::vector3f& v, replay::vector3f& center )
-{
-	using namespace replay;
-
-	// Solve 0.5u + a*(u x(u x v)) = 0.5v + b*(v x(u x v))
-	vector3f n=vector3f::cross_product(u,v);
-	vector3f un=vector3f::cross_product(u,n);
-	vector3f vn=vector3f::cross_product(v,n);
-
-	// This results in an overdetermined system M, so premultiply by M^T
-	// Setup a matrix
-	float m11 = un.squared();
-	float m12 = -(vn|un);
-	float m22 = vn.squared();
-
-	float det = m11*m22-m12*m12;
-
-	// Needs to be invertible
-	if ( math::near_zero( det ) )
-		return false;
-
-	// compute the right side of the equation
-	vector3f d=u-v;
-	float r1 = 0.5f*-(d|un);
-	float r2 = 0.5f*d|vn;
-
-	// compute 'a'
-	float a = (m22*r1 - m12*r2)/det;
-
-	center = 0.5f*u + a*un;
-	return true;
-}
-
 /** Compute the square distance of a point p to a segment from 0,0 to t.
 */
 inline float square_distance_point_segment( const replay::vector2f& t, const replay::vector2f& p )
@@ -148,107 +113,6 @@ void replay::math::minimal_sphere( vector3f* p, std::size_t n, vector3f& m, floa
 	minimal_ball<float,vector3f,3> mb( range, 1e-15f );
 	m = mb.center();
 	r = mb.square_radius();
-}
-
-bool replay::math::construct_circumcircle( const vector3f& a, const vector3f& b, const vector3f& c,
-													vector3f& m, float& square_radius )
-{
-	vector3f db=b-a, dc=c-a;
-
-	if ( !construct_circumcenter( db, dc, m ) )
-		return false;
-
-	square_radius = m.squared();
-	m+=a;
-
-	return true;
-}
-
-boost::tuple<replay::vector3f,float> replay::math::construct_sphere( boost::array<replay::vector3f,4> P )
-{
-	boost::array<float,4> Sqr;
-
-
-	// compute the square of all points
-	for ( int i=0; i<4; ++i )
-		Sqr[i]=P[i].squared();
-
-	const float m15 = replay::matrix4(
-		Sqr[0], P[0][0], P[0][1], P[0][2],
-		Sqr[1], P[1][0], P[1][1], P[1][2],
-		Sqr[2], P[2][0], P[2][1], P[2][2],
-		Sqr[3], P[3][0], P[3][1], P[3][2] ).determinant();
-
-	// we no longer need the values intact..
-	// so subtract the last row from the first three, eliminating 3 ones in the last column of the other minors
-	for ( int i=0; i<3; ++i )
-	{
-		Sqr[i]-=Sqr[3];
-		P[i]-=P[3];
-	}
-
-	const float m11 = det3(
-		P[0][0], P[0][1], P[0][2],
-		P[1][0], P[1][1], P[1][2],
-		P[2][0], P[2][1], P[2][2] );		
-
-	const float m12 = det3(
-		Sqr[0], P[0][1], P[0][2],
-		Sqr[1], P[1][1], P[1][2],
-		Sqr[2], P[2][1], P[2][2] );
-
-	const float m13 = det3(
-		Sqr[0], P[0][0], P[0][2],
-		Sqr[1], P[1][0], P[1][2],
-		Sqr[2], P[2][0], P[2][2] );
-
-	const float m14 = det3(
-		Sqr[0], P[0][0], P[0][1],
-		Sqr[1], P[1][0], P[1][1],
-		Sqr[2], P[2][0], P[2][1] );
-
-	boost::tuple<replay::vector3f,float> result;
-
-	if ( !replay::math::near_zero( m11 ) )
-	{
-		const float c = 0.5f / m11;
-		result.get<0>().set( c*m12, -c*m13, c*m14 );
-		result.get<1>() = result.get<0>().squared() - m15/m11;
-	}
-	else
-	{
-		// points are coplanar
-		result.get<1>() = -1.f;
-	}
-
-	return result;
-}
-
-replay::vector3f replay::math::construct_perpendicular( const vector3f& x )
-{
-	int p = 0;
-	float m = math::abs( x[ 0 ] );
-	float t;
-
-	for ( int i = 1; i < 3; ++i )
-	{
-		t = abs( x[ i ] );
-		if ( m < t )
-		{
-			m = t;
-			p = i;
-		}
-	}
-
-	int q = (p + 1)%3;
-	int r = (q + 1)%3;
-
-    vector3f result;
-	result[ p ] = -x[ q ];
-	result[ q ] = x[ p ];
-	result[ r ] = 0.f;
-
-	return result;
 }
 
 void replay::math::decompose_rotational_matrix( const matrix3& m, quaternion& result )
@@ -557,40 +421,6 @@ void replay::math::extract_frustum( const matrix4& scene, plane3* frustum )
 
 }
 
-unsigned int replay::math::gift_wrap2( vector3f* point, unsigned int count )
-{
-	unsigned int index = 0;
-
-	// find the starting index
-	index = std::min_element( point, point + count,
-		vector3f::less() ) - point;
-
-	std::swap( point[ index ], point[ 0 ] );
-
-	for ( unsigned int j = 0; j < (count-1); ++j )
-	{
-		// invalidate the index
-		index = count + 1;
-
-		// pick a new index if it's unequal to the last point and if it's the first valid one, or a better one
-		// the latter means it's right of the last line
-		for ( unsigned int i = 0; i < count; ++i )
-			if ( i != j && ( (index > count) || ( math::det( math::splice2( point[ index ]-point[ j ] ),
-				math::splice2( point[ i ]-point[ j ] ) ) < 0.f )) )
-				index = i;
-
-		// we closed the loop
-		if ( index == 0 )
-			return j + 1;
-
-		std::swap( point[ index ], point[ j + 1 ] );
-	}
-
-	// all points are on the convex hull
-	return count;
-}
-
-
 unsigned int replay::math::convex_hull_contains( vector2f* hull, unsigned int hullsize,
 												const vector2f& point, const float threshold )
 {
@@ -605,52 +435,59 @@ unsigned int replay::math::convex_hull_contains( vector2f* hull, unsigned int hu
 	return 1;
 }
 
-unsigned int replay::math::gift_wrap( vector2f* point, unsigned int count )
+const replay::vector3f replay::math::construct_perpendicular( const vector3f& x )
 {
-	unsigned int index = 0;
+    vector3f result;
+	std::size_t p = 0;
+	float m = math::abs( x[ 0 ] );
 
-	// find the starting index
-	index = std::min_element( point, point + count,
-		vector2f::less() ) - point;
-
-	std::swap( point[ index ], point[ 0 ] );
-
-	for ( unsigned int j = 0; j < (count-1); ++j )
+	// Find the maximum element
+	for ( std::size_t i=1; i<3; ++i )
 	{
-		// invalidate the index
-		index = count + 1;
-
-		// pick a new index if it's unequal to the last point and if it's the first valid one, or a better one
-		// the latter means it's right of the last line
-		for ( unsigned int i = 0; i < count; ++i )
+		register float t = abs( x[ i ] );
+		if ( m < t )
 		{
-			if ( i != j )
-			{
-				if ( index > count )
-				{
-					index = i;
-					continue;
-				}
-
-				const vector2f d = point[ i ]-point[ j ];
-
-				if ( math::det( point[ index ]-point[ j ], d ) < 0.f )
-				{
-					index = i;
-				}
-			}
-
+			m = t;
+			p = i;
 		}
-
-		// we closed the loop
-		if ( index == 0 )
-			return j + 1;
-
-		std::swap( point[ index ], point[ j + 1 ] );
 	}
 
-	// all points are on the convex hull
-	return count;
+	int q = (p+1)%3;
+	int r = (q+1)%3;
+
+	result[p] = -x[q];
+	result[q] = x[p];
+	result[r] = 0.f;
+
+	return result;
+}
+
+std::size_t replay::math::gift_wrap( vector2f* point, std::size_t n )
+{
+	// No need to construct a hull
+	if ( n < 3 )
+		return n;
+
+	// Find the starting point on the convex hull
+	std::size_t candidate = std::min_element( point, point+n, array_less<vector2f,2>() ) - point;
+	std::swap( point[0], point[candidate] ); // move it to the front
+
+	// Find all other points
+	for ( std::size_t k=1; k<n; ++k )
+	{
+		candidate=k;
+		for ( std::size_t i=k+1; i<n; ++i )
+			if ( replay::math::det( point[candidate]-point[k-1], point[i]-point[candidate] ) < 0.f )
+				candidate=i;
+
+		// Try to close the hull
+		if ( k > 1 && replay::math::det( point[candidate]-point[k-1], point[0]-point[candidate] ) < 0.f )
+			return k;
+
+		std::swap( point[k], point[candidate] );
+	}
+
+	return n;
 }
 
 replay::vector3f replay::math::intersect_3planes( const plane3& a, const plane3& b, const plane3& c )
@@ -663,18 +500,6 @@ replay::vector3f replay::math::intersect_3planes( const plane3& a, const plane3&
 	Temp.invert();
 
 	return Temp * -vector3f( a.d, b.d, c.d );
-}
-
-void replay::math::construct_circle( const vector2f& a, const vector2f& b, const vector2f& c,
-									 vector2f& m, float& radius )
-{
-	line2 u((a+b)*0.5f,complement(b-a));
-	line2 v((a+c)*0.5f,complement(c-a));
-
-	if ( !intersect_line2( u, v, m ) )
-		radius = -1.f; // error - points are colinear
-	else
-		radius = magnitude(a-m);
 }
 
 std::ostream& replay::operator<<( std::ostream& cout, const replay::vector2f& v )
@@ -692,7 +517,7 @@ bool replay::math::intersect_line2( const line2& a, const line2& b, vector2f& re
 	float denom = det(a.direction,b.direction);
 
 	// lines parallel?
-	if ( near_zero( denom ) )
+	if ( fuzzy_zero( denom ) )
 		return false;
 
 	float num = det(b.origin-a.origin,b.direction);
@@ -709,7 +534,7 @@ float replay::square_distance( const line3& la, const line3& lb )
 	float length = magnitude(comp);
 
 	// parallel or equal
-	if ( math::near_zero(length) )
+	if ( math::fuzzy_zero(length) )
 	{
 		// find a reference point 
 		vector3f ref = find_closest_point( la, lb.origin );

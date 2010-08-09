@@ -100,9 +100,9 @@ replay::box_packer::node::insert( const couple< int >& size, int padding  )
 
 
 /** Create a new box packer.
-	\param width the width of the area to pack on
-	\param height the height of the area to pack on
-	\param padding space to be left between packed items
+	\param width The width of the area to pack in
+	\param height The height of the area to pack in
+	\param padding Space to be left between rectangles
 */
 replay::box_packer::box_packer( int width, int height, int padding )
 : root( new node( box< int >( padding, padding, width-padding, height-padding ) ) ), padding( padding )
@@ -135,7 +135,7 @@ replay::box_packer::pack( int width, int height )
 }
 
 /** Pack an item of the given size.
-	If there is no more space left to pack the given item, the function
+	This is the exception free variant: if there is no more space left to pack the given item, the function
 	will return false.
 	\param width The width of the item to pack.
 	\param height The height of the item to pack.

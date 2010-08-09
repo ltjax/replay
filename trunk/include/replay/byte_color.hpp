@@ -36,6 +36,8 @@ namespace replay {
 class byte_color4
 {
 public:
+	/** 8-bit unsigned integer.
+	*/
 	typedef unsigned char	byte;
 
 	/** 32-bit unsigned integer.

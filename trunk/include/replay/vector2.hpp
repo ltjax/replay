@@ -39,27 +39,6 @@ template < class type > class vector2
 	type						data[ 2 ];
 public:
 
-	/** a component wise less predicate.
-	*/
-	class less
-	{
-	public:
-		/** does the predicate thing.
-		*/
-		bool operator ()( const vector2< type >& a, const vector2< type >& b ) const
-		{
-			for ( unsigned int i = 0; i < 2; ++i )
-			{
-				if ( a.data[ i ] < b.data[ i ] )
-					return true;
-				else if ( a.data[ i ] > b.data[ i ] )
-					return false;
-			}
-
-			return false;
-		}
-	};
-
 	/** Get a pointer to the internal array.
 	*/
 	inline type*		ptr() { return data; }

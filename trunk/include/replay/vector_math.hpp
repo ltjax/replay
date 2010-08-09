@@ -80,6 +80,31 @@ namespace replay {
 			+ l.normal[ 2 ] * r[ 14 ] + l.d *           r[ 15 ] );
 	}
 
+	/** Component wise less predicate.
+		Does a lexical comparision between constant-size arrays, for example n-dimensional vectors.
+		The type to be used only needs have operator[] available.
+		\ingroup Math
+	*/
+	template < class ArrayType, std::size_t n >
+	class array_less
+	{
+	public:
+		/** Evalutate the predicate.
+		*/
+		bool operator()( const ArrayType& lhs, const ArrayType& rhs ) const
+		{
+			for ( std::size_t i=0; i<n; ++i )
+			{
+				if ( lhs[i] < rhs[i] )
+					return true;
+				else if ( lhs[i] > rhs[i] )
+					return false;
+			}
+
+			return false;
+		}
+	};
+
 namespace math {
 
 
@@ -109,7 +134,7 @@ namespace math {
 	*/
 	void						decompose_rotational_matrix( const matrix4& m, quaternion& result ); 
 
-	/** compute the determinante of a 2x2 matrix given as two vectors.
+	/** Compute the determinante of a 2x2 matrix given as two vectors.
 		\ingroup Math
 	*/
 	inline float				det( const vector2f& a, const vector2f& b )
@@ -117,7 +142,7 @@ namespace math {
 		return a[ 0 ] * b[ 1 ] - a[ 1 ] * b[ 0 ];
 	}
 
-	/** compute the determinante of a 2x2 matrix given as 4 values.
+	/** Compute the determinante of a 2x2 matrix given as 4 values.
 		\ingroup Math
 	*/
 	inline float				det( const float a, const float b, const float c, const float d )
@@ -126,13 +151,13 @@ namespace math {
 	}
 
 	
-	/** setup a perspective matrix for homogenous coordinates.
+	/** Setup a perspective matrix for homogenous coordinates.
 		\ingroup Math
 	*/
 	void						set_perspective_matrix( matrix4& matrix, float fovy,
 										float aspect, float near, float far );
 
-	/** setup a perspective matrix for homogenous coordinates.
+	/** Setup a perspective matrix for homogenous coordinates.
 		\ingroup Math
 	*/
 	inline matrix4				make_perspective_matrix( float fovy,
@@ -143,13 +168,13 @@ namespace math {
 		return result;
 	}
 
-	/** setup an orthographic matrix for homogenous coordinates.
+	/** Setup an orthographic matrix for homogenous coordinates.
 		\ingroup Math
 	*/
 	void						set_orthographic_matrix( matrix4& matrix, const fcouple& width,
 										const fcouple& height, const fcouple& depth );
 
-	/** setup an orthographic matrix for homogenous coordinates.
+	/** Setup an orthographic matrix for homogenous coordinates.
 		\ingroup Math
 	*/
 	inline matrix4				make_orthographic_matrix( const fcouple& width,
@@ -160,10 +185,11 @@ namespace math {
 		return result;
 	}
 
-	/** construct a vector that is perpendicular to the given one.
+	/** Construct a vector that is perpendicular to the given one.
+		In general, the resulting vector will be shorter than the given one.
 		\ingroup Math
 	*/
-	vector3f					construct_perpendicular( const vector3f& x );
+	const vector3f				construct_perpendicular( const vector3f& x );
 
 
 	/** vector component wise mult by sign.
@@ -242,21 +268,15 @@ namespace math {
 
 	/** Find a 2D convex hull of a set of 2d vectors using the gift wrap algorithm.
 		The points are reordered so that the first points make up a convex hull of the set.
+		The resulting hull is in counter clockwise order.
+		This algorithm is output sensitive in its runtime: it will perform a number of n*k steps,
+		where n is the number of points, and k is the number of points on the convex hull.
 		\param points The points to find the convex hull of.
 		\param count The number of points in the set.
 		\return The number of points that make up the convex hull.
 		\ingroup Math
 	*/
-	unsigned int				gift_wrap2( vector3f* points, unsigned int count );
-
-	/** Find a 2D convex hull of a set of 2d vectors using the gift wrap algorithm.
-		The points are reordered so that the first points make up a convex hull of the set.
-		\param points The points to find the convex hull of.
-		\param count The number of points in the set.
-		\return The number of points that make up the convex hull.
-		\ingroup Math
-	*/
-	unsigned int				gift_wrap( vector2f* points, unsigned int count );
+	std::size_t					gift_wrap( vector2f* points, std::size_t count );
 
 
 	/** Checks whether the given point is inside the given convex hull.
@@ -269,24 +289,6 @@ namespace math {
 	*/
 	bool						intersect_line2( const line2& a, const line2& b, vector2f& result );
 
-	/** Compute a sphere from 4 non-coplanar points.
-		\returns The square of the radius and center if the points are not coplanar, otherwise the center is undefined and the radius is negative.
-		\ingroup Math
-	*/
-	boost::tuple<replay::vector3f,float>	construct_sphere( boost::array<replay::vector3f,4> P );
-
-	/** Construct a circle from three points.
-
-		If the points are colinear, a negative radius is returned.
-		\ingroup Math
-	*/
-	void						construct_circle( const vector2f& a, const vector2f& b, const vector2f& c,
-													vector2f& m, float& radius );
-
-	/** Construct the circumcircle of a triangle.
-	*/
-	bool						construct_circumcircle( const vector3f& a, const vector3f& b, const vector3f& c,
-													vector3f& m, float& square_radius );
 
 	/** Construct the minimal sphere containing a set of points using Welzl's algorithm.
 		Expected linear runtime.
@@ -372,34 +374,34 @@ float						square_distance( const line3& line, const vector3f& point );
 */
 float						square_distance( const vector3f& point0, const vector3f& point1 );
 
-/** finds the square of the euclidean distance of two 3d lines.
+/** Compute the square of the euclidean distance of two 3d lines.
 */
 float						square_distance( const line3& la, const line3& lb );
 
-/** finds the euclidean distance of a line and a point.
+/** Compute the euclidean distance of a line and a point.
 	\ingroup Math
 */
-float						distance( const line3& line, const vector3f& point );
+float						distance( const replay::line3& line, const replay::vector3f& point );
 
 /** Compute the signed distance of a plane and a point. 
 	If the plane's normal is unit-length, the absolute of this
 	distance is the euclidean distance.
 	\ingroup Math
 */
-float						distance( const plane3& p, const vector3f& point );
+float						distance( const replay::plane3& p, const replay::vector3<float>& point );
 
 
 /** Compute the euclidean distance of two points.
 	\ingroup Math
 */
-inline float				distance( const vector3f& lhs, const vector3f& rhs ) { return std::sqrt(square_distance(lhs,rhs)); }
+inline float				distance( const replay::vector3f& lhs, const replay::vector3f& rhs ) { return std::sqrt(square_distance(lhs,rhs)); }
 
-/** compute the length of a vector. (2-norm)
+/** Compute the euclidean length of a vector.
 	\ingroup Math
 */
 float						magnitude( const vector2f& vector );
 
-/** compute the length of a vector. (2-norm)
+/** Compute the euclidean length of a vector.
 	\ingroup Math
 */
 float						magnitude( const vector3f& vector );

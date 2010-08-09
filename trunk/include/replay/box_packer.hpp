@@ -35,7 +35,10 @@ Copyright (c) 2010 Marius Elvert
 namespace replay
 {
 
-/** 2d box packer.
+/** A box packer for 2-dimensions.
+	This algorithm can be used to position a set of axis-aligned rectangles in the plane,
+	so that they do not overlap and that all rectangles together need only a small bounding box.
+	It can be used to generate texture atlases.
 	This uses a first fit packing algorithm.
 */
 class box_packer :

@@ -39,6 +39,8 @@ Copyright (c) 2010 Marius Elvert
 
 namespace replay {
 
+/** Loading and saving functions for raster images.
+*/
 namespace pixbuf_io
 {
 	/** Exception that is thrown on read errors.
@@ -47,7 +49,9 @@ namespace pixbuf_io
 		public std::runtime_error
 	{
 	public:
-		read_error( const std::string& str ) : std::runtime_error(str) {}
+		/** Initialize with an error string.
+		*/
+		explicit read_error( const std::string& str ) : std::runtime_error(str) {}
 	};
 
 	/** Exception that is thrown on write errors.

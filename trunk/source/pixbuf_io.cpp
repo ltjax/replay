@@ -309,38 +309,6 @@ tga_header::load_type2( replay::ibstream<std::istream>& file )
 	return result;
 }
 
-replay::shared_pixbuf
-tga_header::load( replay::ibstream<std::istream>& file )
-{
-	using namespace replay;
-
-	file >> id_length >> colormap_type >> image_type;
-
-	// colormaps are not supported
-	if ( colormap_type != 0 )
-		throw pixbuf_io::unrecognized_format();
-
-	replay::shared_pixbuf result;
-
-	switch ( image_type )
-	{
-	// uncompressed, unmapped BGR image
-	case 2: result=load_type2( file ); break;
-
-	// FIXME: add this
-	// compressed, unmapped 
-	//case 10: load_type10( dst, file ); break;
-
-	default:
-		throw pixbuf_io::unrecognized_format();
-	};
-
-	if ( image_descriptor & (1 << 5 ) )
-		result->flip();
-
-	return result;
-}
-
 /** Deserialize a TGA encoded file.
 */
 replay::shared_pixbuf
@@ -393,6 +361,40 @@ replay::pixbuf_io::save_to_file( const boost::filesystem::path& filename, const 
 	{
 		throw pixbuf_io::unrecognized_format();
 	}
+}
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+
+replay::shared_pixbuf
+tga_header::load( replay::ibstream<std::istream>& file )
+{
+	using namespace replay;
+
+	file >> id_length >> colormap_type >> image_type;
+
+	// colormaps are not supported
+	if ( colormap_type != 0 )
+		throw pixbuf_io::unrecognized_format();
+
+	replay::shared_pixbuf result;
+
+	switch ( image_type )
+	{
+	// uncompressed, unmapped BGR image
+	case 2: result=load_type2( file ); break;
+
+	// FIXME: add this
+	// compressed, unmapped 
+	//case 10: load_type10( dst, file ); break;
+
+	default:
+		throw pixbuf_io::unrecognized_format();
+	};
+
+	if ( image_descriptor & (1 << 5 ) )
+		result->flip();
+
+	return result;
 }
 
 void
@@ -478,3 +480,5 @@ replay::pixbuf_io::load_from_file( const boost::filesystem::path& filename )
 	
 	throw pixbuf_io::unrecognized_format();
 }
+
+#endif

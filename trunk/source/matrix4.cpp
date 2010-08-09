@@ -372,7 +372,7 @@ replay::matrix4::determinant() const
 	unsigned int index = 0;
 
 	// find the first column that has the 4th element enequal to zero
-	while ( index < 4 && math::near_zero( data[ index*4+3 ] ) )
+	while ( index < 4 && math::fuzzy_zero( data[ index*4+3 ] ) )
 		++index;
 
 	if ( index == 4 )
@@ -396,7 +396,7 @@ replay::matrix4::determinant() const
 		while ( index < 3 )
 		{
 			float factor = temp.data[ index*4+3 ];
-			if ( !math::near_zero( factor ) )
+			if ( !math::fuzzy_zero( factor ) )
 			{
 				factor = -(factor / last[ 3 ]);
                 temp.set_column( index, temp.get_column( index ) + factor*last );

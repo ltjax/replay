@@ -49,7 +49,14 @@ private:
 
 public:
 
+	/** An iterator to use with this type.
+		\note This is currently implemented as a raw pointer.
+	*/
 	typedef object_type*		iterator;
+
+	/** An immutable iterator to use with this type.
+		\note This is currently implemented as a const raw pointer.
+	*/
 	typedef const object_type*	const_iterator;
 
 	/** Fill the table with the given value.
