@@ -271,7 +271,7 @@ replay::pixbuf::create( unsigned int x, unsigned int y, color_format format )
 	return result;
 }
 
-/** return a part of this image.
+/** Return a section of this image.
 	\param x Source offset x-coordinate.
 	\param y Source offset y-coordinate.
 	\param w Width of the part to copy.
@@ -289,7 +289,7 @@ replay::pixbuf::get_sub_image( unsigned int x, unsigned int y, unsigned int w, u
     return result;
 }
 
-/**	copy a part of one image to another.
+/**	Copy a part of one image to another.
 	\param dx Destination x-coordinate.
 	\param dy Destination y-coordinate.
 	\param w Width of the part to copy.

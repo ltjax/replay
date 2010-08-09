@@ -265,7 +265,7 @@ replay::quaternion::shortest_arc( const vector3f& a, const vector3f& b )
 {
 	const float cos = a | b;
 
-	if ( math::near( cos, 1.f ) )
+	if ( math::fuzzy_equals( cos, 1.f ) )
 		return quaternion();
 
 	const vector3f axis = normalized( a * b );
@@ -310,7 +310,7 @@ replay::quaternion::slerp( const replay::quaternion& a, const replay::quaternion
 
 	if ( dot < 0.f )
 	{
-		if ( math::near( dot, -1.f ) ) // nlerp
+		if ( math::fuzzy_equals( dot, -1.f ) ) // nlerp
 		{
 			quaternion result( a*(1.f-x) - b*x );
 			return result.normalize();
@@ -326,7 +326,7 @@ replay::quaternion::slerp( const replay::quaternion& a, const replay::quaternion
 	}
 	else
 	{
-		if ( math::near( dot, 1.f ) ) // nlerp
+		if ( math::fuzzy_equals( dot, 1.f ) ) // nlerp
 		{
 			quaternion result( a*(1.f-x) + b*x );
 			return result.normalize();

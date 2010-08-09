@@ -29,7 +29,7 @@ Copyright (c) 2010 Marius Elvert
 
 unsigned int replay::math::solve_quadratic_eq( float a, float b, float c, fcouple& result, float epsilon )
 {
-	if ( !math::near_zero( a, epsilon ) )
+	if ( !math::fuzzy_zero( a, epsilon ) )
 	{
 		float r = b*b - 4*a*c;
 
@@ -56,7 +56,7 @@ unsigned int replay::math::solve_quadratic_eq( float a, float b, float c, fcoupl
 			}
 		}
 	}
-	else if ( !math::near_zero( b, epsilon ) )
+	else if ( !math::fuzzy_zero( b, epsilon ) )
 	{
 		result[ 0 ] = result[ 1 ] = -c/b;
 		return 1;
@@ -71,10 +71,15 @@ unsigned int replay::math::solve_quadratic_eq( float a, float b, float c, fcoupl
 /** \mainpage Replay
 	\section section_about About
 	Replay is a bootstrap library for game development. It mostly provides game development
-	oriented mathematical tools, such as \ref replay::vector3, \ref replay::quaternion and, built on those, \ref replay::affinity.
+	oriented mathematical tools, such as \ref replay::vector3, \ref replay::quaternion and,
+	built on those, \ref replay::affinity.
 
-	\section section_dependancies Dependancies
-	Replay depends on libpng, expat and boost.
+	The library is currently hosted on google code: http://code.google.com/p/replay/
+
+	\section section_dependencies Dependencies
+	Replay depends on libpng (and therefore libpng) and boost.
+
+
 */
 
 

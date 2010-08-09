@@ -137,5 +137,8 @@
     <ClInclude Include="..\..\include\replay\pixbuf_io.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\replay\bounding_rectangle.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

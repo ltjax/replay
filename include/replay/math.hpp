@@ -119,25 +119,26 @@ namespace math {
 	/** return true if the value is within a treshold of zero.
 		\ingroup Math
 	*/
-	inline bool near_zero( const float value, const float epsilon )
+	inline bool fuzzy_zero( const float value, const float epsilon )
 	{
-		return abs( value ) < epsilon;
+		return abs(value) < epsilon;
 	}
 
 	/** return true if the value is within a treshold of zero.
 		\ingroup Math
 	*/
-	inline bool near_zero( const float value )
+	inline bool fuzzy_zero( const float value )
 	{
-		return abs( value ) < default_epsilon;
+		return abs(value) < default_epsilon;
 	}
 
-	/** return true if a is within a treshold of b.
+	/** Return true if a is within a treshold of b.
+		This is used to compare floating point numbers.
 		\ingroup Math
 	*/
-	inline bool near( const float a, const float b )
+	inline bool fuzzy_equals( const float a, const float b, const float epsilon=default_epsilon )
 	{
-		return abs( a - b ) < default_epsilon;
+		return abs(a-b) < epsilon;
 	}
 
 	/** check if the value is in the range. borders count as in.

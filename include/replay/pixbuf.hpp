@@ -33,7 +33,8 @@ Copyright (c) 2010 Marius Elvert
 
 namespace replay {
 
-/** pixel based image.
+/** Pixel based image.
+	\note The image data is stored row-wise without padding, beginning with the bottom-most. This is different from, e.g., the Windows API, where images are stored with the top-most row first.
 */
 class pixbuf :
 	public boost::noncopyable
@@ -47,14 +48,17 @@ class pixbuf :
 	
 public:
 	friend class pixbuf::internal;
+
+	/** A shared (reference-counted) pointer to a pixbuf.
+	*/
 	typedef boost::shared_ptr<pixbuf>	shared_pixbuf;
 
 	/** Color-Format.
 	*/
 	enum color_format {
-		greyscale, /**< greyscale (8-bit). */
-		rgb, /**< Red,Green,Blue (24-bit). */
-		rgba /**< Red,Green,Blue and Alpha (32-bit). */
+		greyscale, /**< Greyscale (8-bit). */
+		rgb, /**< Red, Green, Blue (24-bit). */
+		rgba /**< Red, Green, Blue and Alpha (32-bit). */
 	};
 
 	/** 8-bit unsigned int.

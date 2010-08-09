@@ -34,7 +34,7 @@ Copyright (c) 2010 Marius Elvert
 
 namespace replay {
 
-/** An iso-box in \f$R^3\f$.
+/** An iso-box in \f$\mathbb{R}^3\f$.
 	Represents the intersection of intervals on the 3 principal axes.
 	\ingroup Math
 */
@@ -45,12 +45,13 @@ class aabb :
 
 public:
 	/** Classification relative to a plane.
+		\see classify
 	*/
 	enum clsfctn
 	{
-		negative, /**< all points have a negative distance. */
-		positive, /**< all points have a positive distance. */
-		spanning  /**< the points have mixed signs in their distances. */
+		negative, /**< All points have a negative distance to the plane. */
+		positive, /**< All points have a positive distance to the plane. */
+		spanning  /**< The points have mixed signs in their distances to the plane, so the box intersects the plane. */
 	};
 									aabb( );
 	explicit						aabb( const float extends );

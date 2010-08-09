@@ -33,7 +33,8 @@ Copyright (c) 2010 Marius Elvert
 namespace replay {
 
 /** 3-dimensional plane.
-	All \f$x \in R^3\f$ that satisfy the equation \f$normal*x + d = 0\f$.
+	All \f$\vec{x} \in \mathbb{R}^3\f$ that satisfy the equation \f$\langle\vec{\mathsf{normal}},\vec{x}\rangle + \mathsf{d} = 0\f$.
+	The distance to a plane can be computed by \ref replay::distance().
 	\ingroup Math
 */
 class plane3
@@ -63,7 +64,7 @@ class plane3
 		*/
 		void				flip();
 		
-		/** Clear all components to 0, effectively degenerating the plane into the \f$R^3\f$.
+		/** Clear all components to 0, effectively degenerating the plane into the \f$\mathbb{R}^3\f$.
 		*/
 		void				clear();
 
@@ -96,11 +97,11 @@ class plane3
 		*/
 		static plane3		construct_from_points( const vector3f& p0, const vector3f& p1, const vector3f& p2 );
 
-		/** exception class.
+		/** Exception class.
 		*/
 		class invalid_plane : std::exception {};
 
-		/** convert the equation into hessian normal form.
+		/** Convert the equation into hessian normal form.
 		*/
 		void				hnf( const float epsilon = math::default_epsilon );
 };

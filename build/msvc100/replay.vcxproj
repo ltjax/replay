@@ -232,6 +232,7 @@
     <ClInclude Include="..\..\include\replay\matrix2.hpp" />
     <ClInclude Include="..\..\include\replay\matrix3.hpp" />
     <ClInclude Include="..\..\include\replay\matrix4.hpp" />
+    <ClInclude Include="..\..\include\replay\bounding_rectangle.hpp" />
     <ClInclude Include="..\..\include\replay\minimal_sphere.hpp" />
     <ClInclude Include="..\..\include\replay\pixbuf.hpp" />
     <ClInclude Include="..\..\include\replay\pixbuf_io.hpp" />

@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE( quadratic_equation_solver )
 		float b=die();
 		float c=die();
 
-		if ( replay::math::near( a,b ) )
+		if ( replay::math::fuzzy_equals( a,b ) )
 			continue;
 
 		fcouple r;
@@ -125,11 +125,6 @@ BOOST_AUTO_TEST_CASE( circumcircle )
 
 	// Reconstruct it
 	vector3f result_center;
-	float result_radius_square;
-
-	BOOST_REQUIRE( math::construct_circumcircle(a,b,c,result_center,result_radius_square) );
-	BOOST_REQUIRE_SMALL((center-result_center).squared(), 0.001f);
-	BOOST_REQUIRE_CLOSE(std::sqrt(result_radius_square),radius,0.001f );
 
 	equisphere<float,3> s(1e-16f);
 	BOOST_REQUIRE(s.push(a.ptr()));
@@ -141,36 +136,6 @@ BOOST_AUTO_TEST_CASE( circumcircle )
 	BOOST_REQUIRE_SMALL(center_delta.squared(), 0.001f);
 	BOOST_REQUIRE_CLOSE(std::sqrt(s.get_squared_radius()),radius,0.001f);
 
-}
-
-BOOST_AUTO_TEST_CASE( sphere_simple )
-{
-	using namespace replay;
-
-	// A somewhat trivial test case
-	boost::array<vector3f,4> points;
-	points[0].set(1.f,0.f,0.f);
-	points[1].set(0.f,1.f,0.f);
-	points[2].set(0.f,0.f,1.f);
-	points[3].set(0.f,-1.f,0.f);
-
-	boost::tuple<vector3f,float> sphere=math::construct_sphere(points);
-
-	BOOST_REQUIRE_SMALL( sphere.get<0>().squared(), 0.001f );
-	BOOST_REQUIRE_CLOSE( sphere.get<1>(), 1.f, 0.01f );
-
-	// And now a more complicated one
-	float radius=23.f;
-	vector3f center(40.f, 23.f, 71.f);
-	points[0] = center+polar_to_model(40.f,20.f)*radius;
-	points[1] = center+polar_to_model(110.f,7.f)*radius;
-	points[2] = center+polar_to_model(-67.f,-48.f)*radius;
-	points[3] = center+polar_to_model(23.f,-70.f)*radius;
-
-	sphere=math::construct_sphere(points);
-
-	BOOST_REQUIRE_SMALL( (sphere.get<0>()-center).squared(), 0.001f );
-	BOOST_REQUIRE_CLOSE( sphere.get<1>(), radius*radius, 0.01f );
 }
 
 // Simple test case directly testing the minimal ball solver in 3D

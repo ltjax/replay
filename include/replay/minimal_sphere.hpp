@@ -32,16 +32,19 @@ Copyright (c) 2010 Marius Elvert
 namespace replay {
 
 /** Incrementaly construct a d-dimensional point that is equidistant to all
-	input points, i.e. all points are on the boundary of a d-dimensional sphere.
+	input points. The input points are on the boundary of a d-dimensional sphere.
 	This data structure is numerically robust and will reject point pushes that
 	degenerate the numerical stability (i.e. that are very close to the existing ball).
 	The code is based on the paper 'Fast and Robust Smallest Enclosing Balls' by
 	Bernd Gaertner.
+	\ingroup Math
 */
 template <class RealType, std::size_t d>
 class equisphere
 {
 public:
+	/** Initialize the solver with an error boundary. 1e-15 is a good value to use with floats.
+	*/
 	equisphere( RealType epsilon ) :
 	  m(0), epsilon(epsilon)
 	{
@@ -49,26 +52,36 @@ public:
 		std::fill_n(center[0],d,RealType(0));
 	}
 
+	/** Get the center of the equisphere.
+	*/
 	const RealType* get_center() const
 	{
 		return ( m > 0 ) ? center[m-1] : center[0];
 	}
 
+	/** Get the squared radius of the sphere that is currently equidistant to all constraint points.
+	*/
 	RealType get_squared_radius() const
 	{
 		return ( m > 0 ) ? sqr_radius[m-1] : sqr_radius[0];
 	}
 
+	/** Get the number of points currently used as constraints.
+	*/
 	std::size_t get_support_count() const
 	{
 		return m;
 	}
 
+	/** Remove the last point constraint.
+	*/
 	void pop()
 	{
 		--m;
 	}
 
+	/** Add a point constraint.
+	*/
 	template<class VectorType>
 	bool push( const VectorType& p )
 	{
@@ -190,6 +203,7 @@ private:
 	Bernd Gaertner.
 	It employs the move-to-front heuristic. However, this heuristic
 	is only 'cheap' for std::list containers - otherwise std::rotate is used.
+	\ingroup Math
 */
 template <class RealType, class VectorType, std::size_t d>
 class minimal_ball
