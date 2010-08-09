@@ -1,7 +1,0 @@
-
-==replay::pixbuf_io::unrecognized_format Reference==
-
-{{{
-#include pixbuf_io.hpp
-}}}
-Exception that is thrown when trying to load unsupported image formats. 

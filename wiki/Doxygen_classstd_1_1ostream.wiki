@@ -1,3 +1,0 @@
-
-==std::ostream Reference==
-STL class. 

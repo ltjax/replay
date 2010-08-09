@@ -1,8 +1,0 @@
-
-==std::set Reference==
-STL class. 
-====keys====
-{{{
-  K std::set< K >::keys
-}}}
-  STL member. 

@@ -1,3 +1,0 @@
-
-==std::multiset::reverse_iterator Reference==
-STL iterator class. 

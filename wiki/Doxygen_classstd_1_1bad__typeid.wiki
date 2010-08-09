@@ -1,3 +1,0 @@
-
-==std::bad_typeid Reference==
-STL class. 

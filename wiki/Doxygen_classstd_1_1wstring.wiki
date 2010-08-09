@@ -1,3 +1,0 @@
-
-==std::wstring Reference==
-STL class. 

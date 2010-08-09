@@ -1,6 +1,0 @@
-
-==buffer.hpp Reference==
-
-{{{
-#include cstddef
-}}}

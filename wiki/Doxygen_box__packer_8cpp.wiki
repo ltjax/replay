@@ -1,6 +1,0 @@
-
-==box_packer.cpp Reference==
-
-{{{
-#include replay/box_packer.hpp
-}}}

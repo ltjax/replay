@@ -1,3 +1,0 @@
-
-==std::wios Reference==
-STL class. 

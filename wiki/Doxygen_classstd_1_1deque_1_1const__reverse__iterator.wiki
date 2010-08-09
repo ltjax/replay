@@ -1,3 +1,0 @@
-
-==std::deque::const_reverse_iterator Reference==
-STL iterator class. 

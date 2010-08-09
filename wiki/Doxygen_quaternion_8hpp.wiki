@@ -1,6 +1,0 @@
-
-==quaternion.hpp Reference==
-
-{{{
-#include replay/vector3.hpp
-}}}

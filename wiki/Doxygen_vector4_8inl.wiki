@@ -1,2 +1,0 @@
-
-==vector4.inl Reference==

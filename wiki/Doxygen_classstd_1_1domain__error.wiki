@@ -1,3 +1,0 @@
-
-==std::domain_error Reference==
-STL class. 

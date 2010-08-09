@@ -1,8 +1,0 @@
-
-==std::vector Reference==
-STL class. 
-====elements====
-{{{
-  T std::vector< T >::elements
-}}}
-  STL member. 

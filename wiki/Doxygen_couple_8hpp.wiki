@@ -1,2 +1,0 @@
-
-==couple.hpp Reference==

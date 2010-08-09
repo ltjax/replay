@@ -1,6 +1,0 @@
-
-==vector2.hpp Reference==
-
-{{{
-#include vector2.inl
-}}}

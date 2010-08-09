@@ -1,3 +1,0 @@
-
-==std::basic_istream Reference==
-STL class. 

@@ -1,3 +1,0 @@
-
-==std::istringstream Reference==
-STL class. 

@@ -1,6 +1,0 @@
-
-==minimal_sphere.hpp Reference==
-
-{{{
-#include list
-}}}

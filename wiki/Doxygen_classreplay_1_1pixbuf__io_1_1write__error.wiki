@@ -1,7 +1,0 @@
-
-==replay::pixbuf_io::write_error Reference==
-
-{{{
-#include pixbuf_io.hpp
-}}}
-Exception that is thrown on write errors. 

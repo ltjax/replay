@@ -1,3 +1,0 @@
-
-==std::vector::iterator Reference==
-STL iterator class. 

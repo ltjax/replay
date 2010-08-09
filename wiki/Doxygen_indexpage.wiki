@@ -1,3 +1,0 @@
-
-==index Reference==
-AboutReplay is a bootstrap library for game development. It mostly provides game development oriented mathematical tools, such as replay::vector3, replay::quaternion and, built on those, replay::affinity.DependanciesReplay depends on libpng, expat and boost. 

@@ -1,8 +1,0 @@
-
-==std::deque Reference==
-STL class. 
-====elements====
-{{{
-  T std::deque< T >::elements
-}}}
-  STL member. 

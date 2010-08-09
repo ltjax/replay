@@ -1,6 +1,0 @@
-
-==byte_color.cpp Reference==
-
-{{{
-#include replay/byte_color.hpp
-}}}

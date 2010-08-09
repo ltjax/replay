@@ -1,6 +1,0 @@
-
-==byte_color.hpp Reference==
-
-{{{
-#include memory
-}}}

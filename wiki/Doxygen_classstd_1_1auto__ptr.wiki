@@ -1,8 +1,0 @@
-
-==std::auto_ptr Reference==
-STL class. 
-====ptr====
-{{{
-  T std::auto_ptr< T >::ptr
-}}}
-  STL member. 

@@ -1,6 +1,0 @@
-
-==matrix3.hpp Reference==
-
-{{{
-#include replay/vector3.hpp
-}}}

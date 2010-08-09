@@ -1,7 +1,0 @@
-
-==replay::plane3::invalid_plane Reference==
-
-{{{
-#include plane3.hpp
-}}}
-exception class. 

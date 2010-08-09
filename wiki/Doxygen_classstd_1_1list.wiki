@@ -1,8 +1,0 @@
-
-==std::list Reference==
-STL class. 
-====elements====
-{{{
-  T std::list< T >::elements
-}}}
-  STL member. 

@@ -1,3 +1,0 @@
-
-==std::basic_ostringstream Reference==
-STL class. 

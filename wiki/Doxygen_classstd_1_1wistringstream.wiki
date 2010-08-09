@@ -1,3 +1,0 @@
-
-==std::wistringstream Reference==
-STL class. 

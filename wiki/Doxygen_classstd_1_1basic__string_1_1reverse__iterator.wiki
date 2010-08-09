@@ -1,3 +1,0 @@
-
-==std::basic_string::reverse_iterator Reference==
-STL iterator class. 

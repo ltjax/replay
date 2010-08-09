@@ -1,3 +1,0 @@
-
-==std::deque::iterator Reference==
-STL iterator class. 
