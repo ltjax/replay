@@ -36,7 +36,7 @@ namespace replay {
 
 /** Compute a minimal-area bounding rectangle of a 2D convex hull using a rotating calipers algorithm.
 	This algorithm runs in linear time.
-	\note This does not work on simple point sets. Construct the convex hull before using this, e.g., using replay::math::gift_wrap().
+	\note This does not work on simple point sets. Construct the convex hull before using this, e.g., using \ref replay::math::gift_wrap().
 */
 class bounding_rectangle_algorithm
 {
