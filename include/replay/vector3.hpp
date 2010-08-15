@@ -77,13 +77,13 @@ public:
 	vector3< type >&						set( const type& v );
 
 	// Linear Algebra
-	vector3< type >							operator+( const vector3< type >& operand ) const;	// addition
-	vector3< type >							operator-( const vector3< type >& operand ) const;	// substraction
-	vector3< type >							operator*( const vector3< type >& operand ) const;	// cross product
-	type									operator|( const vector3< type >& operand ) const;	// dot product
-	vector3< type >							operator*( const type& operand ) const;				// scalar product
-	vector3< type >							operator/( const type& operand ) const;				// division
-	vector3< type >							operator-() const;									// inversion
+	vector3< type >							operator+( const vector3< type >& operand ) const;	// Addition
+	vector3< type >							operator-( const vector3< type >& operand ) const;	// Substraction
+	vector3< type >							operator*( const vector3< type >& operand ) const;	// Cross product
+	type									operator|( const vector3< type >& operand ) const;	// Dot product
+	vector3< type >							operator*( const type& operand ) const;				// Scalar product
+	vector3< type >							operator/( const type& operand ) const;				// Division
+	vector3< type >							operator-() const;									// Inversion
 
 											vector3();
 	explicit								vector3( const float value );
@@ -104,7 +104,7 @@ public:
 	void									negate();
 	void									clear();
 
-	/** vector cross product. */
+	/** Vector cross product. */
 	inline static vector3< type >			cross_product( const vector3< type >& a, const vector3< type >& b ) { return a * b; }
 	
 	/** vector dot product. */

@@ -303,6 +303,31 @@ namespace math {
 	*/
 	void						minimal_sphere( vector3f* p, std::size_t n, vector3f& m, float& r );
 
+	/** Matrix decomposition into lower and upper matrices.
+	*/
+	namespace lup {
+		/** Decompose the given matrix into a lower triangular matrix,
+			an upper triangular matrix and a permutation matrix.
+			The decomposition happens mostly in-place: the lower triangular matrix has ones on the diagonal,
+			so these are not explicitly stored and used for the diagonal of the upper triangular matrix.
+			\param m The matrix to be decomposed and the output space for the lower and upper triangular elements.
+			\param p The permutation used for the decomposition.
+			\param epsilon Error value to test for zeros.
+			\returns true, exactly if the decomposition was successful, i.e., when the matrix is not singular.
+		*/
+		bool					decompose( matrix3& m, vector3<std::size_t>& p, float epsilon=default_epsilon );
+
+		/** Solve an equation in LUP decomposed form.
+		*/
+		vector3f				solve( const matrix3& lu, const vector3<std::size_t>& p, const vector3f& rhs );
+
+		/** Solve an equation.
+			The matrix does not need to be decomposed for this form.
+			This is just a convenience function that does the LUP decomposition internally.
+			Do not use is 
+		*/
+		vector3f				solve( matrix3 m, const vector3f& rhs );
+	}
 
 
 	/** Primitive intersection tests.

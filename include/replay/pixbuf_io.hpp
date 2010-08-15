@@ -29,7 +29,7 @@ Copyright (c) 2010 Marius Elvert
 
 #include <string>
 #include <boost/filesystem/path.hpp>
-#include "Pixbuf.hpp"
+#include "pixbuf.hpp"
 
 #if defined(_MSC_VER)
 #  ifndef REPLAY_NO_AUTO_LINK
@@ -40,6 +40,7 @@ Copyright (c) 2010 Marius Elvert
 namespace replay {
 
 /** Loading and saving functions for raster images.
+	\ingroup Imaging
 */
 namespace pixbuf_io
 {
