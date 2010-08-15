@@ -391,3 +391,7 @@ void replay::pixbuf::replace_data( internal* data )
 	delete this->data;
 	this->data = data;
 }
+
+
+/** \defgroup Imaging Image manipulation, loading and saving.
+*/

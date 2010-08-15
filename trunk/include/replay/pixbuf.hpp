@@ -35,6 +35,7 @@ namespace replay {
 
 /** Pixel based image.
 	\note The image data is stored row-wise without padding, beginning with the bottom-most. This is different from, e.g., the Windows API, where images are stored with the top-most row first.
+	\ingroup Imaging
 */
 class pixbuf :
 	public boost::noncopyable

@@ -32,6 +32,7 @@ Copyright (c) 2010 Marius Elvert
 namespace replay {
 
 /** Represents a 32-bit color as a 4 byte array in RGBA.
+	\ingroup Imaging
 */
 class byte_color4
 {

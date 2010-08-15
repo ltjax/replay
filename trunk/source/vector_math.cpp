@@ -576,3 +576,84 @@ float replay::square_distance( const vector3f& point, const boost::array<vector3
 	return sqr_plane_distance + square_distance_point_triangle( u_length, 
 		vector2f(dot(v,t),dot(v,b)), vector2f(dot(p,t),dot(p,b)) );
 }
+
+
+replay::vector3f replay::math::lup::solve( matrix3 m, const vector3f& rhs )
+{
+	vector3<std::size_t> permutation;
+
+	decompose( m, permutation );
+	return solve( m, permutation, rhs );
+}
+
+replay::vector3f replay::math::lup::solve( const matrix3& lu, const vector3<std::size_t>& p, const vector3f& rhs )
+{
+	vector3f y;
+
+	y[0] = rhs[p[0]];
+	y[1] = rhs[p[1]] - lu(1,0)*y[0];
+	y[2] = rhs[p[2]] - lu(2,0)*y[0] - lu(2,1)*y[1];
+
+	vector3f x;
+
+	x[2] = (y[2]) / lu(2,2);
+	x[1] = (y[1] - x[2]*lu(1,2)) / lu(1,1);
+	x[0] = (y[0] - x[1]*lu(0,1) - x[2]*lu(0,2)) / lu(0,0);
+
+	return x;
+}
+
+bool replay::math::lup::decompose( matrix3& m, vector3<std::size_t>& p, float epsilon )
+{
+	std::size_t best=0;
+	p.set(0,1,2);
+
+	// find the pivot in the first row
+	if ( math::abs( m(1,0) ) > math::abs( m(2,0) ) )
+	{
+		if ( math::abs( m(1,0) ) > math::abs( m(0,0) ) ) // row 1 has the biggest element
+		{
+			best = 1;
+			m.swap_rows(0,1);
+		}
+	}
+	else
+	{
+		if ( math::abs( m(2,0) ) > math::abs( m(0,0) ) ) // row 2 has the pivot
+		{
+			best = 2;
+			m.swap_rows(0,2);
+		}
+	}
+
+	// Keep a record of this permutation
+	p[0] = best;
+	p[best] = 0;
+
+	// Bump out if the first divisor is too small
+	float d=m(0,0);
+	if ( fuzzy_zero(d,epsilon) )
+		return false;
+
+	m(1,0) /= d;
+	m(2,0) /= d;
+
+	m(1,1) -= m(1,0)*m(0,1); m(1,2) -= m(1,0)*m(0,2);
+	m(2,1) -= m(2,0)*m(0,1); m(2,2) -= m(2,0)*m(0,2);
+
+	// find the new pivot
+	if ( math::abs( m(1,1) ) < math::abs( m(2,1) ) )
+	{
+		// swap rows again
+		m.swap_rows( 1, 2 );
+		std::swap( p[1],p[2] );
+	}
+
+	if ( fuzzy_zero(m(1,1),epsilon) )
+		return false;
+
+	m(2,1) /= m(1,1);
+	m(2,2) -= m(2,1)*m(1,2);
+
+	return true;
+}
