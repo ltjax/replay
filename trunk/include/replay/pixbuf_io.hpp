@@ -40,11 +40,11 @@ Copyright (c) 2010 Marius Elvert
 namespace replay {
 
 /** Loading and saving functions for raster images.
-	\ingroup Imaging
 */
 namespace pixbuf_io
 {
 	/** Exception that is thrown on read errors.
+		\ingroup Imaging
 	*/
 	class read_error :
 		public std::runtime_error
@@ -56,10 +56,12 @@ namespace pixbuf_io
 	};
 
 	/** Exception that is thrown on write errors.
+		\ingroup Imaging
 	*/
 	class					write_error : public std::exception {};
 
 	/** Exception that is thrown when trying to load unsupported image formats.
+		\ingroup Imaging
 	*/
 	class					unrecognized_format : public std::exception {};
 
