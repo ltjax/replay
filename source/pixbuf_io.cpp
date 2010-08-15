@@ -92,6 +92,7 @@ namespace { // BEGIN PRIVATE NAMESPACE
 } // END PRIVATE NAMESPACE
 
 /** Deserialize a PNG encoded file.
+	\ingroup Imaging
 */
 replay::shared_pixbuf
 replay::pixbuf_io::load_from_png_file( std::istream& file )
@@ -196,6 +197,10 @@ replay::pixbuf_io::load_from_png_file( std::istream& file )
 }
 
 /** Serialize by encoding a PNG file via libpng.
+	\param file The file to serialize to.
+	\param source The image to serialize.
+	\param level Compression level to be used. 0 means no compression, 9 means full compression.
+	\ingroup Imaging
 */
 void
 replay::pixbuf_io::save_to_png_file( std::ostream& file, const pixbuf& source, int level )
@@ -310,6 +315,7 @@ tga_header::load_type2( replay::ibstream<std::istream>& file )
 }
 
 /** Deserialize a TGA encoded file.
+	\ingroup Imaging
 */
 replay::shared_pixbuf
 replay::pixbuf_io::load_from_tga_file( std::istream& file )
@@ -321,6 +327,7 @@ replay::pixbuf_io::load_from_tga_file( std::istream& file )
 }
 
 /** Serialize by encoding a TGA file.
+	\ingroup Imaging
 */
 void
 replay::pixbuf_io::save_to_tga_file( std::ostream& file, const pixbuf& source )
@@ -334,6 +341,9 @@ replay::pixbuf_io::save_to_tga_file( std::ostream& file, const pixbuf& source )
 
 /** Save an image.
 	\note Only TGA and PNG are supported right now.
+	\param filename Path of the file to be saved.
+	\param source The image to be saved.
+	\ingroup Imaging
 */
 void
 replay::pixbuf_io::save_to_file( const boost::filesystem::path& filename, const pixbuf& source )
@@ -450,7 +460,10 @@ tga_header::save( replay::obstream<std::ostream>& file, const replay::pixbuf& so
 }
 
 /** Load an image.
-	\note Format is guessed by the filename extension.
+	The format is guessed from the filename's extension.
+	\note Only TGA and PNG are supported right now.
+	\param filename Path of the file to be loaded.
+	\ingroup Imaging
 */
 replay::shared_pixbuf
 replay::pixbuf_io::load_from_file( const boost::filesystem::path& filename )
