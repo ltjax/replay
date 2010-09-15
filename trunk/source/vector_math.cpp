@@ -512,6 +512,11 @@ std::ostream& replay::operator<<( std::ostream& cout, const replay::vector3f& v 
 	return cout << '(' << v[ 0 ] << ' ' << v[ 1 ] << ' ' << v[ 2 ] << ')';
 }
 
+std::ostream& replay::operator<<( std::ostream& cout, const replay::vector4f& v )
+{
+	return cout << '(' << v[ 0 ] << ' ' << v[ 1 ] << ' ' << v[ 2 ] << ' ' << v[ 3 ] << ')';
+}
+
 bool replay::math::intersect_line2( const line2& a, const line2& b, vector2f& result )
 {
 	float denom = det(a.direction,b.direction);

@@ -434,33 +434,37 @@ float						magnitude( const vector2f& vector );
 */
 float						magnitude( const vector3f& vector );
 
-/** normalize the given vector.
+/** Normalize the given vector.
 	\ingroup Math
 */
 void						normalize( vector3f& vector );
 
-/** normalize the given vector.
+/** Normalize the given vector.
 	\ingroup Math
 */
 void						normalize( vector2f& vector );
 
-/** return a normalized vector.
+/** Return a normalized vector.
 	\ingroup Math
 */
 vector3f					normalized( const vector3f& vector );
 
-/** return a normalized vector.
+/** Return a normalized vector.
 	\ingroup Math
 */
 vector2f					normalized( const vector2f& vector );
 
-/** vector2f stream-out operator.
+/** Stream out a vector2f.
 */
 std::ostream&				operator<<( std::ostream& cout, const replay::vector2f& v );
 
-/** vector3f stream-out operator.
+/** Stream out a vector3f.
 */
 std::ostream&				operator<<( std::ostream& cout, const replay::vector3f& v );
+
+/** Stream out a vector4f.
+*/
+std::ostream&				operator<<( std::ostream& cout, const replay::vector4f& v );
 
 }
 
