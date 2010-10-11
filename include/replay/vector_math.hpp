@@ -434,12 +434,17 @@ float						magnitude( const vector2f& vector );
 */
 float						magnitude( const vector3f& vector );
 
-/** Normalize the given vector.
+/** In-place normalize the given vector.
+	\ingroup Math
+*/
+void						normalize( vector4f& vector );
+
+/** In-place normalize the given vector.
 	\ingroup Math
 */
 void						normalize( vector3f& vector );
 
-/** Normalize the given vector.
+/** In-place normalize the given vector.
 	\ingroup Math
 */
 void						normalize( vector2f& vector );
