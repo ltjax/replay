@@ -81,7 +81,8 @@ public:
 	void				clear();
 	vector4< type >&	negate();
 
-	type				sum();
+	type				sum() const;
+	type				squared() const;
 
 						vector4();
 	explicit			vector4( const type* array );

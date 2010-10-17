@@ -434,6 +434,11 @@ float						magnitude( const vector2f& vector );
 */
 float						magnitude( const vector3f& vector );
 
+/** Compute the euclidean length of a vector.
+	\ingroup Math
+*/
+float						magnitude( const vector4f& vector );
+
 /** In-place normalize the given vector.
 	\ingroup Math
 */
@@ -448,6 +453,11 @@ void						normalize( vector3f& vector );
 	\ingroup Math
 */
 void						normalize( vector2f& vector );
+
+/** Return a normalized vector.
+	\ingroup Math
+*/
+vector4f					normalized( const vector4f& vector );
 
 /** Return a normalized vector.
 	\ingroup Math
