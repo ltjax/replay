@@ -233,10 +233,28 @@ replay::magnitude( const vector3f& vector )
 }
 
 float
+replay::magnitude( const vector4f& vector )
+{
+	return std::sqrt( vector.squared() );
+}
+
+float
 replay::math::max_norm( const vector3f& vector )
 {
 	return std::max( std::max( math::abs( vector[ 0 ] ),
 		math::abs( vector[ 1 ] ) ), math::abs( vector[ 2 ] ) );
+}
+
+void
+replay::normalize( vector4f& vector )
+{
+	vector /= magnitude( vector );
+}
+
+replay::vector4f
+replay::normalized( const vector4f& vector )
+{
+	return vector / magnitude( vector );
 }
 
 void

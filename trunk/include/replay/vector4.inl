@@ -214,10 +214,20 @@ replay::vector4< type >::negate()
 
 /** Compute the sum of all elements. */
 template < class type > inline type
-replay::vector4< type >::sum()
+replay::vector4< type >::sum() const
 {
 	return this->data[ 0 ] + this->data[ 1 ]
 		+ this->data[ 2 ] + this->data[ 3 ];
+}
+
+/** Square this vector using the dot product. */
+template< class type > inline type
+replay::vector4< type >::squared() const
+{
+	return	this->data[0] * this->data[0] +
+			this->data[1] * this->data[1] +
+			this->data[2] * this->data[2] +
+			this->data[3] * this->data[3];
 }
 
 /**Negated.*/
