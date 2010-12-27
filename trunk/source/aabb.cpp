@@ -94,17 +94,18 @@ float replay::aabb::distance( const vector3f& other ) const
 	return std::sqrt( square_distance( other ) );
 }
 
-/** Project the box onto a vector.
+/** Project the box onto a vector. 
+	\param x The vector that the box is supposed to be projected onto.
+	\returns a An ordered range of the box projected onto the vector.
 */
-void replay::aabb::project( const vector3f& x, fcouple& result ) const
+replay::fcouple replay::aabb::project( const vector3f& x ) const
 {
-	unsigned int mask;
-
+	fcouple result;
 	result.set( 0.f, 0.f );
 
 	for ( unsigned int i = 0; i < 3; ++i )
 	{
-		mask = math::sign( x[ i ] );
+		unsigned int mask = math::sign( x[i] );
 
 		result[ mask   ] += (*this)[ 0 ][ i ] * x[ i ];
 		result[ mask^1 ] += (*this)[ 1 ][ i ] * x[ i ];
@@ -112,6 +113,8 @@ void replay::aabb::project( const vector3f& x, fcouple& result ) const
 
 	if ( result[ 0 ] > result[ 1 ] )
 		result.swap();
+
+	return result;
 }
 
 /** Classify the box in respect to a plane.

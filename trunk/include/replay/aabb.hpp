@@ -109,7 +109,7 @@ public:
 
 	bool							contains( const vector3f& point ) const;
 
-	void							project( const vector3f& x, fcouple& result ) const;
+	fcouple							project( const vector3f& x ) const;
 	clsfctn							classify( const plane3& x ) const;
 
 	aabb&							expand( const vector3f& x );
