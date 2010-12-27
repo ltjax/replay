@@ -158,16 +158,16 @@ namespace math {
 		\ingroup Math
 	*/
 	void						set_perspective_matrix( matrix4& matrix, float fovy,
-										float aspect, float near, float far );
+										float aspect, float neardist, float fardist );
 
 	/** Setup a perspective matrix for homogenous coordinates.
 		\ingroup Math
 	*/
 	inline matrix4				make_perspective_matrix( float fovy,
-										float aspect, float near, float far )
+										float aspect, float neardist, float fardist )
 	{
 		matrix4 result;
-		set_perspective_matrix( result, fovy, aspect, near, far );
+		set_perspective_matrix( result, fovy, aspect, neardist, fardist );
 		return result;
 	}
 
