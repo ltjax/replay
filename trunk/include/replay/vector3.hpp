@@ -59,37 +59,50 @@ public:
 	template <class index_type>	inline
 	const type&							operator[]( const index_type i ) const { return data[i]; }
 
-	vector3< type >&					operator=( const type* array );
 
 	/** Set this objects components using an array of another type.
 		\param array Array to copy the values from. The values will be copied from the first n elements.
 	*/
-	template < class x > inline
-	vector3< type >&					set( const x* array )
+	template <class src_type> inline
+	vector3<type>&						reset( const src_type* src )
 	{
 		for ( unsigned int i = 0; i < 3; ++i )
-			data[ i ] = array[ i ];
+			data[i] = src[i];
 
 		return *this;
 	}
 
 	// Access
-	vector3< type >&					set( const type& x, const type& y, const type& z );
-	vector3< type >&					set( const type& v );
+	vector3<type>&						reset( const type& x, const type& y, const type& z );
+	vector3<type>&						reset( const type& v = value_type(0) );
 
 	// Linear Algebra
 	vector3<type>						operator+( const vector3<type>& operand ) const;	// Addition
 	vector3<type>						operator-( const vector3<type>& operand ) const;	// Substraction
-	vector3<type>						operator*( const vector3<type>& operand ) const;	// Cross product
-	type								operator|( const vector3<type>& operand ) const;	// Dot product
 	vector3<type>						operator*( const type& operand ) const;				// Scalar product
 	vector3<type>						operator/( const type& operand ) const;				// Division
-	vector3<type>						operator-() const;									// Inversion
-
-										vector3();
-	explicit							vector3( uninitialized_tag );
-	explicit							vector3( const float value );
-	explicit							vector3( const type* data );
+	vector3<type>						operator-() const;									// Negation
+	
+	/** Create a new vector.
+		This constructor will leave all values uninitialized.
+	*/
+	explicit							vector3( uninitialized_tag ) {}
+	
+	/** Create a vector with all elements the same value.
+	*/
+	explicit							vector3( value_type value = value_type(0) ) {reset(value);}
+	
+	/** Convert an array into a vector.
+		\param src Array to copy the values from. The values will be copied from the first three elements.
+	*/
+	template <class src_type>
+	explicit							vector3( const src_type* src ) {reset(src);}
+	
+	/** Create a new vector from seperate values.
+		\param x The first component.
+		\param y The second component.
+		\param z The third component.
+	*/
 										vector3( const type& x, const type& y, const type& z );
 
 	vector3<type>&						operator+=( const vector3<type>& operand );
@@ -104,22 +117,6 @@ public:
 	type								sum() const;
 
 	void								negate();
-	void								clear();
-
-	/** Vector cross product.
-	*/
-	inline static
-	vector3<type>						cross_product( const vector3<type>& a, const vector3<type>& b ) { return a * b; }
-	
-	/** Vector dot product.
-	*/
-	inline static
-	type								dot_product( const vector3<type>& a, const vector3<type>& b ) { return a | b; }
-
-	/** Component wise product.
-	*/
-	inline static
-	vector3<type>						comp_product( const vector3<type>& a, const vector3<type>& b ) { return vector3< type >( a[ 0 ]*b[ 0 ], a[ 1 ]*b[ 1 ], a[ 2 ]*b[ 2 ] ); }
 
 	/** Static element wise type cast.
 	*/
@@ -135,10 +132,31 @@ private:
 	type								data[ 3 ];
 };
 
+/** Cross product.
+	Also referred to as vector-product.
+	\ingroup Math
+*/
+template <class type> inline 
+vector3<type>							cross( const vector3<type>& a, const vector3<type>& b );
+	
+/** Dot product.
+	\ingroup Math
+*/
+template <class type> inline 
+type									dot( const vector3<type>& a, const vector3<type>& b );
+
+/** Component wise product.
+	\ingroup Math
+*/
+template <class type> inline 
+vector3<type>							comp( const vector3<type>& a, const vector3<type>& b );
+
+
 /** Scalar product.
+	\ingroup Math
 */
 template <class type>
-vector3<type> operator*( const type& a, const vector3< type >& b )
+vector3<type>							operator*( const type& a, const vector3< type >& b )
 {
 	return b * a;
 }
@@ -146,12 +164,12 @@ vector3<type> operator*( const type& a, const vector3< type >& b )
 /** A convenience typedef for a 3d floating-point vector.
 	\ingroup Math
 */
-typedef vector3<float>			vector3f;
+typedef vector3<float>					vector3f;
 
 /** A convenience typedef for a 2d double-precision floating-point vector.
 	\ingroup Math
 */
-typedef vector3<double>			vector3d;
+typedef vector3<double>					vector3d;
 
 }
 

@@ -185,7 +185,7 @@ replay::math::compute_frustum_corners( const plane3* frustum, vector3f* points )
 replay::vector3f
 replay::find_closest_point( const line3& line, const vector3f& point )
 {
-	const float lambda = ((point - line.origin)|line.direction)/line.direction.squared();
+	const float lambda = dot(point-line.origin, line.direction) / line.direction.squared();
 
 	return line.get_point( lambda );
 }
@@ -205,37 +205,37 @@ replay::square_distance( const vector3f& point0, const vector3f& point1 )
 float
 replay::distance( const plane3& p, const vector3f& point )
 {
-	return (p.normal|point) + p.d;
+	return dot(p.normal, point) + p.d;
 }
 
 float
 replay::distance( const line3& line, const vector3f& point )
 {
-	return std::sqrt( square_distance( line, point ) );
+	return std::sqrt(square_distance(line, point));
 }
 
 float
 replay::magnitude( const vector2f& vector )
 {
-	return std::sqrt( vector.squared() );
+	return std::sqrt(vector.squared());
 }
 
 float
 replay::math::max_norm( const vector2f& vector )
 {
-	return std::max( math::abs( vector[ 0 ] ), math::abs( vector[ 1 ] ) );
+	return std::max(math::abs(vector[0]), math::abs(vector[1]));
 }
 
 float
 replay::magnitude( const vector3f& vector )
 {
-	return std::sqrt( vector.squared() );
+	return std::sqrt(vector.squared());
 }
 
 float
 replay::magnitude( const vector4f& vector )
 {
-	return std::sqrt( vector.squared() );
+	return std::sqrt(vector.squared());
 }
 
 float
@@ -295,19 +295,19 @@ replay::math::intersection_test::line_triangle( const linear_component3& line, c
 	const vector3f edge0 = t1 - t0;
 	const vector3f edge1 = t2 - t0;
 
-	const vector3f normal = vector3f::cross_product( edge0, edge1 );
+	const vector3f normal = cross(edge0, edge1);
 
 	// Backface culling
-	if ( vector3f::dot_product( normal, line.direction ) > 0.0f )
+	if ( dot(normal, line.direction) > 0.0f )
 		return false;
 
 	// begin calculating determinant - also used to calculate u parameter
-	const vector3f perp = vector3f::cross_product( line.direction, edge1 );
+	const vector3f perp = cross(line.direction, edge1);
 
 	// if determinant is near zero, ray lies in plane of triangle
-	float determinant = vector3f::dot_product( edge0, perp );
+	float determinant = dot(edge0, perp);
      
-	if ( std::abs( determinant ) < epsilon )
+	if ( std::abs(determinant) < epsilon )
 		return false;
 
 	// inverse determinant
@@ -317,16 +317,16 @@ replay::math::intersection_test::line_triangle( const linear_component3& line, c
 	const vector3f delta = line.origin - t0;
 
 	// calculate u parameter and test bounds
-	const float u = vector3f::dot_product( delta, perp ) * determinant;
+	const float u = dot(delta, perp) * determinant;
 
 	if ( u < 0.0f || u > 1.0f )
 		return false;
 
 	// prepare to test v parameter
-	const vector3f temp = delta * edge0;
+	const vector3f temp = cross(delta, edge0);
 
 	// calculate v parameter and test bounds
-	const float v = vector3f::dot_product( line.direction, temp ) * determinant;
+	const float v = dot(line.direction, temp) * determinant;
 	if ( v < 0.0f || (u + v) > 1.0f )
 		return false;
 
@@ -336,7 +336,9 @@ replay::math::intersection_test::line_triangle( const linear_component3& line, c
 
 	// calculate lambda as ray intersects triangle
 	if ( lambda )
-		*lambda = vector3f::dot_product( edge1, temp ) * determinant;
+	{
+		*lambda = dot(edge1, temp) * determinant;
+	}
 
 	return true;
 }
@@ -352,7 +354,7 @@ replay::math::intersection_test::line_sphere( const linear_component3& line, con
 	// <d,d>
 	float dd = line.direction.squared();
 	// <d,a-c>
-	float num = line.direction|v0;
+	float num = dot(line.direction, v0);
 
 	// check point of closest approach before solving the quadratic equation
 	float lambda = -num/dd;
@@ -362,7 +364,7 @@ replay::math::intersection_test::line_sphere( const linear_component3& line, con
 		return false;
 
 	unsigned int result_count = math::solve_quadratic_eq( dd, 2.f*num,
-		(v0|v0)-square_radius, result, epsilon );
+		v0.squared()-square_radius, result, epsilon );
 
 	if ( result_count == 2 )
 	{
@@ -552,7 +554,7 @@ bool replay::math::intersect_line2( const line2& a, const line2& b, vector2f& re
 
 float replay::square_distance( const line3& la, const line3& lb )
 {
-	vector3f comp = vector3f::cross_product( la.direction, lb.direction );
+	vector3f comp = cross( la.direction, lb.direction );
 	
 	float length = magnitude(comp);
 
@@ -566,10 +568,9 @@ float replay::square_distance( const line3& la, const line3& lb )
 	}
 	
 	// compute the plane intersection
-	vector3f n = vector3f::cross_product(comp, lb.direction);
+	vector3f n = cross(comp, lb.direction);
 
-	float lambda = vector3f::dot_product(n, lb.origin-la.origin) /
-		vector3f::dot_product(n, la.direction);
+	float lambda = dot(n, lb.origin-la.origin) / dot(n, la.direction);
 
 	// find the reference point on the first line
 	vector3f pa = la.get_point(lambda);
@@ -590,9 +591,9 @@ float replay::square_distance( const vector3f& point, const boost::array<vector3
 	float u_length = magnitude(u);
 
 	// build and orthogonal base to translate this to 2d
-	const vector3f n = normalized(vector3f::cross_product(u,v));
+	const vector3f n = normalized(cross(u,v));
 	const vector3f t = u/u_length;
-	const vector3f b = vector3f::cross_product(n,t);
+	const vector3f b = cross(n,t);
 
 	float sqr_plane_distance = math::square(dot(p,n));
 	
@@ -629,7 +630,7 @@ replay::vector3f replay::math::lup::solve( const matrix3& lu, const vector3<std:
 bool replay::math::lup::decompose( matrix3& m, vector3<std::size_t>& p, float epsilon )
 {
 	std::size_t best=0;
-	p.set(0,1,2);
+	p.reset(0,1,2);
 
 	// find the pivot in the first row
 	if ( math::abs( m(1,0) ) > math::abs( m(2,0) ) )

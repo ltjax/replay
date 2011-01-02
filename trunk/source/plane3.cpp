@@ -30,14 +30,16 @@ Copyright (c) 2010 Marius Elvert
 replay::plane3&
 replay::plane3::set( const vector3f& normal, const float d )
 {
-	this->normal = normal; this->d = d;
+	this->normal = normal;
+	this->d = d;
 	return *this;
 }
 
 replay::plane3&
 replay::plane3::set( const float a, const float b, const float c, const float d )
 {
-	this->normal.set( a, b, c ); this->d = d;
+	this->normal.reset( a, b, c );
+	this->d = d;
 	return *this;
 }
 
@@ -57,7 +59,7 @@ replay::plane3::flip()
 void
 replay::plane3::clear()
 {
-	normal.clear();
+	normal.reset();
 	d = 0.f;
 }
 
@@ -87,13 +89,13 @@ replay::plane3::get_flipped( const plane3& from )
 replay::plane3
 replay::plane3::construct_from_pointnormal( const vector3f& normal, const vector3f& point )
 {
-	return plane3( normal, -vector3f::dot_product( normal, point ) );
+	return plane3( normal, -dot( normal, point ) );
 }
 
 replay::plane3
 replay::plane3::construct_from_points( const vector3f& p0, const vector3f& p1, const vector3f& p2 )
 {
-	return construct_from_pointnormal( vector3f::cross_product( p1-p0, p2-p0 ), p0 );
+	return construct_from_pointnormal( cross( p1-p0, p2-p0 ), p0 );
 }
 
 void

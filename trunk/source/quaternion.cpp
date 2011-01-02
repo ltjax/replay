@@ -263,14 +263,17 @@ replay::quaternion::inner_product( const quaternion& a, const quaternion& b )
 const replay::quaternion
 replay::quaternion::shortest_arc( const vector3f& a, const vector3f& b )
 {
-	const float cos = a | b;
+	// Compute the cosine of the angle between the two vectors
+	const float cos = dot(a, b);
 
-	if ( math::fuzzy_equals( cos, 1.f ) )
+	// Return an identity if the angle is zero
+	if (math::fuzzy_equals(cos, 1.f))
 		return quaternion();
 
-	const vector3f axis = normalized( a * b );
+	// Otherwise rotate around the perpendicular vector
+	const vector3f axis = normalized(cross(a, b));
 
-	return quaternion( std::acos( cos ), axis );
+	return quaternion(std::acos(cos), axis);
 }
 
 replay::vector3f
