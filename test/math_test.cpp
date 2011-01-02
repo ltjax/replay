@@ -11,16 +11,6 @@
 #include <boost/assign/std/vector.hpp>
 #include <boost/assign/std/list.hpp>
 
-namespace replay {
-
-// FIXME: this should probably go into the library
-std::ostream& operator<<(std::ostream& str, const replay::vector3<int>& rhs)
-{
-	return str << '(' << rhs[0] << ' ' << rhs[1] << ' ' << rhs[2] << ')';
-}
-
-}
-
 namespace {
 
 
@@ -175,7 +165,7 @@ BOOST_AUTO_TEST_CASE( circumcircle )
 	BOOST_REQUIRE(s.push(b.ptr()));
 	BOOST_REQUIRE(s.push(c.ptr()));
 
-	vector3f equisphere_center(s.get_center());
+	vector3f equisphere_center(vector3f::cast(s.get_center()));
 	vector3f center_delta = center-equisphere_center;
 	BOOST_REQUIRE_SMALL(center_delta.squared(), 0.001f);
 	BOOST_REQUIRE_CLOSE(std::sqrt(s.get_squared_radius()),radius,0.001f);

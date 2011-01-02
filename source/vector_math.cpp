@@ -522,20 +522,6 @@ replay::vector3f replay::math::intersect_3planes( const plane3& a, const plane3&
 	return Temp * -vector3f( a.d, b.d, c.d );
 }
 
-std::ostream& replay::operator<<( std::ostream& cout, const replay::vector2f& v )
-{
-	return cout << '(' << v[ 0 ] << ' ' << v[ 1 ] << ')';
-}
-
-std::ostream& replay::operator<<( std::ostream& cout, const replay::vector3f& v )
-{
-	return cout << '(' << v[ 0 ] << ' ' << v[ 1 ] << ' ' << v[ 2 ] << ')';
-}
-
-std::ostream& replay::operator<<( std::ostream& cout, const replay::vector4f& v )
-{
-	return cout << '(' << v[ 0 ] << ' ' << v[ 1 ] << ' ' << v[ 2 ] << ' ' << v[ 3 ] << ')';
-}
 
 bool replay::math::intersect_line2( const line2& a, const line2& b, vector2f& result )
 {

@@ -356,24 +356,8 @@ namespace math {
 
 	}
 }
-	
-/** Compute the scalar product of two 2d vectors.
-	\ingroup Math
-*/
-inline float				dot( const vector2f& a, const vector2f& b )
-{
-	return a[ 0 ] * b[ 0 ] + a[ 1 ] * b[ 1 ];
-}
 
-/** Compute the scalar product of two 4d vectors.
-	\ingroup Math
-*/
-inline float				dot( const vector4f& a, const vector4f& b )
-{
-	return a|b;
-}
-
-/** find the closest point.
+/** Find the closest point to a given point on a line.
 	\param line line on which to look for the closest point.
 	\param point where to find the closest point to.
 	\ingroup Math
@@ -460,18 +444,6 @@ vector3f					normalized( const vector3f& vector );
 	\ingroup Math
 */
 vector2f					normalized( const vector2f& vector );
-
-/** Stream out a vector2f.
-*/
-std::ostream&				operator<<( std::ostream& cout, const replay::vector2f& v );
-
-/** Stream out a vector3f.
-*/
-std::ostream&				operator<<( std::ostream& cout, const replay::vector3f& v );
-
-/** Stream out a vector4f.
-*/
-std::ostream&				operator<<( std::ostream& cout, const replay::vector4f& v );
 
 }
 

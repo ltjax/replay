@@ -24,204 +24,126 @@ Copyright (c) 2010 Marius Elvert
 
 */
 
-/** Default constructor. 
-	Initializes all components as zero.
+/** Set vector elements from individual values.
 */
-template < class type > inline
-replay::vector2< type >::vector2()
+template <class type> inline
+replay::vector2<type>& replay::vector2<type>::reset(const value_type x, const value_type y)
 {
-	this->data[ 0 ] = 0;
-	this->data[ 1 ] = 0;
+	data[0] = x;
+	data[1] = y;
+	return *this;
 }
 
-/** Initialize vector from a c-style array.
+/** Vector reset.
+	Sets all elements to a given value, which defaults to 0.
 */
-template < class type > inline
-replay::vector2< type >::vector2( const type* values )
+template <class type> inline
+replay::vector2<type>& replay::vector2<type>::reset(const value_type value)
 {
-	data[ 0 ] = values[ 0 ]; data[ 1 ] = values[ 1 ];
-}
-
-/** Initialize vector by setting all elements to a single value.
-*/
-template < class type > inline
-replay::vector2< type >::vector2( const type value )
-{
-	data[ 0 ] = value; data[ 1 ] = value;
-}
-
-/** Initialize vector from given values.
-*/
-template < class type > inline
-replay::vector2< type >::vector2( const type x, const type y )
-{
-	this->data[ 0 ] = x;
-	this->data[ 1 ] = y;
-}
-
-/** Set vector from given values.
-*/
-template < class type > inline void
-replay::vector2< type >::set( const type x, const type y )
-{
-	this->data[ 0 ] = x;
-	this->data[ 1 ] = y;
-}
-
-/** Vector addition.
-*/
-template < class type > inline replay::vector2< type >
-replay::vector2< type >::operator+( const vector2< type >& operand ) const
-{
-	return vector2< type > (
-		this->data[ 0 ] + operand.data[ 0 ],
-		this->data[ 1 ] + operand.data[ 1 ] );
-}
-
-/** vector subtraction.
-*/
-template < class type > inline replay::vector2< type >
-replay::vector2< type >::operator-( const vector2< type >& operand ) const
-{
-	return vector2< type > (
-		this->data[ 0 ] - operand.data[ 0 ],
-		this->data[ 1 ] - operand.data[ 1 ] );
-}
-
-/** Vector scalar multiplication.
-*/
-template < class type > inline replay::vector2< type >
-replay::vector2< type >::operator*( const type value ) const
-{
-	return vector2< type > (
-		this->data[ 0 ] * value,
-		this->data[ 1 ] * value );
-}
-
-/** Vector dot product.
-*/
-template < class type > inline type
-replay::vector2< type >::operator|( const vector2< type >& operand ) const
-{
-	return this->data[ 0 ]*operand.data[ 0 ] + this->data[ 1 ]*operand.data[ 1 ];
-}
-
-/** Vector scalar division.
-*/
-template < class type > inline replay::vector2< type >
-replay::vector2< type >::operator/( const type value ) const
-{
-	return vector2< type > (
-		this->data[ 0 ] / value,
-		this->data[ 1 ] / value );
+	data[0] = value;
+	data[1] = value;
+	return *this;
 }
 
 /** Vector negation.
 */
-template < class type > inline replay::vector2< type >
-replay::vector2< type >::operator-() const
+template <class type> inline replay::vector2<type>
+replay::vector2<type>::operator-() const
 {
-	return vector2< type > (
-		-this->data[ 0 ],
-		-this->data[ 1 ] );
+	return vector2<type>(-data[0], -data[1]);
 }
 
 /** Vector add-assign.
 */
-template < class type > inline replay::vector2< type >&
-replay::vector2< type >::operator+=( const vector2< type >& operand )
+template <class type> inline replay::vector2<type>&
+replay::vector2<type>::operator+=(const vector2<type>& rhs)
 {
-	this->data[ 0 ] += operand.data[ 0 ];
-	this->data[ 1 ] += operand.data[ 1 ];
+	data[0] += rhs.data[0];
+	data[1] += rhs.data[1];
 
 	return (*this);
 }
 
 /** Vector subtract-assign.
 */
-template < class type > inline replay::vector2< type >&
-replay::vector2< type >::operator-=( const vector2< type >& operand )
+template <class type> inline replay::vector2<type>&
+replay::vector2<type>::operator-=(const vector2<type>& rhs)
 {
-	this->data[ 0 ] -= operand.data[ 0 ];
-	this->data[ 1 ] -= operand.data[ 1 ];
+	data[0] -= rhs.data[0];
+	data[1] -= rhs.data[1];
 
 	return (*this);
 }
 
 /** Vector scalar divide-assign.
 */
-template < class type > inline replay::vector2< type >&
-replay::vector2< type >::operator/=( const type value )
+template <class type> inline
+replay::vector2<type>&
+replay::vector2<type>::operator/=(const value_type rhs)
 {
-	this->data[ 0 ] /= value;
-	this->data[ 1 ] /= value;
+	data[0] /= rhs;
+	data[1] /= rhs;
 
 	return (*this);
 }
 
 /** Vector scalar multiplicate-assign.
 */
-template < class type > inline replay::vector2< type >&
-replay::vector2< type >::operator*=( const type value )
+template <class type> inline
+replay::vector2<type>&
+replay::vector2<type>::operator*=(const value_type rhs)
 {
-	this->data[ 0 ] *= value;
-	this->data[ 1 ] *= value;
+	data[0] *= rhs;
+	data[1] *= rhs;
 
 	return (*this);
 }
 
 /** Vector element wise compare.
 */
-template < class type > inline bool
-replay::vector2< type >::operator==( const vector2< type >& operand ) const
+template <class type> inline
+bool replay::vector2<type>::operator==(const vector2<type>& rhs) const
 {
-	return this->data[ 0 ] == operand.data[ 0 ] && this->data[ 1 ] == operand.data[ 1 ];
+	return data[0]==rhs.data[0] && data[1]==rhs.data[1];
 }
 
 /** Vector element wise compare.
 */
-template < class type > inline bool
-replay::vector2< type >::operator!=( const vector2< type >& operand ) const
+template <class type> inline
+bool replay::vector2<type>::operator!=(const vector2<type>& rhs) const
 {
-	return this->data[ 0 ] != operand.data[ 0 ] || this->data[ 1 ] != operand.data[ 1 ];
+	return data[0]!=rhs.data[0] || data[1]!=rhs.data[1];
 }
 
-/** Vector assign from C-style array.
+/** In-place vector negate.
 */
-template < class type > inline replay::vector2< type >&
-replay::vector2< type >::operator=( const type* array )
+template <class type> inline
+replay::vector2<type>&
+replay::vector2<type>::negate()
 {
-	this->data[ 0 ] = array[ 0 ];
-	this->data[ 1 ] = array[ 1 ];
+	data[0] = -data[0];
+	data[1] = -data[1];
 
-	return (*this);
+	return *this;
 }
 
-/** Vector negate.
-*/
-template < class type > inline void
-replay::vector2< type >::negate()
-{
-	this->data[ 0 ] = -this->data[ 0 ];
-	this->data[ 1 ] = -this->data[ 1 ];
-}
-
-/** Vector clear.
-	Sets all elements to 0.
-*/
-template < class type > inline void
-replay::vector2< type >::clear()
-{
-	this->data[ 0 ] = 0;
-	this->data[ 1 ] = 0;
-}
 
 /** Vector dot-product square.
 */
-template < class type > inline type
-replay::vector2< type >::squared() const
+template <class type> inline
+typename replay::vector2<type>::value_type
+replay::vector2<type>::squared() const
 {
-	return ( this->data[ 0 ]*this->data[ 0 ] ) + ( this->data[ 1 ]*this->data[ 1 ] );
+	return data[0]*data[0] + data[1]*data[1];
+}
+
+/** Sum of all elements in the vector.
+*/
+template <class type> inline
+typename replay::vector2<type>::value_type
+replay::vector2<type>::sum() const
+{
+	return data[0] + data[1];
 }
 
 
