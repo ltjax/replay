@@ -79,7 +79,7 @@ public:
 		\param z The third component.
 		\param w The fourth component.
 	*/
-	vector4<type>&		reset(value_type a, value_type b, value_type c, value_type d);
+	vector4<type>&		reset(value_type x, value_type y, value_type z, value_type w);
 
 	vector4<type>&		operator+=( const vector4<type>& rhs );
 	vector4<type>&		operator-=( const vector4<type>& rhs );
@@ -119,7 +119,7 @@ public:
 		\param z The third component.
 		\param w The fourth component.
 	*/
-						vector4(value_type a, value_type b, value_type c, value_type d) {reset(a,b,c,d);}
+						vector4(value_type x, value_type y, value_type z, value_type w) {reset(x,y,z,w);}
 
 	/** Convert an array-like type to a 4D vector.
 		The parameter needs to be indexable for at least 4 elements.

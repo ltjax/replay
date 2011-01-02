@@ -392,7 +392,7 @@ float						distance( const replay::line3& line, const replay::vector3f& point );
 	distance is the euclidean distance.
 	\ingroup Math
 */
-float						distance( const replay::plane3& p, const replay::vector3<float>& point );
+float						distance( const replay::plane3& p, const replay::vector3f& point );
 
 
 /** Compute the euclidean distance of two points.

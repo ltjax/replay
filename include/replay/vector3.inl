@@ -40,7 +40,7 @@ replay::vector3<type>& replay::vector3<type>::reset(value_type x, value_type y, 
 }
 
 /** Set all components.
-	\param v Value to set the vector to.
+	\param value Value to set the vector to.
 */
 template <class type> inline
 replay::vector3<type>& replay::vector3<type>::reset(value_type value)

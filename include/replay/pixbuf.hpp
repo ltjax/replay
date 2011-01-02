@@ -106,6 +106,8 @@ public:
 
 };
 
+/** A shared (reference-counted) pointer to a pixbuf.
+*/
 typedef pixbuf::shared_pixbuf shared_pixbuf;
 
 }

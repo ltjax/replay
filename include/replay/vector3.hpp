@@ -39,6 +39,8 @@ namespace replay {
 template <class type> class vector3
 {
 public:
+	/** Element type.
+	*/
 	typedef type						value_type;
 	
 	/** Get a pointer to the internal array.
@@ -129,7 +131,7 @@ vector3<type> cross( const vector3<type>& a, const vector3<type>& b );
 template <class type> inline 
 type dot( const vector3<type>& a, const vector3<type>& b );
 
-/** Component wise product of two 3D vectors..
+/** Component wise product of two 3D vectors.
 	\ingroup Math
 */
 template <class type> inline 
