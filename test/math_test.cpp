@@ -11,7 +11,18 @@
 #include <boost/assign/std/vector.hpp>
 #include <boost/assign/std/list.hpp>
 
+namespace replay {
+
+// FIXME: this should probably go into the library
+std::ostream& operator<<(std::ostream& str, const replay::vector3<int>& rhs)
+{
+	return str << '(' << rhs[0] << ' ' << rhs[1] << ' ' << rhs[2] << ')';
+}
+
+}
+
 namespace {
+
 
 // FIXME: this is somewhat generically useful - lift it to a visible namespace?
 replay::vector3f polar_to_model( float latitude, float longitude )
@@ -45,6 +56,39 @@ float distance_to_sphere( const IteratorType point_begin, const IteratorType poi
 }
 
 
+}
+
+// This test verifies integer arithmetic with a vector3.
+// Hopefully, floating-point math will behave correct if this does.
+BOOST_AUTO_TEST_CASE( vector3_integer_operations )
+{
+	using namespace replay;
+	typedef vector3<int> vec3;
+
+	const vec3 a(-1, -67, 32);
+	const vec3 b(7777, 0, -111);
+	const vec3 c(a-b);
+
+	BOOST_REQUIRE_EQUAL( c-a, -b );
+
+	const vec3 all_one(1,1,1);
+
+	BOOST_REQUIRE_EQUAL(all_one.sum(), 3);
+	BOOST_REQUIRE_EQUAL(all_one.squared(), 3);
+
+	int checksum=vec3::dot_product(a, all_one);
+	BOOST_REQUIRE_EQUAL(checksum, a.sum());
+
+	checksum=vec3::dot_product(b, all_one);
+	BOOST_REQUIRE_EQUAL(checksum, b.sum());
+
+	BOOST_REQUIRE_EQUAL(a.sum()-b.sum(), c.sum());
+
+	BOOST_REQUIRE_EQUAL((a*42).sum(), a.sum()*42);
+
+	const vec3 all_two(2,2,2);
+	BOOST_REQUIRE_EQUAL(all_one*2, all_two);
+	BOOST_REQUIRE_EQUAL(all_one+all_one, all_two);
 }
 
 BOOST_AUTO_TEST_CASE( quadratic_equation_solver )
@@ -166,7 +210,7 @@ BOOST_AUTO_TEST_CASE( minimal_ball )
 	}
 
 	// run the solver
-    replay::minimal_ball<float,replay::vector3f,3> ball(points,1e-15f);
+	replay::minimal_ball<float,replay::vector3f,3> ball(points,1e-15f);
 
 	// check correctness
 	BOOST_REQUIRE_CLOSE( ball.square_radius(), 1.f, 0.001f );
