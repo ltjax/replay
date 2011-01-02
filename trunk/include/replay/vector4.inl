@@ -90,7 +90,7 @@ replay::vector4<type>::reset(const value_type value)
 
 template <class type> inline
 replay::vector4<type>&
-replay::vector4<type>::reset(const vector3<type>& xyz, const type w )
+replay::vector4<type>::reset(const vector3<type>& xyz, const value_type w)
 {
 	data[0] = xyz[0];
 	data[1] = xyz[1];

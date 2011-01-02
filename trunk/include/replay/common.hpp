@@ -29,7 +29,11 @@ Copyright (c) 2010 Marius Elvert
 
 namespace replay {
 
-/** Special type to use 'uninitializing constructors'.
+/** Tag type to use 'uninitializing constructors'.
+	Types that support this will typically expose an explicit unary constructor
+	taking an uninitialized_tag and leave all contents uninitialized.
+	Using these constructors is for optimization only and violates the RAII principle.
+	Use with caution!
 */
 class uninitialized_tag
 {
