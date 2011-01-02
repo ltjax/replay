@@ -33,6 +33,14 @@ replay::vector3< type >::vector3()
 	this->data[ 0 ] = this->data[ 1 ] = this->data[ 2 ] = type( 0 );
 }
 
+/** Create a new vector.
+	This constructor will leave all values uninitialized.
+*/
+template< class type > inline
+replay::vector3< type >::vector3( uninitialized_tag )
+{
+}
+
 /** Convert an array into a vector.
 	\param array Array to copy the values from. The values will be copied from the first three elements.
 */

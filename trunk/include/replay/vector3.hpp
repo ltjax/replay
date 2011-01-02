@@ -27,44 +27,45 @@ Copyright (c) 2010 Marius Elvert
 #ifndef replay_vector3_hpp
 #define replay_vector3_hpp
 
+#include <replay/common.hpp>
 
 namespace replay {
 
 /** 3-dimensional vector.
 	\ingroup Math
 */
-template < class type > class vector3
+template <class type> class vector3
 {
-	/** the actual data.
-	*/
-	type						data[ 3 ];
 public:
+	typedef type						value_type;
+	
+	/** Get a pointer to the internal array.
+	*/
+	inline
+	type*								ptr() { return data; }
 
 	/** Get a pointer to the internal array.
 	*/
-	inline type*							ptr() { return data; }
-
-	/** Get a pointer to the internal array.
-	*/
-	inline const type*						ptr() const { return data; }
+	inline
+	const type*							ptr() const { return data; }
 
 	/** Index access operator.
 	*/
-	template < class index_type >
-	inline type&							operator[]( const index_type i ) { return data[i]; }
+	template <class index_type>	inline
+	type&								operator[]( const index_type i ) { return data[i]; }
 
 	/** Index access operator.
 	*/
-	template < class index_type >
-	inline const type&						operator[]( const index_type i ) const { return data[i]; }
+	template <class index_type>	inline
+	const type&							operator[]( const index_type i ) const { return data[i]; }
 
-	vector3< type >&						operator=( const type* array );
+	vector3< type >&					operator=( const type* array );
 
 	/** Set this objects components using an array of another type.
 		\param array Array to copy the values from. The values will be copied from the first n elements.
 	*/
 	template < class x > inline
-	vector3< type >&						set( const x* array )
+	vector3< type >&					set( const x* array )
 	{
 		for ( unsigned int i = 0; i < 3; ++i )
 			data[ i ] = array[ i ];
@@ -73,55 +74,71 @@ public:
 	}
 
 	// Access
-	vector3< type >&						set( const type& x, const type& y, const type& z );
-	vector3< type >&						set( const type& v );
+	vector3< type >&					set( const type& x, const type& y, const type& z );
+	vector3< type >&					set( const type& v );
 
 	// Linear Algebra
-	vector3< type >							operator+( const vector3< type >& operand ) const;	// Addition
-	vector3< type >							operator-( const vector3< type >& operand ) const;	// Substraction
-	vector3< type >							operator*( const vector3< type >& operand ) const;	// Cross product
-	type									operator|( const vector3< type >& operand ) const;	// Dot product
-	vector3< type >							operator*( const type& operand ) const;				// Scalar product
-	vector3< type >							operator/( const type& operand ) const;				// Division
-	vector3< type >							operator-() const;									// Inversion
+	vector3<type>						operator+( const vector3<type>& operand ) const;	// Addition
+	vector3<type>						operator-( const vector3<type>& operand ) const;	// Substraction
+	vector3<type>						operator*( const vector3<type>& operand ) const;	// Cross product
+	type								operator|( const vector3<type>& operand ) const;	// Dot product
+	vector3<type>						operator*( const type& operand ) const;				// Scalar product
+	vector3<type>						operator/( const type& operand ) const;				// Division
+	vector3<type>						operator-() const;									// Inversion
 
-											vector3();
-	explicit								vector3( const float value );
-	explicit								vector3( const type* data );
-											vector3( const type& x, const type& y, const type& z );
+										vector3();
+	explicit							vector3( uninitialized_tag );
+	explicit							vector3( const float value );
+	explicit							vector3( const type* data );
+										vector3( const type& x, const type& y, const type& z );
 
-	vector3< type >&						operator+=( const vector3< type >& operand );
-	vector3< type >&						operator-=( const vector3< type >& operand );
-	vector3< type >&						operator*=( const type& operand );
-	vector3< type >&						operator/=( const type& operand );
+	vector3<type>&						operator+=( const vector3<type>& operand );
+	vector3<type>&						operator-=( const vector3<type>& operand );
+	vector3<type>&						operator*=( const type& operand );
+	vector3<type>&						operator/=( const type& operand );
 
-	bool									operator==( const vector3< type >& operand ) const;
-	bool									operator!=( const vector3< type >& operand ) const;
+	bool								operator==( const vector3< type >& operand ) const;
+	bool								operator!=( const vector3< type >& operand ) const;
 
-	type									squared() const;
-	type									sum() const;
+	type								squared() const;
+	type								sum() const;
 
-	void									negate();
-	void									clear();
+	void								negate();
+	void								clear();
 
-	/** Vector cross product. */
-	inline static vector3< type >			cross_product( const vector3< type >& a, const vector3< type >& b ) { return a * b; }
+	/** Vector cross product.
+	*/
+	inline static
+	vector3<type>						cross_product( const vector3<type>& a, const vector3<type>& b ) { return a * b; }
 	
-	/** vector dot product. */
-	inline static float						dot_product( const vector3< type >& a, const vector3< type >& b ) { return a | b; }
+	/** Vector dot product.
+	*/
+	inline static
+	type								dot_product( const vector3<type>& a, const vector3<type>& b ) { return a | b; }
 
-	/** component wise product. */
-	inline static vector3< type >			comp_product( const vector3< type >& a, const vector3< type >& b ) { return vector3< type >( a[ 0 ]*b[ 0 ], a[ 1 ]*b[ 1 ], a[ 2 ]*b[ 2 ] ); }
+	/** Component wise product.
+	*/
+	inline static
+	vector3<type>						comp_product( const vector3<type>& a, const vector3<type>& b ) { return vector3< type >( a[ 0 ]*b[ 0 ], a[ 1 ]*b[ 1 ], a[ 2 ]*b[ 2 ] ); }
 
-	/** static element wise type cast. */
-	template < class x > static vector3< type > cast( const vector3< x >& from )
-	{ return vector3< type >( static_cast< type >( from[ 0 ] ), static_cast< type >( from[ 1 ] ), static_cast< type >( from[ 2 ] ) ); }
+	/** Static element wise type cast.
+	*/
+	template <class src_type> inline static
+	vector3<type>						cast( const vector3<src_type>& from )
+	{
+		return vector3<type>( static_cast<type>( from[ 0 ] ), static_cast<type>( from[ 1 ] ), static_cast<type>( from[ 2 ] ) );
+	}
+
+private:
+	/** the actual data.
+	*/
+	type								data[ 3 ];
 };
 
-/** scalar product.
+/** Scalar product.
 */
-template < class type > vector3< type >
-operator*( const type& a, const vector3< type >& b )
+template <class type>
+vector3<type> operator*( const type& a, const vector3< type >& b )
 {
 	return b * a;
 }
@@ -129,12 +146,12 @@ operator*( const type& a, const vector3< type >& b )
 /** A convenience typedef for a 3d floating-point vector.
 	\ingroup Math
 */
-typedef vector3< float >	vector3f;
+typedef vector3<float>			vector3f;
 
 /** A convenience typedef for a 2d double-precision floating-point vector.
 	\ingroup Math
 */
-typedef vector3< double >	vector3d;
+typedef vector3<double>			vector3d;
 
 }
 
