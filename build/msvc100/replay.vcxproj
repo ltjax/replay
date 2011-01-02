@@ -202,7 +202,6 @@
     <None Include="..\..\include\replay\vector2.inl" />
     <None Include="..\..\include\replay\vector3.inl" />
     <None Include="..\..\include\replay\vector4.inl" />
-    <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\aabb.cpp" />
@@ -226,6 +225,7 @@
     <ClInclude Include="..\..\include\replay\bstream.hpp" />
     <ClInclude Include="..\..\include\replay\buffer.hpp" />
     <ClInclude Include="..\..\include\replay\byte_color.hpp" />
+    <ClInclude Include="..\..\include\replay\common.hpp" />
     <ClInclude Include="..\..\include\replay\couple.hpp" />
     <ClInclude Include="..\..\include\replay\lines3.hpp" />
     <ClInclude Include="..\..\include\replay\math.hpp" />

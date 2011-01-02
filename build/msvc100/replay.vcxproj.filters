@@ -15,7 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ReadMe.txt" />
     <None Include="..\..\include\replay\vector2.inl">
       <Filter>Header Files</Filter>
     </None>
@@ -138,6 +137,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\replay\bounding_rectangle.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\replay\common.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
