@@ -52,7 +52,7 @@ public:
 		initial_extrema();
 
 		// Start with no rotation
-		current.u.set(1.f,0.f);
+		current.u.reset(1.f,0.f);
 		
 		// Check all possible configurations
 		float	min_area=compute_current_size();
@@ -154,7 +154,7 @@ private:
 		case 1:
 			
 			t = normalized(get_edge(right));
-			current.u.set( t[1],-t[0] );
+			current.u.reset( t[1],-t[0] );
 			break;
 		case 2:
 			t = normalized(get_edge(top));
@@ -162,7 +162,7 @@ private:
 			break;
 		case 3:
 			t = normalized(get_edge(left));
-			current.u.set( -t[1], t[0] );
+			current.u.reset( -t[1], t[0] );
 			break;
 		}
 	}
@@ -177,7 +177,7 @@ private:
 		const vector2f& l(hull[left]);
 		const vector2f& b(hull[bottom]);
 
-		current.min.set(
+		current.min.reset(
 			 l[0]*u[0]+l[1]*u[1], // x component of phi(P[Left])
 			-b[0]*u[1]+b[1]*u[0] // y component of phi(P[Bottom])
 		);
@@ -186,7 +186,7 @@ private:
 		const vector2f& r(hull[right]);
 		const vector2f& t(hull[top]);
 
-		current.max.set(
+		current.max.reset(
 			 r[0]*u[0]+r[1]*u[1],
 			-t[0]*u[1]+t[1]*u[0]
 		);

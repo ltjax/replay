@@ -443,7 +443,7 @@ replay::matrix4::transpose()
 const replay::vector4f
 replay::matrix4::get_column( unsigned int i ) const
 {
-	return vector4f( data + ( i * 4 ) );
+	return vector4f::cast( data + (i*4) );
 }
 
 /** Get a row in the matrix.

@@ -24,139 +24,95 @@ Copyright (c) 2010 Marius Elvert
 
 */
 
-template<class type> inline
-replay::vector3<type>::vector3( const type& x, const type& y, const type& z )
-{
-	this->data[0] = x;
-	this->data[1] = y;
-	this->data[2] = z;
-}
-
 /** Set this objects components.
 	\param x The first component.
 	\param y The second component.
 	\param z The third component.
 */
-template< class type > inline replay::vector3< type >&
-replay::vector3< type >::reset( const type& x, const type& y, const type& z )
+template <class type> inline
+replay::vector3<type>& replay::vector3<type>::reset(value_type x, value_type y, value_type z)
 {
-	this->data[ 0 ] = x;
-	this->data[ 1 ] = y;
-	this->data[ 2 ] = z;
+	data[0] = x;
+	data[1] = y;
+	data[2] = z;
 
-	return (*this);
+	return *this;
 }
 
 /** Set all components.
 	\param v Value to set the vector to.
 */
-template< class type > inline replay::vector3< type >&
-replay::vector3< type >::reset( const type& v )
+template <class type> inline
+replay::vector3<type>& replay::vector3<type>::reset(value_type value)
 {
-	this->data[ 0 ] = this->data[ 1 ] = this->data[ 2 ] = v;
-
-	return (*this);
-}
-
-/** Addition. */
-template< class type > inline replay::vector3< type >
-replay::vector3< type >::operator+( const vector3< type >& operand ) const
-{
-	return replay::vector3< type >(
-		this->data[ 0 ] + operand.data[ 0 ],
-		this->data[ 1 ] + operand.data[ 1 ],
-		this->data[ 2 ] + operand.data[ 2 ] );
-}
-
-/** Subtraction. */
-template< class type > inline replay::vector3< type >
-replay::vector3< type >::operator-( const vector3< type >& operand ) const
-{
-	return replay::vector3< type >(
-		this->data[ 0 ] - operand.data[ 0 ],
-		this->data[ 1 ] - operand.data[ 1 ],
-		this->data[ 2 ] - operand.data[ 2 ] );
-}
-
-
-/** Scalar product. */
-template< class type > inline replay::vector3< type >
-replay::vector3< type >::operator*( const type& operand ) const
-{
-	return replay::vector3< type >(
-		this->data[ 0 ] * operand,
-		this->data[ 1 ] * operand,
-		this->data[ 2 ] * operand );
-}
-
-/** Scalar division. */
-template< class type > inline replay::vector3< type >
-replay::vector3< type >::operator/( const type& operand ) const
-{
-	return replay::vector3< type >(
-		this->data[ 0 ] / operand,
-		this->data[ 1 ] / operand,
-		this->data[ 2 ] / operand );
-}
-
-/** Negation. */
-template< class type > inline replay::vector3< type >
-replay::vector3< type >::operator-() const
-{
-	return replay::vector3< type >(
-		-this->data[ 0 ],
-		-this->data[ 1 ],
-		-this->data[ 2 ] );
-}
-
-/** Addition. */
-template< class type > inline replay::vector3< type >&
-replay::vector3< type >::operator+=( const replay::vector3< type >& operand )
-{
-	this->data[ 0 ] += operand.data[ 0 ];
-	this->data[ 1 ] += operand.data[ 1 ];
-	this->data[ 2 ] += operand.data[ 2 ];
+	data[0] = value;
+	data[1] = value;
+	data[2] = value;
 
 	return *this;
 }
 
-/** Subtraction. */
-template< class type > inline replay::vector3< type >&
-replay::vector3< type >::operator-=( const replay::vector3< type >& operand )
+/** Negation.
+*/
+template <class type> inline replay::vector3<type>
+replay::vector3<type>::operator-() const
 {
-	this->data[ 0 ] -= operand.data[ 0 ];
-	this->data[ 1 ] -= operand.data[ 1 ];
-	this->data[ 2 ] -= operand.data[ 2 ];
+	return replay::vector3<type>(-data[0], -data[1], -data[2]);
+}
+
+/** In-place addition.
+*/
+template <class type> inline replay::vector3<type>&
+replay::vector3<type>::operator+=( const replay::vector3<type>& operand )
+{
+	data[0] += operand.data[0];
+	data[1] += operand.data[1];
+	data[2] += operand.data[2];
 
 	return *this;
 }
 
-/** Scalar multiplication. */
-template< class type > inline replay::vector3< type >&
-replay::vector3< type >::operator*=( const type& operand )
+/** In-place subtraction.
+*/
+template <class type> inline replay::vector3<type>&
+replay::vector3<type>::operator-=( const replay::vector3<type>& operand )
 {
-	this->data[ 0 ] *= operand;
-	this->data[ 1 ] *= operand;
-	this->data[ 2 ] *= operand;
+	data[0] -= operand.data[0];
+	data[1] -= operand.data[1];
+	data[2] -= operand.data[2];
 
 	return *this;
 }
 
-/** Scalar division. */
-template< class type > inline replay::vector3< type >&
-replay::vector3< type >::operator/=( const type& operand )
+/** In-place scalar multiplication.
+*/
+template <class type> inline replay::vector3<type>&
+replay::vector3<type>::operator*=( const type& operand )
 {
-	this->data[ 0 ] /= operand;
-	this->data[ 1 ] /= operand;
-	this->data[ 2 ] /= operand;
+	data[0] *= operand;
+	data[1] *= operand;
+	data[2] *= operand;
+
+	return *this;
+}
+
+/** In-place scalar division.
+*/
+template <class type> inline
+replay::vector3<type>&
+replay::vector3<type>::operator/=( const type& operand )
+{
+	data[0] /= operand;
+	data[1] /= operand;
+	data[2] /= operand;
 
 	return *this;
 }
 
 /** Test for equality.
 */
-template< class type > inline bool
-replay::vector3< type >::operator==( const vector3< type >& operand ) const
+template <class type> inline
+bool replay::vector3<type>::operator==( const vector3<type>& operand ) const
 {
 	return	data[0] == operand[0] &&
 			data[1] == operand[1] &&
@@ -165,44 +121,47 @@ replay::vector3< type >::operator==( const vector3< type >& operand ) const
 
 /** Test for unequality.
 */
-template< class type > inline bool
-replay::vector3< type >::operator!=( const vector3< type >& operand ) const
+template <class type> inline
+bool replay::vector3<type>::operator!=( const vector3<type>& operand ) const
 {
 	return	data[0] != operand[0] ||
 			data[1] != operand[1] ||
 			data[2] != operand[2];
 }
 
-/** Negate. In-place negate each component of this vector. */
-template< class type > inline void
-replay::vector3< type >::negate()
+template <class type> inline
+replay::vector3<type>&
+replay::vector3<type>::negate()
 {
-	this->data[ 0 ] = -this->data[ 0 ];
-	this->data[ 1 ] = -this->data[ 1 ];
-	this->data[ 2 ] = -this->data[ 2 ];
+	data[0] = -data[0];
+	data[1] = -data[1];
+	data[2] = -data[2];
+
+	return *this;
 }
 
 /** Square. Square this vector using the dot product. */
-template< class type > inline type
-replay::vector3< type >::squared() const
+template <class type> inline
+type replay::vector3<type>::squared() const
 {
-	return	this->data[ 0 ] * this->data[ 0 ] +
-			this->data[ 1 ] * this->data[ 1 ] +
-			this->data[ 2 ] * this->data[ 2 ];
+	return	data[0] * data[0] +
+			data[1] * data[1] +
+			data[2] * data[2];
 }
 
 /** Sum. Return a sum of all elements. */
-template< class type > inline type
-replay::vector3< type >::sum() const
+template <class type> inline
+type replay::vector3<type>::sum() const
 {
-	return	this->data[ 0 ] + this->data[ 1 ] + this->data[ 2 ];
+	return data[0] + data[1] + data[2];
 }
 
 
 template<class type> inline
-replay::vector3<type> replay::cross( const vector3<type>& lhs, const vector3<type>& rhs )
+replay::vector3<type>
+replay::cross(const vector3<type>& lhs, const vector3<type>& rhs)
 {
-	return replay::vector3< type >(
+	return replay::vector3<type>(
 		lhs[1]*rhs[2] - lhs[2]*rhs[1],
 		lhs[2]*rhs[0] - lhs[0]*rhs[2],
 		lhs[0]*rhs[1] - lhs[1]*rhs[0]
@@ -210,15 +169,16 @@ replay::vector3<type> replay::cross( const vector3<type>& lhs, const vector3<typ
 }
 
 template<class type> inline
-type replay::dot( const vector3<type>& lhs, const vector3<type>& rhs )
+type replay::dot(const vector3<type>& lhs, const vector3<type>& rhs)
 {
 	return lhs[0]*rhs[0] + lhs[1]*rhs[1] + lhs[2]*rhs[2];
 }
 
 template <class type> inline 
-replay::vector3<type> replay::comp( const vector3<type>& a, const vector3<type>& b )
+replay::vector3<type>
+replay::comp(const vector3<type>& lhs, const vector3<type>& rhs)
 {
-	return vector3<type>( a[0]*b[0], a[1]*b[1], a[2]*b[2] );
+	return vector3<type>( lhs[0]*rhs[0], lhs[1]*rhs[1], lhs[2]*rhs[2] );
 }
 
 

@@ -129,7 +129,7 @@ class matrix3
 
 		/** Get a matrix column.
 		*/
-		const vector3f			get_column( unsigned int index ) const { return vector3f( data + ( index * 3 ) ); }
+		const vector3f			get_column( unsigned int index ) const { return vector3f::cast( data + ( index * 3 ) ); }
 		
 		/** Get a matrix row.
 		*/

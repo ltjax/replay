@@ -27,11 +27,13 @@ Copyright (c) 2010 Marius Elvert
 #ifndef replay_vector3_hpp
 #define replay_vector3_hpp
 
+#include <iosfwd>
 #include <replay/common.hpp>
 
 namespace replay {
 
 /** 3-dimensional vector.
+	\note The element type is supposed to be a mathematical group.
 	\ingroup Math
 */
 template <class type> class vector3
@@ -42,68 +44,45 @@ public:
 	/** Get a pointer to the internal array.
 	*/
 	inline
-	type*								ptr() { return data; }
+	type*								ptr() {return data;}
 
 	/** Get a pointer to the internal array.
 	*/
 	inline
-	const type*							ptr() const { return data; }
+	const type*							ptr() const {return data;}
 
 	/** Index access operator.
 	*/
 	template <class index_type>	inline
-	type&								operator[]( const index_type i ) { return data[i]; }
+	value_type&							operator[](const index_type i) {return data[i];}
 
 	/** Index access operator.
 	*/
 	template <class index_type>	inline
-	const type&							operator[]( const index_type i ) const { return data[i]; }
-
-
-	/** Set this objects components using an array of another type.
-		\param array Array to copy the values from. The values will be copied from the first n elements.
-	*/
-	template <class src_type> inline
-	vector3<type>&						reset( const src_type* src )
-	{
-		for ( unsigned int i = 0; i < 3; ++i )
-			data[i] = src[i];
-
-		return *this;
-	}
+	const value_type					operator[](const index_type i) const {return data[i];}
 
 	// Access
-	vector3<type>&						reset( const type& x, const type& y, const type& z );
-	vector3<type>&						reset( const type& v = value_type(0) );
+	vector3<type>&						reset(value_type x, value_type y, value_type z);
+	vector3<type>&						reset(value_type value = value_type(0));
 
 	// Linear Algebra
-	vector3<type>						operator+( const vector3<type>& operand ) const;	// Addition
-	vector3<type>						operator-( const vector3<type>& operand ) const;	// Substraction
-	vector3<type>						operator*( const type& operand ) const;				// Scalar product
-	vector3<type>						operator/( const type& operand ) const;				// Division
 	vector3<type>						operator-() const;									// Negation
 	
 	/** Create a new vector.
 		This constructor will leave all values uninitialized.
 	*/
-	explicit							vector3( uninitialized_tag ) {}
+	explicit							vector3(uninitialized_tag) {}
 	
 	/** Create a vector with all elements the same value.
 	*/
-	explicit							vector3( value_type value = value_type(0) ) {reset(value);}
-	
-	/** Convert an array into a vector.
-		\param src Array to copy the values from. The values will be copied from the first three elements.
-	*/
-	template <class src_type>
-	explicit							vector3( const src_type* src ) {reset(src);}
+	explicit							vector3(value_type value = value_type(0)) {reset(value);}
 	
 	/** Create a new vector from seperate values.
 		\param x The first component.
 		\param y The second component.
 		\param z The third component.
 	*/
-										vector3( const type& x, const type& y, const type& z );
+										vector3(value_type x, value_type y, value_type z) {reset(x,y,z);}
 
 	vector3<type>&						operator+=( const vector3<type>& operand );
 	vector3<type>&						operator-=( const vector3<type>& operand );
@@ -112,24 +91,29 @@ public:
 
 	bool								operator==( const vector3< type >& operand ) const;
 	bool								operator!=( const vector3< type >& operand ) const;
+	
+	/** In-place negate.
+		Negates each element of this vector.
+	*/
+	vector3<type>&						negate();
 
-	type								squared() const;
-	type								sum() const;
+	value_type							squared() const;
+	value_type							sum() const;
 
-	void								negate();
 
 	/** Static element wise type cast.
+		This can be used on all indexable array-like types.
 	*/
-	template <class src_type> inline static
-	vector3<type>						cast( const vector3<src_type>& from )
+	template <class array_type> inline static
+	vector3<type>						cast(const array_type& src)
 	{
-		return vector3<type>( static_cast<type>( from[ 0 ] ), static_cast<type>( from[ 1 ] ), static_cast<type>( from[ 2 ] ) );
+		return vector3<type>( static_cast<type>(src[0]), static_cast<type>(src[1]), static_cast<type>(src[2]) );
 	}
 
 private:
 	/** the actual data.
 	*/
-	type								data[ 3 ];
+	type								data[3];
 };
 
 /** Cross product.
@@ -137,28 +121,74 @@ private:
 	\ingroup Math
 */
 template <class type> inline 
-vector3<type>							cross( const vector3<type>& a, const vector3<type>& b );
+vector3<type> cross( const vector3<type>& a, const vector3<type>& b );
 	
-/** Dot product.
+/** Dot product of two 3D vectors.
 	\ingroup Math
 */
 template <class type> inline 
-type									dot( const vector3<type>& a, const vector3<type>& b );
+type dot( const vector3<type>& a, const vector3<type>& b );
 
-/** Component wise product.
+/** Component wise product of two 3D vectors..
 	\ingroup Math
 */
 template <class type> inline 
-vector3<type>							comp( const vector3<type>& a, const vector3<type>& b );
+vector3<type> comp( const vector3<type>& a, const vector3<type>& b );
 
+/** Addition.
+	\ingroup Math
+*/
+template <class type> inline
+vector3<type> operator+(vector3<type> lhs, const vector3<type>& rhs)
+{
+	return lhs += rhs;
+}
+
+/** Subtraction.
+	\ingroup Math
+*/
+template <class type> inline
+vector3<type> operator-(vector3<type> lhs, const vector3<type>& rhs)
+{
+	return lhs -= rhs;
+}
 
 /** Scalar product.
 	\ingroup Math
 */
-template <class type>
-vector3<type>							operator*( const type& a, const vector3< type >& b )
+template <class type> inline
+vector3<type> operator*(vector3<type> lhs, const type rhs)
 {
-	return b * a;
+	return lhs *= rhs;
+}
+
+/** Scalar product.
+	\ingroup Math
+*/
+template <class type> inline
+vector3<type> operator*(const type lhs, vector3<type> rhs)
+{
+	return rhs *= lhs;
+}
+
+/** Scalar division.
+	\ingroup Math
+*/
+template <class type> inline
+vector3<type> operator/(vector3<type> lhs, const type& rhs)
+{
+	return lhs /= rhs;
+}
+
+/** Stream-out a vector in human-readable form.
+	This streams a vector with elements x,y and z as "(x y z)".
+	\note The element type needs to be streamable.
+	\ingroup Math
+*/
+template <class type>
+std::ostream& operator<<(std::ostream& lhs, const replay::vector3<type>& rhs)
+{
+	return lhs << '(' << rhs[0] << ' ' << rhs[1] << ' ' << rhs[2] << ')';
 }
 
 /** A convenience typedef for a 3d floating-point vector.

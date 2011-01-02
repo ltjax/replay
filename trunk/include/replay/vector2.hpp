@@ -27,94 +27,174 @@ Copyright (c) 2010 Marius Elvert
 #ifndef replay_vector2_hpp
 #define replay_vector2_hpp
 
+#include <iosfwd>
+#include <replay/common.hpp>
+
 namespace replay {
 
 /** 2-dimensional vector.
 	\ingroup Math
 */
-template < class type > class vector2
+template <class type> class vector2
 {
-	/** the actual data.
-	*/
-	type						data[ 2 ];
 public:
+	/** Element type of this vector.
+	*/
+	typedef type			value_type;
 
 	/** Get a pointer to the internal array.
 	*/
-	inline type*		ptr() { return data; }
+	inline type*			ptr() { return data; }
 
 	/** Get a pointer to the internal array.
 	*/
-	inline const type*	ptr() const { return data; }
+	inline const type*		ptr() const { return data; }
 
 	/** Index access operator.
 	*/
-	template < class index_type >
-	inline type&		operator[]( const index_type i ) { return data[i]; }
+	template <class index_type> inline
+	value_type&				operator[](const index_type i) {return data[i];}
 
 	/** Index access operator.
 	*/
-	template < class index_type >
-	inline const type&	operator[]( const index_type i ) const { return data[i]; }
+	template <class index_type>	inline
+	const value_type		operator[](const index_type i) const {return data[i];}
+	
 
-						vector2();
-	explicit			vector2( const type* values );
-	explicit			vector2( const type value );
-						vector2( const type x, const type y );
+	vector2<type>&			reset(value_type value=value_type(0));
+	vector2<type>&			reset(value_type x, value_type y);
 
-	void				set( const type x, const type y );
+	/** Non-initializing constructor.
+		Leaves all values uninitialized
+	*/
+	explicit				vector2(uninitialized_tag) {}
+							
+	/** Initialize vector by setting all elements to a single value.
+	*/
+	explicit				vector2(value_type value = type(0)) {reset(value);}
 
-	vector2< type >		operator+( const vector2< type >& operand ) const;	
-	vector2< type >		operator-( const vector2< type >& operand ) const;
-	type				operator|( const vector2< type >& operand ) const;
-	vector2< type >		operator*( const type value ) const;
-	vector2< type >		operator/( const type value ) const;
-	vector2< type >		operator-() const;
+	/** Initialize vector from given individual values.
+	*/
+							vector2(value_type x, value_type y) {reset(x,y);}
+	
+	vector2<type>			operator-() const;
 
+	vector2<type>&			operator+=(const vector2<type>& operand);
+	vector2<type>&			operator-=(const vector2<type>& operand);
+	vector2<type>&			operator*=(value_type value);
+	vector2<type>&			operator/=(value_type value);
 
-	vector2< type >&	operator+=( const vector2< type >& operand );
-	vector2< type >&	operator-=( const vector2< type >& operand );
-	vector2< type >&	operator*=( const type value );
-	vector2< type >&	operator/=( const type value );
-	vector2< type >&	operator=( const type* array );
+	bool					operator==(const vector2<type>& operand) const;
+	bool					operator!=(const vector2<type>& operand) const;
 
-	bool				operator==( const vector2< type >& operand ) const;
-	bool				operator!=( const vector2< type >& operand ) const;
+	vector2<type>&			negate();
 
-	void				clear();
-	void				negate();
-
-	type				squared() const;
+	value_type				squared() const;
+	value_type				sum() const;
 
 	/** Element wise static typecast.
+		Works on all indexable types.
 	*/
-	template < class x > static vector2< type > cast( const vector2< x >& from )
-	{ return vector2< type >( static_cast< type >( from[ 0 ] ), static_cast< type >( from[ 1 ] ) ); }
+	template <class array_type> inline static
+	vector2<type>			cast(const array_type& src) 
+	{ return vector2<type>(static_cast<type>(src[0]), static_cast<type>(src[1])); }
+
+private:
+	/** the actual data.
+	*/
+	type					data[2];
 };
 
 
-#include "vector2.inl"
+/** Vector dot product of two 2D vectors.
+	\ingroup Math
+*/
+template <class type> inline
+type dot(const vector2<type>& lhs, const vector2<type>& rhs)
+{
+	return lhs[0]*rhs[0] + lhs[1]*rhs[1];
+}
+
+/** Component-wise product of two 2D vectors.
+	\ingroup Math
+*/
+template <class type> inline
+vector2<type> comp(const vector2<type>& lhs, const vector2<type>& rhs)
+{
+	return vector2<type>(lhs[0]*rhs[0], lhs[1]*rhs[1]);
+}
+
+/** Vector addition.
+	\ingroup Math
+*/
+template <class type> inline
+vector2<type> operator+(vector2<type> lhs, const vector2<type>& rhs)
+{
+	return lhs += rhs;
+}
+
+/** Vector substraction.
+	\ingroup Math
+*/
+template <class type> inline
+vector2<type> operator-(vector2<type> lhs, const vector2<type>& rhs)
+{
+	return lhs -= rhs;
+}
 
 /** Scalar product.
 	\ingroup Math
 */
-template < class type > vector2< type >
-operator*( const type& a, const vector2< type >& b )
+template <class type> inline
+vector2<type> operator*(vector2<type> lhs, const type rhs)
 {
-	return b * a;
+	return lhs *= rhs;
+}
+
+/** Scalar product.
+	\ingroup Math
+*/
+template <class type> inline
+vector2<type> operator*(const type lhs, vector2<type> rhs)
+{
+	// Implement commutativity
+	return rhs *= lhs;
+}
+
+/** Scalar division.
+	\ingroup Math
+*/
+template <class type> inline
+vector2<type> operator/(vector2<type> lhs, const type rhs)
+{
+	// Implement commutativity
+	return lhs /= rhs;
+}
+
+/** Stream-out a vector in human-readable form.
+	This streams a vector with elements x and y as "(x y)".
+	\note The element type needs to be streamable.
+	\ingroup Math
+*/
+template <class type>
+std::ostream& operator<<(std::ostream& lhs, const replay::vector2<type>& rhs)
+{
+	return lhs << '(' << rhs[0] << ' ' << rhs[1] << ')';
 }
 
 /** Shorthandle for a 2D \c float vector.
 	\ingroup Math	
 */
-typedef vector2< float > vector2f;
+typedef vector2<float> vector2f;
 
 /** Shorthandle for a 2D \c int vector.
 	\ingroup Math
 */
-typedef vector2< int > vector2i;
+typedef vector2<int> vector2i;
 
 }
+
+#include "vector2.inl"
 
 #endif // replay_vector2_hpp
 

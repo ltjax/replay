@@ -24,78 +24,10 @@ Copyright (c) 2010 Marius Elvert
 
 */
 
-/**Set the values of the vector.
-\param x The first component.
-\param y The second component.
-\param z The third component.
-\param w The fourth component.*/
-
-template < class type > inline void
-replay::vector4< type >::set( const type x, const type y, const type z, const type w )
-{
-	this->data[ 0 ] = x;
-	this->data[ 1 ] = y;
-	this->data[ 2 ] = z;
-	this->data[ 3 ] = w;
-}
-
-/**Addition*/
-template < class type > inline replay::vector4< type >
-replay::vector4< type >::operator+( const vector4< type >& operand ) const
-{
-	return vector4< type >(
-		this->data[ 0 ] + operand.data[ 0 ],
-		this->data[ 1 ] + operand.data[ 1 ],
-		this->data[ 2 ] + operand.data[ 2 ],
-		this->data[ 3 ] + operand.data[ 3 ] );
-}
-
-/**Subtraction*/
-template < class type > inline replay::vector4< type >
-replay::vector4< type >::operator-( const vector4< type >& operand ) const
-{
-	return vector4< type >(
-		this->data[ 0 ] - operand.data[ 0 ],
-		this->data[ 1 ] - operand.data[ 1 ],
-		this->data[ 2 ] - operand.data[ 2 ],
-		this->data[ 3 ] - operand.data[ 3 ] );
-}
-
-/**Multiplication*/
-template < class type > inline replay::vector4< type >
-replay::vector4< type >::operator*( const type value ) const
-{
-	return vector4< type >(
-		this->data[ 0 ] * value,
-		this->data[ 1 ] * value,
-		this->data[ 2 ] * value,
-		this->data[ 3 ] * value );
-}
-
-/**Division*/
-template < class type > inline replay::vector4< type >
-replay::vector4< type >::operator/( const type value ) const
-{
-	return vector4< type >(
-		this->data[ 0 ] / value,
-		this->data[ 1 ] / value,
-		this->data[ 2 ] / value,
-		this->data[ 3 ] / value );
-}
-
-/**Dot product*/
-template < class type > inline type
-replay::vector4< type >::operator|( const vector4< type >& operand ) const
-{
-	return  this->data[ 0 ] * operand.data[ 0 ] +
-			this->data[ 1 ] * operand.data[ 1 ] +
-			this->data[ 2 ] * operand.data[ 2 ] +
-			this->data[ 3 ] * operand.data[ 3 ];
-}
-
-/**Addition*/
-template < class type > inline replay::vector4< type >&
-replay::vector4< type >::operator+=( const vector4< type >& rhs )
+/** In-place addition.
+*/
+template <class type> inline replay::vector4<type>&
+replay::vector4<type>::operator+=( const vector4<type>& rhs )
 {
 	data[0]+=rhs.data[0];
 	data[1]+=rhs.data[1];
@@ -105,9 +37,10 @@ replay::vector4< type >::operator+=( const vector4< type >& rhs )
 	return *this;
 }
 
-/**Subtraction*/
-template < class type > inline replay::vector4< type >&
-replay::vector4< type >::operator-=( const vector4< type >& rhs )
+/** In-place substraction.
+*/
+template <class type> inline replay::vector4<type>&
+replay::vector4<type>::operator-=( const vector4<type>& rhs )
 {
 	data[0]-=rhs.data[0];
 	data[1]-=rhs.data[1];
@@ -117,128 +50,137 @@ replay::vector4< type >::operator-=( const vector4< type >& rhs )
 	return *this;
 }
 
-/**Multiplication*/
-template < class type > inline replay::vector4< type >&
-replay::vector4< type >::operator*=( const type value )
+/** In-place scalar multiplication.
+*/
+template <class type> inline replay::vector4<type>&
+replay::vector4<type>::operator*=( const type value )
 {
-	this->data[ 0 ] *= value;
-	this->data[ 1 ] *= value;
-	this->data[ 2 ] *= value;
-	this->data[ 3 ] *= value;
+	data[0] *= value;
+	data[1] *= value;
+	data[2] *= value;
+	data[3] *= value;
 
 	return *this;
 }
 
-/**Division*/
-template < class type > inline replay::vector4< type >&
-replay::vector4< type >::operator/=( const type value )
+/** In-place scalar division.
+*/
+template <class type> inline replay::vector4<type>&
+replay::vector4<type>::operator/=( const type value )
 {
-	this->data[ 0 ] /= value;
-	this->data[ 1 ] /= value;
-	this->data[ 2 ] /= value;
-	this->data[ 3 ] /= value;
+	data[0] /= value;
+	data[1] /= value;
+	data[2] /= value;
+	data[3] /= value;
 
 	return *this;
 }
 
-
-/** Clear. Reset all values to zero. */
-template < class type > inline void
-replay::vector4< type >::clear()
+template <class type> inline
+replay::vector4<type>&
+replay::vector4<type>::reset(const value_type value)
 {
-	this->data[ 0 ] = this->data[ 1 ] = this->data[ 2 ] = this->data[ 3 ] = 0;
+	data[0] = value;
+	data[1] = value;
+	data[2] = value;
+	data[3] = value;
+
+	return *this;
 }
 
-/**Default Constructor.*/
-template < class type > inline
-replay::vector4< type >::vector4()
+template <class type> inline
+replay::vector4<type>&
+replay::vector4<type>::reset(const vector3<type>& xyz, const type w )
 {
-	this->data[ 0 ] = this->data[ 1 ] = this->data[ 2 ] = this->data[ 3 ] = 0;
+	data[0] = xyz[0];
+	data[1] = xyz[1];
+	data[2] = xyz[2];
+	data[3] = w;
+
+	return *this;
 }
 
-/** Convert an array into a vector.
-	\param array Array to copy the values from. The values will be copied from the first four elements.
-*/
-template < class type > inline
-replay::vector4< type >::vector4( const type* array )
+template <class type> inline
+replay::vector4<type>&
+replay::vector4<type>::reset(const vector2< type >& ab, const vector2< type >& cd)
 {
-	data[ 0 ] = array[ 0 ]; data[ 1 ] = array[ 1 ];
-	data[ 2 ] = array[ 2 ]; data[ 3 ] = array[ 3 ];
+	data[0] = ab[0];
+	data[1] = ab[1];
+	data[2] = cd[0];
+	data[3] = cd[1];
+
+	return *this;
 }
 
-/** Initialize the vector by setting all elements to a single value.
-*/
-template < class type > inline
-replay::vector4< type >::vector4( const type value )
+template <class type> inline
+replay::vector4<type>&
+replay::vector4<type>::reset(const value_type x, const value_type y, const value_type z, const value_type w)
 {
-	data[ 0 ] = value; data[ 1 ] = value;
-	data[ 2 ] = value; data[ 3 ] = value;
+	data[0] = x;
+	data[1] = y;
+	data[2] = z;
+	data[3] = w;
+
+	return *this;
 }
 
-/** Convert a 3-tuple and a 4th element into a vector.
-*/
-template < class type > inline
-replay::vector4< type >::vector4( const vector3< type >& abc, const type d )
+template <class type> inline
+replay::vector4<type>&
+replay::vector4<type>::negate()
 {
-	this->data[ 0 ] = abc[ 0 ]; this->data[ 1 ] = abc[ 1 ]; this->data[ 2 ] = abc[ 2 ]; this->data[ 3 ] = d;
-}
+	data[0] = -data[0];
+	data[1] = -data[1];
+	data[2] = -data[2];
+	data[3] = -data[3];
 
-/** Convert two 2-tuples into a vector,
-*/
-template < class type > inline
-replay::vector4< type >::vector4( const vector2< type >& ab, const vector2< type >& cd )
-{
-	this->data[ 0 ] = ab[ 0 ]; this->data[ 1 ] = ab[ 1 ]; this->data[ 2 ] = cd[ 0 ]; this->data[ 3 ] = cd[ 1 ];
-}
-
-/**Create a new vector from seperate values.
-\param x The first component.
-\param y The second component.
-\param z The third component.
-\param w The fourth component.*/
-template < class type > inline
-replay::vector4< type >::vector4( const type x, const type y, const type z, const type w )
-{
-	set( x, y, z, w );
-}
-
-/** Negate. Negate each component of this vector. */
-template < class type > inline replay::vector4< type >&
-replay::vector4< type >::negate()
-{
-	this->data[ 0 ] = -this->data[ 0 ];
-	this->data[ 1 ] = -this->data[ 1 ];
-	this->data[ 2 ] = -this->data[ 2 ];
-	this->data[ 3 ] = -this->data[ 3 ];
+	return *this;
 }
 
 /** Compute the sum of all elements. */
-template < class type > inline type
-replay::vector4< type >::sum() const
+template <class type> inline type
+replay::vector4<type>::sum() const
 {
-	return this->data[ 0 ] + this->data[ 1 ]
-		+ this->data[ 2 ] + this->data[ 3 ];
+	return data[0] + data[1]
+		+ data[2] + data[3];
 }
 
 /** Square this vector using the dot product. */
 template< class type > inline type
-replay::vector4< type >::squared() const
+replay::vector4<type>::squared() const
 {
-	return	this->data[0] * this->data[0] +
-			this->data[1] * this->data[1] +
-			this->data[2] * this->data[2] +
-			this->data[3] * this->data[3];
+	return	data[0] * data[0] +
+			data[1] * data[1] +
+			data[2] * data[2] +
+			data[3] * data[3];
 }
 
 /**Negated.*/
-template < class type > inline replay::vector4< type >
-replay::vector4< type >::operator-() const
+template <class type> inline replay::vector4<type>
+replay::vector4<type>::operator-() const
 {
 	return vector4<type>(
-		-this->data[ 0 ],
-		-this->data[ 1 ],
-		-this->data[ 2 ],
-		-this->data[ 3 ] );
+		-data[0],
+		-data[1],
+		-data[2],
+		-data[3] );
 }
 
+template <class type> inline
+type replay::dot(const vector4<type>& lhs, const vector4<type>& rhs)
+{
+	return  lhs[0] * rhs[0] +
+			lhs[1] * rhs[1] +
+			lhs[2] * rhs[2] +
+			lhs[3] * rhs[3];
+}
 
+template <class type> inline
+replay::vector4<type> replay::comp(const vector4<type>& lhs, const vector4<type>& rhs)
+{
+	return replay::vector4<type>(
+		lhs[0] * rhs[0],
+		lhs[1] * rhs[1],
+		lhs[2] * rhs[2],
+		lhs[3] * rhs[3]
+	);
+}
