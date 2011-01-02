@@ -365,14 +365,6 @@ inline float				dot( const vector2f& a, const vector2f& b )
 	return a[ 0 ] * b[ 0 ] + a[ 1 ] * b[ 1 ];
 }
 
-/** Compute the scalar product of two 3d vectors.
-	\ingroup Math
-*/
-inline float				dot( const vector3f& a, const vector3f& b )
-{
-	return a|b;
-}
-
 /** Compute the scalar product of two 4d vectors.
 	\ingroup Math
 */

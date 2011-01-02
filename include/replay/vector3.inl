@@ -24,66 +24,12 @@ Copyright (c) 2010 Marius Elvert
 
 */
 
-/** Create a new vector.
-	The default constructor will initialise all values as zero.
-*/
-template< class type > inline
-replay::vector3< type >::vector3()
+template<class type> inline
+replay::vector3<type>::vector3( const type& x, const type& y, const type& z )
 {
-	this->data[ 0 ] = this->data[ 1 ] = this->data[ 2 ] = type( 0 );
-}
-
-/** Create a new vector.
-	This constructor will leave all values uninitialized.
-*/
-template< class type > inline
-replay::vector3< type >::vector3( uninitialized_tag )
-{
-}
-
-/** Convert an array into a vector.
-	\param array Array to copy the values from. The values will be copied from the first three elements.
-*/
-template< class type > inline
-replay::vector3< type >::vector3( const type* array )
-{
-	data[ 0 ] = array[ 0 ]; data[ 1 ] = array[ 1 ];
-	data[ 2 ] = array[ 2 ];
-}
-
-/** Create a vector with all elements the same value. */
-template< class type > inline
-replay::vector3< type >::vector3( const float value )
-{
-	this->data[ 0 ] = this->data[ 1 ] = this->data[ 2 ] = value;
-}
-
-/** Create a new vector from seperate values.
-	\param x The first component.
-	\param y The second component.
-	\param z The third component.
-*/
-template< class type > inline
-replay::vector3< type >::vector3( const type& x, const type& y, const type& z )
-{
-	this->data[ 0 ] = x;
-	this->data[ 1 ] = y;
-	this->data[ 2 ] = z;
-}
-
-
-
-/** Assign an array.
-	\param array Array to copy the values from. The values will be copied from the first three elements.
-*/
-template< class type > inline replay::vector3< type >&
-replay::vector3< type >::operator=( const type* array )
-{
-	this->data[ 0 ] = array[ 0 ];
-	this->data[ 1 ] = array[ 1 ];
-	this->data[ 2 ] = array[ 2 ];
-
-	return (*this);
+	this->data[0] = x;
+	this->data[1] = y;
+	this->data[2] = z;
 }
 
 /** Set this objects components.
@@ -92,7 +38,7 @@ replay::vector3< type >::operator=( const type* array )
 	\param z The third component.
 */
 template< class type > inline replay::vector3< type >&
-replay::vector3< type >::set( const type& x, const type& y, const type& z )
+replay::vector3< type >::reset( const type& x, const type& y, const type& z )
 {
 	this->data[ 0 ] = x;
 	this->data[ 1 ] = y;
@@ -105,7 +51,7 @@ replay::vector3< type >::set( const type& x, const type& y, const type& z )
 	\param v Value to set the vector to.
 */
 template< class type > inline replay::vector3< type >&
-replay::vector3< type >::set( const type& v )
+replay::vector3< type >::reset( const type& v )
 {
 	this->data[ 0 ] = this->data[ 1 ] = this->data[ 2 ] = v;
 
@@ -132,26 +78,6 @@ replay::vector3< type >::operator-( const vector3< type >& operand ) const
 		this->data[ 2 ] - operand.data[ 2 ] );
 }
 
-/** Cross product.
-	Also referred to as vector-product.
-*/
-template< class type > inline replay::vector3< type >
-replay::vector3< type >::operator*( const vector3< type >& operand ) const
-{
-	return replay::vector3< type >(
-		this->data[ 1 ] * operand.data[ 2 ] - this->data[ 2 ] * operand.data[ 1 ],
-		this->data[ 2 ] * operand.data[ 0 ] - this->data[ 0 ] * operand.data[ 2 ],
-		this->data[ 0 ] * operand.data[ 1 ] - this->data[ 1 ] * operand.data[ 0 ] );
-}
-
-/** Dot product. */
-template< class type > inline type
-replay::vector3< type >::operator|( const vector3< type >& operand ) const
-{
-	return	this->data[ 0 ] * operand.data[ 0 ] +
-			this->data[ 1 ] * operand.data[ 1 ] +
-			this->data[ 2 ] * operand.data[ 2 ];
-}
 
 /** Scalar product. */
 template< class type > inline replay::vector3< type >
@@ -247,7 +173,7 @@ replay::vector3< type >::operator!=( const vector3< type >& operand ) const
 			data[2] != operand[2];
 }
 
-/** Negate. Negate each component of this vector. */
+/** Negate. In-place negate each component of this vector. */
 template< class type > inline void
 replay::vector3< type >::negate()
 {
@@ -272,13 +198,27 @@ replay::vector3< type >::sum() const
 	return	this->data[ 0 ] + this->data[ 1 ] + this->data[ 2 ];
 }
 
-/** Clear. Reset all values to zero. */
-template< class type > inline void
-replay::vector3< type >::clear()
+
+template<class type> inline
+replay::vector3<type> replay::cross( const vector3<type>& lhs, const vector3<type>& rhs )
 {
-	this->data[ 0 ] = this->data[ 1 ] = this->data[ 2 ] = type( 0 );
+	return replay::vector3< type >(
+		lhs[1]*rhs[2] - lhs[2]*rhs[1],
+		lhs[2]*rhs[0] - lhs[0]*rhs[2],
+		lhs[0]*rhs[1] - lhs[1]*rhs[0]
+	);
 }
 
+template<class type> inline
+type replay::dot( const vector3<type>& lhs, const vector3<type>& rhs )
+{
+	return lhs[0]*rhs[0] + lhs[1]*rhs[1] + lhs[2]*rhs[2];
+}
 
+template <class type> inline 
+replay::vector3<type> replay::comp( const vector3<type>& a, const vector3<type>& b )
+{
+	return vector3<type>( a[0]*b[0], a[1]*b[1], a[2]*b[2] );
+}
 
 

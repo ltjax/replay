@@ -76,10 +76,10 @@ BOOST_AUTO_TEST_CASE( vector3_integer_operations )
 	BOOST_REQUIRE_EQUAL(all_one.sum(), 3);
 	BOOST_REQUIRE_EQUAL(all_one.squared(), 3);
 
-	int checksum=vec3::dot_product(a, all_one);
+	int checksum=dot(a, all_one);
 	BOOST_REQUIRE_EQUAL(checksum, a.sum());
 
-	checksum=vec3::dot_product(b, all_one);
+	checksum=dot(b, all_one);
 	BOOST_REQUIRE_EQUAL(checksum, b.sum());
 
 	BOOST_REQUIRE_EQUAL(a.sum()-b.sum(), c.sum());
@@ -150,7 +150,7 @@ BOOST_AUTO_TEST_CASE( circumcircle )
 	// Construct a rotational matrix
 	vector3f x=polar_to_model(177.f, -34.f);
 	vector3f y=normalized(math::construct_perpendicular(x));
-	matrix3 M(x,y,x*y);
+	matrix3 M(x,y,cross(x, y));
 
 	// Construct three points on a circle and rotate them
 	const float radius = 14.f;

@@ -55,8 +55,8 @@ replay::aabb::aabb( const vector3f& min, const vector3f& max )
 */
 replay::aabb& replay::aabb::clear()
 {
-	(*this)[ 0 ].set( std::numeric_limits<float>::max() );
-	(*this)[ 1 ].set( -std::numeric_limits<float>::max() );
+	(*this)[ 0 ].reset( std::numeric_limits<float>::max() );
+	(*this)[ 1 ].reset( -std::numeric_limits<float>::max() );
 
 	return *this;
 }
