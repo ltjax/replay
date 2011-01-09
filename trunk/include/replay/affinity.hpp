@@ -84,6 +84,15 @@ public:
 	affinity( const quaternion& orientation, const vector3f& position )
 	: orientation( orientation ), position( position ) {}
 
+	
+	/** Constructor for user-defined conversions.
+		\see convertible_tag
+	*/
+	template <class source_type> affinity(const source_type& other, typename convertible_tag<source_type, affinity>::type empty=0)
+	{
+		*this = convert(other);
+	}
+
 	/** Concaternate two mappings a and b.
 		the effect is as if b and a were executed in that order.
 	*/

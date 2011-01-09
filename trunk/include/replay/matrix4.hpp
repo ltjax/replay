@@ -57,6 +57,14 @@ public:
 							 const float a12, const float a22, const float a32, const float a42,
 							 const float a13, const float a23, const float a33, const float a43,
 							 const float a14, const float a24, const float a34, const float a44 );
+	
+	/** Constructor for user-defined conversions.
+		\see convertible_tag
+	*/
+	template <class source_type> matrix4(const source_type& other, typename convertible_tag<source_type, matrix4>::type empty=0)
+	{
+		*this = convert(other);
+	}
 
 	float*			ptr();
 	const float*	ptr() const;

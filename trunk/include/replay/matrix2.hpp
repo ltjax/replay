@@ -48,6 +48,15 @@ class matrix2
 		*/
 		matrix2(	const float m11, const float m21,
 					const float m12, const float m22 );
+					
+		/** Constructor for user-defined conversions.
+			\see convertible_tag
+		*/
+		template <class source_type>
+		matrix2(const source_type& other, typename convertible_tag<source_type, matrix2>::type empty=0)
+		{
+			*this = convert(other);
+		}
 
 		/** Set the matrix from four values.
 		*/

@@ -39,6 +39,19 @@ class uninitialized_tag
 {
 };
 
+
+/** Use the SFINAE idiom to selectively enable conversion-constructors.
+	Several types have a conversion-constructor that can be enabled
+	by specializing convertible_tag for the source and target type and
+	adding a typedef named "type" that can accept a zero, for example a void*.
+	The actual type does not matter, but smaller types are better in case
+	they don't get optimized away properly.
+*/
+template <class source_type, class target_type>
+struct convertible_tag
+{
+};
+
 }
 
 #endif
