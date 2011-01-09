@@ -41,37 +41,37 @@ template < class type > class vector4
 public:
 	/** Element type.
 	*/
-	typedef type		value_type;
+	typedef type					value_type;
 
 	/** Get a pointer to the internal array.
 	*/
-	inline type*		ptr() { return data; }
+	inline type*					ptr() { return data; }
 
 	/** Get a pointer to the internal array.
 	*/
-	inline const type*	ptr() const { return data; }
+	inline const type*				ptr() const { return data; }
 
 	/** Index access operator.
 	*/
 	template < class index_type > inline
-	value_type&			operator[](const index_type i) { return data[i]; }
+	value_type&						operator[](const index_type i) { return data[i]; }
 
 	/** Index access operator.
 	*/
 	template < class index_type > inline
-	const value_type	operator[](const index_type i) const { return data[i]; }
+	const value_type				operator[](const index_type i) const { return data[i]; }
 	
 	/** Set all elements to a single value. Default to zero.
 	*/
-	vector4<type>&		reset(value_type value=value_type(0));
+	vector4<type>&					reset(value_type value=value_type(0));
 	
 	/** Assemble a 4D vector by concatenating a 3D vector and a 4th element.
 	*/
-	vector4<type>&		reset(const vector3<type>& xyz, value_type w);
+	vector4<type>&					reset(const vector3<type>& xyz, value_type w);
 	
 	/** Assemble a 4D vector by concatenating two 2D vectors.
 	*/
-	vector4<type>&		reset(const vector2<type>& xy, const vector2<type>& zw);
+	vector4<type>&					reset(const vector2<type>& xy, const vector2<type>& zw);
 
 	/** Set the elements of the vector individually.
 		\param x The first component.
@@ -79,39 +79,47 @@ public:
 		\param z The third component.
 		\param w The fourth component.
 	*/
-	vector4<type>&		reset(value_type x, value_type y, value_type z, value_type w);
+	vector4<type>&					reset(value_type x, value_type y, value_type z, value_type w);
 
-	vector4<type>&		operator+=( const vector4<type>& rhs );
-	vector4<type>&		operator-=( const vector4<type>& rhs );
-	vector4<type>&		operator*=( const type value );
-	vector4<type>&		operator/=( const type value );
-	vector4<type>		operator-() const;
+	vector4<type>&					operator+=( const vector4<type>& rhs );
+	vector4<type>&					operator-=( const vector4<type>& rhs );
+	vector4<type>&					operator*=( const type value );
+	vector4<type>&					operator/=( const type value );
+	vector4<type>					operator-() const;
 	
 	/** In-place negate.
 		Negates each component of this vector.
 	*/
-	vector4<type>&		negate();
+	vector4<type>&					negate();
 
-	type				sum() const;
-	type				squared() const;
+	type							sum() const;
+	type							squared() const;
 
 	/** Non-initializing constructor.
 		Leaves all elements uninitialized.
 	*/
-	explicit 			vector4(uninitialized_tag) {}
+	explicit 						vector4(uninitialized_tag) {}
+	
+	/** Constructor for user-defined conversions.
+		\see convertible_tag
+	*/
+	template <class source_type>	vector4(const source_type& other, typename convertible_tag<source_type, vector4>::type empty=0)
+	{
+		*this = convert(other);
+	}
 
 	/** Single-value constructor.
 		Sets all elements to the given value. Defaults to zero.
 	*/
-	explicit			vector4(value_type value=value_type(0)) {reset(value);}
+	explicit						vector4(value_type value=value_type(0)) {reset(value);}
 
 	/** Assemble a 4D vector by concatenating a 3D vector and a 4th element.
 	*/
-						vector4(const vector3<type>& xyz, value_type w) {reset(xyz,w);}
+									vector4(const vector3<type>& xyz, value_type w) {reset(xyz,w);}
 
 	/** Assemble a 4D vector by concatenating two 2D vectors.
 	*/
-						vector4(const vector2<type>& xy, const vector2<type>& zw) {reset(xy,zw);}
+									vector4(const vector2<type>& xy, const vector2<type>& zw) {reset(xy,zw);}
 
 	/** Create a new vector from seperate values.
 		\param x The first component.
@@ -119,13 +127,13 @@ public:
 		\param z The third component.
 		\param w The fourth component.
 	*/
-						vector4(value_type x, value_type y, value_type z, value_type w) {reset(x,y,z,w);}
+									vector4(value_type x, value_type y, value_type z, value_type w) {reset(x,y,z,w);}
 
 	/** Convert an array-like type to a 4D vector.
 		The parameter needs to be indexable for at least 4 elements.
 	*/
 	template <class array_type> static
-	vector4<type>		cast(const array_type& src)
+	vector4<type>					cast(const array_type& src)
 	{
 		return vector4<type>(
 			static_cast<type>(src[0]),

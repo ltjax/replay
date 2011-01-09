@@ -29,6 +29,7 @@ Copyright (c) 2010 Marius Elvert
 
 #include <iosfwd>
 #include <replay/common.hpp>
+#include <boost/utility.hpp>
 
 namespace replay {
 
@@ -74,6 +75,14 @@ public:
 		This constructor will leave all values uninitialized.
 	*/
 	explicit							vector3(uninitialized_tag) {}
+
+	/** Constructor for user-defined conversions.
+		\see convertible_tag
+	*/
+	template <class source_type>		vector3(const source_type& other, typename convertible_tag<source_type, vector3>::type empty=0)
+	{
+		*this = convert(other);
+	}
 	
 	/** Create a vector with all elements the same value.
 	*/

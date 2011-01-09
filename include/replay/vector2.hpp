@@ -68,7 +68,15 @@ public:
 		Leaves all values uninitialized
 	*/
 	explicit				vector2(uninitialized_tag) {}
-							
+	
+	/** Constructor for user-defined conversions.
+		\see convertible_tag
+	*/
+	template <class source_type> vector2(const source_type& other, typename convertible_tag<source_type, vector2>::type empty=0)
+	{
+		*this = convert(other);
+	}
+
 	/** Initialize vector by setting all elements to a single value.
 	*/
 	explicit				vector2(value_type value = type(0)) {reset(value);}

@@ -51,6 +51,15 @@ class matrix3
 
 		explicit				matrix3( const quaternion& q );
 
+			
+		/** Constructor for user-defined conversions.
+			\see convertible_tag
+		*/
+		template <class source_type> matrix3(const source_type& other, typename convertible_tag<source_type, matrix3>::type empty=0)
+		{
+			*this = convert(other);
+		}
+
 		/** Get a pointer to the data.
 		*/
 		const float*			ptr() const { return data; }

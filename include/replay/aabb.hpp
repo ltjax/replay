@@ -56,6 +56,14 @@ public:
 									aabb( );
 	explicit						aabb( const float extends );
 									aabb( const vector3f& min, const vector3f& max );
+	
+	/** Constructor for user-defined conversions.
+		\see convertible_tag
+	*/
+	template <class source_type>	aabb(const source_type& other, typename convertible_tag<source_type, aabb>::type empty=0)
+	{
+		*this = convert(other);
+	}
 
 	aabb&							clear();
 	aabb&							move( const vector3f& delta );
