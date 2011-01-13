@@ -115,6 +115,7 @@ private:
 
 
 /** Vector dot product of two 2D vectors.
+	\relates vector2
 	\ingroup Math
 */
 template <class type> inline
@@ -124,6 +125,7 @@ type dot(const vector2<type>& lhs, const vector2<type>& rhs)
 }
 
 /** Component-wise product of two 2D vectors.
+	\relates vector2
 	\ingroup Math
 */
 template <class type> inline
@@ -133,6 +135,7 @@ vector2<type> comp(const vector2<type>& lhs, const vector2<type>& rhs)
 }
 
 /** Vector addition.
+	\relates vector2
 	\ingroup Math
 */
 template <class type> inline
@@ -142,6 +145,7 @@ vector2<type> operator+(vector2<type> lhs, const vector2<type>& rhs)
 }
 
 /** Vector substraction.
+	\relates vector2
 	\ingroup Math
 */
 template <class type> inline
@@ -151,6 +155,7 @@ vector2<type> operator-(vector2<type> lhs, const vector2<type>& rhs)
 }
 
 /** Scalar product.
+	\relates vector2
 	\ingroup Math
 */
 template <class type> inline
@@ -160,6 +165,7 @@ vector2<type> operator*(vector2<type> lhs, const type rhs)
 }
 
 /** Scalar product.
+	\relates vector2
 	\ingroup Math
 */
 template <class type> inline
@@ -170,6 +176,7 @@ vector2<type> operator*(const type lhs, vector2<type> rhs)
 }
 
 /** Scalar division.
+	\relates vector2
 	\ingroup Math
 */
 template <class type> inline
@@ -180,11 +187,13 @@ vector2<type> operator/(vector2<type> lhs, const type rhs)
 }
 
 /** Shorthandle for a 2D \c float vector.
+	\relates vector2
 	\ingroup Math	
 */
 typedef vector2<float> vector2f;
 
 /** Shorthandle for a 2D \c int vector.
+	\relates vector2
 	\ingroup Math
 */
 typedef vector2<int> vector2i;

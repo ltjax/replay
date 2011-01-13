@@ -150,18 +150,21 @@ private:
 };
 
 /** Scalar dot product of two 4D vectors.
+	\relates vector4
 	\ingroup Math
 */
 template <class type> inline
 type dot(const vector4<type>& lhs, const vector4<type>& rhs);
 
 /** Component wise multiplication of two 4D vectors.
+	\relates vector4
 	\ingroup Math
 */
 template <class type> inline
 vector4<type> comp(const vector4<type>& lhs, const vector4<type>& rhs);
 
 /** Scalar product.
+	\relates vector4
 	\ingroup Math
 */
 template <class type>
@@ -171,6 +174,7 @@ vector4<type> operator*(const type lhs, vector4<type> rhs)
 }
 
 /** Addition.
+	\relates vector4
 	\ingroup Math
 */
 template <class type>
@@ -180,6 +184,7 @@ vector4<type> operator+(vector4<type> lhs, const vector4<type>& rhs)
 }
 
 /** Substraction.
+	\relates vector4
 	\ingroup Math
 */
 template <class type>
@@ -189,6 +194,7 @@ vector4<type> operator-(vector4<type> lhs, const vector4<type>& rhs)
 }
 
 /** Scalar product.
+	\relates vector4
 	\ingroup Math
 */
 template <class type>
@@ -198,6 +204,7 @@ vector4<type> operator*(vector4<type> lhs, const type rhs)
 }
 
 /** Scalar division.
+	\relates vector4
 	\ingroup Math
 */
 template <class type>
@@ -207,12 +214,14 @@ vector4<type> operator/(vector4<type> lhs, const type rhs)
 }
 
 /** A convenience typedef for a 4d floating-point vector.
+	\relates vector4
 	\ingroup Math
 */
 typedef vector4<float> vector4f;
 
 
 /** A convenience typedef for a 4d double-precision floating-point vector.
+	\relates vector4
 	\ingroup Math
 */
 typedef vector4<double> vector4d;

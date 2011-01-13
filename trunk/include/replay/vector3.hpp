@@ -128,25 +128,32 @@ private:
 };
 
 /** Cross product.
-	Also referred to as vector-product.
+	Also referred to as vector-product, this operator returns a vector that
+	is perpendicular to both input vectors.
+	The length of this vector is equal to the area of the parallelogram spanned
+	by the two input vectors.
+	\relates vector3
 	\ingroup Math
 */
 template <class type> inline 
 vector3<type> cross( const vector3<type>& a, const vector3<type>& b );
 	
 /** Dot product of two 3D vectors.
+	\relates vector3
 	\ingroup Math
 */
 template <class type> inline 
 type dot( const vector3<type>& a, const vector3<type>& b );
 
 /** Component wise product of two 3D vectors.
+	\relates vector3
 	\ingroup Math
 */
 template <class type> inline 
 vector3<type> comp( const vector3<type>& a, const vector3<type>& b );
 
 /** Addition.
+	\relates vector3
 	\ingroup Math
 */
 template <class type> inline
@@ -156,6 +163,7 @@ vector3<type> operator+(vector3<type> lhs, const vector3<type>& rhs)
 }
 
 /** Subtraction.
+	\relates vector3
 	\ingroup Math
 */
 template <class type> inline
@@ -165,6 +173,7 @@ vector3<type> operator-(vector3<type> lhs, const vector3<type>& rhs)
 }
 
 /** Scalar product.
+	\relates vector3
 	\ingroup Math
 */
 template <class type> inline
@@ -174,6 +183,7 @@ vector3<type> operator*(vector3<type> lhs, const type rhs)
 }
 
 /** Scalar product.
+	\relates vector3
 	\ingroup Math
 */
 template <class type> inline
@@ -183,6 +193,7 @@ vector3<type> operator*(const type lhs, vector3<type> rhs)
 }
 
 /** Scalar division.
+	\relates vector3
 	\ingroup Math
 */
 template <class type> inline
@@ -193,11 +204,13 @@ vector3<type> operator/(vector3<type> lhs, const type& rhs)
 
 
 /** A convenience typedef for a 3d floating-point vector.
+	\relates vector3
 	\ingroup Math
 */
 typedef vector3<float>					vector3f;
 
 /** A convenience typedef for a 2d double-precision floating-point vector.
+	\relates vector3
 	\ingroup Math
 */
 typedef vector3<double>					vector3d;
