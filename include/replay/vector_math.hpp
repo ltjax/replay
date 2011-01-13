@@ -459,6 +459,7 @@ std::ostream& operator<<(std::ostream& lhs, const replay::vector2<type>& rhs)
 /** Stream-out a vector in human-readable form.
 	This streams a vector with elements x,y and z as "(x y z)".
 	\note The element type needs to be streamable.
+	\relates vector3
 	\ingroup Math
 */
 template <class type>
@@ -470,6 +471,7 @@ std::ostream& operator<<(std::ostream& lhs, const replay::vector3<type>& rhs)
 /** Stream-out a vector in human-readable form.
 	This streams a vector with elements x,y,z and w as "(x y z w)".
 	\note The element type needs to be streamable.
+	\relates vector4
 	\ingroup Math
 */
 template <class type>
