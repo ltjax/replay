@@ -179,17 +179,6 @@ vector2<type> operator/(vector2<type> lhs, const type rhs)
 	return lhs /= rhs;
 }
 
-/** Stream-out a vector in human-readable form.
-	This streams a vector with elements x and y as "(x y)".
-	\note The element type needs to be streamable.
-	\ingroup Math
-*/
-template <class type>
-std::ostream& operator<<(std::ostream& lhs, const replay::vector2<type>& rhs)
-{
-	return lhs << '(' << rhs[0] << ' ' << rhs[1] << ')';
-}
-
 /** Shorthandle for a 2D \c float vector.
 	\ingroup Math	
 */

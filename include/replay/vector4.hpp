@@ -206,17 +206,6 @@ vector4<type> operator/(vector4<type> lhs, const type rhs)
 	return lhs /= rhs;
 }
 
-/** Stream-out a vector in human-readable form.
-	This streams a vector with elements x,y,z and w as "(x y z w)".
-	\note The element type needs to be streamable.
-	\ingroup Math
-*/
-template <class type>
-std::ostream& operator<<(std::ostream& lhs, const replay::vector4<type>& rhs)
-{
-	return lhs << '(' << rhs[0] << ' ' << rhs[1] << ' ' << rhs[2] << ' ' << rhs[3] << ')';
-}
-
 /** A convenience typedef for a 4d floating-point vector.
 	\ingroup Math
 */

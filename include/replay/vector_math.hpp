@@ -27,7 +27,7 @@ Copyright (c) 2010 Marius Elvert
 #ifndef replay_vector_math_hpp
 #define replay_vector_math_hpp
 
-#include <iosfwd>
+#include <ostream>
 #include <algorithm>
 #include <boost/tuple/tuple.hpp>
 #include <boost/array.hpp>
@@ -444,6 +444,39 @@ vector3f					normalized( const vector3f& vector );
 	\ingroup Math
 */
 vector2f					normalized( const vector2f& vector );
+
+/** Stream-out a vector in human-readable form.
+	This streams a vector with elements x and y as "(x y)".
+	\note The element type needs to be streamable.
+	\ingroup Math
+*/
+template <class type>
+std::ostream& operator<<(std::ostream& lhs, const replay::vector2<type>& rhs)
+{
+	return lhs << '(' << rhs[0] << ' ' << rhs[1] << ')';
+}
+
+/** Stream-out a vector in human-readable form.
+	This streams a vector with elements x,y and z as "(x y z)".
+	\note The element type needs to be streamable.
+	\ingroup Math
+*/
+template <class type>
+std::ostream& operator<<(std::ostream& lhs, const replay::vector3<type>& rhs)
+{
+	return lhs << '(' << rhs[0] << ' ' << rhs[1] << ' ' << rhs[2] << ')';
+}
+
+/** Stream-out a vector in human-readable form.
+	This streams a vector with elements x,y,z and w as "(x y z w)".
+	\note The element type needs to be streamable.
+	\ingroup Math
+*/
+template <class type>
+std::ostream& operator<<(std::ostream& lhs, const replay::vector4<type>& rhs)
+{
+	return lhs << '(' << rhs[0] << ' ' << rhs[1] << ' ' << rhs[2] << ' ' << rhs[3] << ')';
+}
 
 }
 
