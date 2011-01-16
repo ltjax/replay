@@ -70,25 +70,25 @@ public:
 
 	/** Construct a mapping based on an offset.
 	*/
-	explicit affinity( const vector3f& position )
+	explicit affinity(const vector3f& position)
 	: position( position ) {}
 	
 	
 	/** Construct a mapping based on an orientation.
 	*/
-	explicit affinity( const quaternion& orientation )
-	: orientation( orientation ) {}
+	explicit affinity(const quaternion& orientation)
+	: orientation(orientation) {}
 
 	/** Construct a mapping based on an orientation and an offset.
 	*/
-	affinity( const quaternion& orientation, const vector3f& position )
-	: orientation( orientation ), position( position ) {}
+	affinity(const quaternion& orientation, const vector3f& position)
+	: orientation(orientation), position( position ) {}
 
 	
 	/** Constructor for user-defined conversions.
 		\see convertible_tag
 	*/
-	template <class source_type> affinity(const source_type& other, typename convertible_tag<source_type, affinity>::type empty=0)
+	template <class T>		affinity(const T& other, typename convertible_tag<T, affinity>::type empty=0)
 	{
 		*this = convert(other);
 	}
@@ -96,64 +96,65 @@ public:
 	/** Concaternate two mappings a and b.
 		the effect is as if b and a were executed in that order.
 	*/
-	affinity				operator*( const affinity& other ) const
+	affinity				operator*(const affinity& rhs) const
 	{
-		return affinity( orientation * other.orientation,
-			quaternion::transform( orientation, other.position ) + position );
+		return affinity(orientation*rhs.orientation,
+			transform(orientation, rhs.position) + position);
 	}
 
 	/** Inplace concaternate two mappings a and b.
 		the effect is as if b and a were executed in that order.
 	*/
-	affinity&				operator*=( const affinity& other )
+	affinity&				operator*=(const affinity& rhs)
 	{
-		this->position = quaternion::transform( orientation, other.position ) + position;
-		this->orientation *= other.orientation;
+		this->position = transform(orientation, rhs.position) + position;
+		this->orientation *= rhs.orientation;
 		return *this;
 	}
 
 	/** Transform a position vector by this mapping.
 	*/
-	const vector3f			operator*( const vector3f& rhs ) const
+	const vector3f			operator*(const vector3f& rhs) const
 	{
-		return quaternion::transform(orientation,rhs)+position;
+		return transform(orientation, rhs) + position;
 	}
-
-	/** Find the inverse of the given affinity.
-		\param rhs The original mapping of which to find the inverse.
-		\return The inverse of the mapping.
-	*/
-	static const affinity	inverse( const affinity& rhs )
-	{
-		quaternion temp = quaternion::inverse( rhs.orientation );
-
-		return affinity( temp, -quaternion::transform( temp, rhs.position ) );
-	}
-	
-	/** Blend smoothly between two affinities.
-		\param lhs The first affinity.
-		\param rhs The second affinity.
-		\param x A value in \f$[0..1]\f$, selecting blend fraction between a and b.
-		\return Result of the blending.
-		\note Uses \ref quaternion::nlerp internally.
-		\note This is not a linear operator.
-	*/
-	static const affinity	blend( const affinity& lhs, const affinity& rhs, float x )
-	{
-
-		return affinity( quaternion::nlerp( lhs.orientation, rhs.orientation, x ),
-			(1.f-x)*lhs.position + x*rhs.position );
-	}
-
-
-	/** Get this mapping as a homogenous 4x4 matrix.
-	*/
-	inline const matrix4	matrix() const
-	{
-		return matrix4( orientation, position );
-	}
-
 };
+
+
+/** Get this mapping as a homogenous 4x4 matrix.
+*/
+inline
+const matrix4		to_matrix(const affinity& rhs)
+{
+	return matrix4(rhs.orientation, rhs.position);
+}
+
+/** Find the inverse of the given affinity.
+	\param rhs The original mapping of which to find the inverse.
+	\return The inverse of the mapping.
+*/
+inline
+const affinity		inverse(const affinity& rhs)
+{
+	const quaternion rho(replay::inverse(rhs.orientation));
+	return affinity(rho, -transform(rho, rhs.position));
+}
+	
+/** Blend smoothly between two affinities.
+	\param lhs The first affinity.
+	\param rhs The second affinity.
+	\param alpha A value in \f$[0..1]\f$, selecting blend fraction between lhs and rhs.
+	\return Result of the blending.
+	\note Uses \ref quaternion::nlerp internally.
+	\note This is not a linear operator.
+*/
+inline
+const affinity		blend( const affinity& lhs, const affinity& rhs, float alpha)
+{
+
+	return affinity(nlerp(lhs.orientation, rhs.orientation, alpha),
+		(1.f-alpha)*lhs.position + alpha*rhs.position );
+}
 
 }
 

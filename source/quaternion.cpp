@@ -77,33 +77,23 @@ replay::quaternion::quaternion( const float w, const float x, const float y, con
 const replay::quaternion
 replay::quaternion::operator*( const quaternion& operand ) const
 {
-	quaternion result;
-
-    multiply( *this, operand, result );
-
-	return result;
+	return multiply(*this, operand);
 }
 
 replay::quaternion&
 replay::quaternion::operator*=( const quaternion& operand )
 {
-	quaternion temp;
-
-	multiply( *this, operand, temp );
-
-	*this = temp;
-
-	return (*this);
+	return (*this = multiply(*this, operand));
 }
 
 const replay::quaternion
-replay::quaternion::operator*( const float value ) const
+replay::quaternion::operator*(const float rhs) const
 {
 	return quaternion( 
-		w * value,
-		x * value,
-		y * value,
-		z * value );
+		w * rhs,
+		x * rhs,
+		y * rhs,
+		z * rhs );
 }
 
 const replay::quaternion
@@ -200,7 +190,7 @@ replay::quaternion::normalize()
 }
 
 void
-replay::quaternion::rotate( quaternion& q, const float angle, const vector3f& axis )
+replay::rotate( quaternion& q, const float angle, const vector3f& axis )
 {
 	const quaternion delta( angle, axis );
 
@@ -208,23 +198,22 @@ replay::quaternion::rotate( quaternion& q, const float angle, const vector3f& ax
 	q.normalize();
 }
 
-void
-replay::quaternion::convert_to_axis_angle( const quaternion& q, float& angle_result, vector3f& axis_result )
-{	
-	angle_result = std::acos( math::clamp( q.w, -1.f, 1.f ) ) * 2.f;
+boost::tuple<replay::vector3f, float>
+replay::to_axis_angle(const quaternion& obj)
+{
+	const float angle = 2.f*std::acos(math::clampabs(obj.w, 1.f));
 
 	// begin calculating the inverse sine
-	float g = std::sqrt( std::max( 1.f - ( q.w * q.w ), 0.f ) );
+	float factor = std::sqrt(std::max(1.f - (obj.w * obj.w), 0.f));
 
 	// FIXME: is this needed?
-	if ( std::fabs( g ) < 0.0001f )
-		g = 1.f;
+	if ( std::fabs(factor) < 0.0001f )
+		factor = 1.f;
 	else
-		g = 1.f / g;
+		factor = 1.f / factor;
 
-	axis_result[ 0 ] = q.x * g;
-	axis_result[ 1 ] = q.y * g;
-	axis_result[ 2 ] = q.z * g;
+	return boost::tuple<replay::vector3f, float>(
+		replay::vector3f(obj.x * factor, obj.y * factor, obj.z * factor), angle);
 }
 
 const replay::vector3f
@@ -255,13 +244,13 @@ replay::quaternion::get_transformed_z() const
 }
 
 const float
-replay::quaternion::inner_product( const quaternion& a, const quaternion& b )
+replay::dot(const quaternion& a, const quaternion& b)
 {
 	return a.w*b.w + a.x*b.x + a.y*b.y + a.z*b.z;
 }
 
 const replay::quaternion
-replay::quaternion::shortest_arc( const vector3f& a, const vector3f& b )
+replay::shortest_arc( const vector3f& a, const vector3f& b )
 {
 	// Compute the cosine of the angle between the two vectors
 	const float cos = dot(a, b);
@@ -277,7 +266,7 @@ replay::quaternion::shortest_arc( const vector3f& a, const vector3f& b )
 }
 
 replay::vector3f
-replay::quaternion::transform( const quaternion& q, const vector3f& v )
+replay::transform( const quaternion& q, const vector3f& v )
 {
 	return vector3f(
 			(1.f - 2.f * ( q.y*q.y + q.z*q.z )) * v[ 0 ] + 2.f * ( q.x*q.y - q.z*q.w ) * v[ 1 ] + 2.f * ( q.x*q.z + q.y*q.w ) * v[ 2 ],
@@ -285,19 +274,14 @@ replay::quaternion::transform( const quaternion& q, const vector3f& v )
 			2.f * ( q.x*q.z - q.y*q.w ) * v[ 0 ] + 2.f * ( q.y*q.z + q.x*q.w ) * v[ 1 ] + (1.f - 2.f * ( q.x*q.x + q.y*q.y )) * v[ 2 ] );
 }
 
-const replay::quaternion
-replay::quaternion::inverse( const quaternion& a )
-{
-	return a.conjugated() / a.squared();
-}
 
 const replay::quaternion
-replay::quaternion::nlerp( const replay::quaternion& a, const replay::quaternion& b, const float x )
+replay::nlerp( const replay::quaternion& a, const replay::quaternion& b, const float x )
 {
 	quaternion result;
 
 	// Turn the right way...
-	if ( inner_product( a, b ) < 0.f )
+	if ( dot( a, b ) < 0.f )
 		result = ( a*(1.f-x) - b*x );
 	else
 		result = ( a*(1.f-x) + b*x );
@@ -307,19 +291,19 @@ replay::quaternion::nlerp( const replay::quaternion& a, const replay::quaternion
 }
 
 const replay::quaternion
-replay::quaternion::slerp( const replay::quaternion& a, const replay::quaternion& b, const float x )
+replay::slerp( const replay::quaternion& a, const replay::quaternion& b, const float x )
 {
-	const float dot = inner_product( a, b );
+	const float angle = dot(a, b);
 
-	if ( dot < 0.f )
+	if (angle < 0.f)
 	{
-		if ( math::fuzzy_equals( dot, -1.f ) ) // nlerp
+		if ( math::fuzzy_equals( angle, -1.f ) ) // nlerp
 		{
 			quaternion result( a*(1.f-x) - b*x );
 			return result.normalize();
 		}
 
-		const float theta = std::acos( math::clamp( -dot, -1.f, 1.f ) );
+		const float theta = std::acos( math::clamp( -angle, -1.f, 1.f ) );
 		const float sin_theta = std::sin( theta );
 		const float m = std::sin( (1.f-x)*theta ) / sin_theta;
 		const float n = std::sin( x*theta ) / sin_theta;
@@ -329,13 +313,13 @@ replay::quaternion::slerp( const replay::quaternion& a, const replay::quaternion
 	}
 	else
 	{
-		if ( math::fuzzy_equals( dot, 1.f ) ) // nlerp
+		if ( math::fuzzy_equals( angle, 1.f ) ) // nlerp
 		{
 			quaternion result( a*(1.f-x) + b*x );
 			return result.normalize();
 		}
 
-		const float theta = std::acos( math::clamp( dot, -1.f, 1.f ) );
+		const float theta = std::acos( math::clamp( angle, -1.f, 1.f ) );
 		const float sin_theta = std::sin( theta );
 		const float m = std::sin( (1.f-x)*theta ) / sin_theta;
 		const float n = std::sin( x*theta ) / sin_theta;
@@ -345,14 +329,18 @@ replay::quaternion::slerp( const replay::quaternion& a, const replay::quaternion
 }
 
 const replay::quaternion
-replay::quaternion::short_rotation( const quaternion& a, const quaternion& b )
+replay::short_rotation( const quaternion& a, const quaternion& b )
 {
-	const float dot = quaternion::inner_product( a, b );
-	quaternion temp = b * quaternion::inverse( a );
+	quaternion result(b * inverse(a));
 
-	if ( dot < 0.f )
-		temp.negate();
+	if (dot(a, b) < 0.f)
+		result.negate();
 
-	return temp;
+	return result;
 }
 
+const replay::quaternion
+replay::inverse(const quaternion& a)
+{
+	return a.conjugated() / a.squared();
+}
