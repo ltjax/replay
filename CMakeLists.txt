@@ -8,10 +8,10 @@ set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${replay_BINARY_DIR}/build )
 
 set( Boost_USE_STATIC_LIBS OFF )
 if( WIN32 )
-find_package( Boost 1.42 EXACT REQUIRED )
+find_package( Boost 1.42 REQUIRED )
 else( WIN32 )
 set( Boost_USE_MULTITHREADED OFF )
-find_package( Boost 1.42 EXACT REQUIRED COMPONENTS unit_test_framework )
+find_package( Boost 1.42 REQUIRED COMPONENTS unit_test_framework )
 endif( WIN32 )
 
 find_package( PNG QUIET )

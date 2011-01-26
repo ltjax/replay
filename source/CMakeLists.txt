@@ -5,7 +5,7 @@ else( PNG_FOUND )
 include_directories( ${replay_SOURCE_DIR}/include )
 endif( PNG_FOUND )
 
-file( GLOB replay_HEADERS ${replay_SOURCE_DIR}/include/replay/*.hpp )
+file( GLOB replay_HEADERS ${replay_SOURCE_DIR}/include/replay/*.hpp ${replay_SOURCE_DIR}/include/replay/*.inl )
 
 set( replaySources
 	aabb.cpp
