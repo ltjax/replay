@@ -90,7 +90,7 @@ public:
 	transformation		operator*( const transformation& other ) const
 	{
 		return transformation( orientation * other.orientation,
-			quaternion::transform( orientation, math::mult_by_sign( other.position, sign ) ) + position, sign*other.sign );
+			transform(orientation, math::mult_by_sign( other.position, sign ) ) + position, sign*other.sign );
 	}
 
 	/** Concaternate two transformations a and b.
@@ -98,31 +98,32 @@ public:
 	*/
 	transformation&		operator*=( const transformation& other )
 	{
-		this->position = quaternion::transform( orientation, math::mult_by_sign( other.position, sign ) ) + position;
+		this->position = transform( orientation, math::mult_by_sign( other.position, sign ) ) + position;
 		this->orientation *= other.orientation;
 		this->sign *= other.sign;
 		return *this;
 	}
-
-	/** Find the inverse of the given transformation.
-		\param t The transformation of which to find the inverse.
-		\return The inverse of the transformation
-	*/
-	static transformation		inverse( const transformation& t )
-	{
-		quaternion temp = quaternion::inverse( t.orientation );
-
-		return transformation( temp, -math::mult_by_sign( quaternion::transform( temp, t.position ), t.sign ), t.sign );
-	}
-
-	/** Get this transformation as a homogenous 4x4 matrix.
-	*/
-	inline matrix4				matrix() const
-	{
-		return matrix4( orientation, position, sign );
-	}
-
 };
+
+/** Convert this transformation to a homogenous 4x4 matrix.
+*/
+inline
+const matrix4			to_matrix(const transformation& rhs)
+{
+	return matrix4(rhs.orientation, rhs.position, rhs.sign);
+}
+
+/** Find the inverse of the given transformation.
+	\param t The transformation of which to find the inverse.
+	\return The inverse of the transformation
+*/
+inline
+const transformation	inverse(const transformation& rhs)
+{
+	const quaternion temp = inverse(rhs.orientation);
+
+	return transformation(temp, -math::mult_by_sign(transform(temp, rhs.position), rhs.sign), rhs.sign);
+}
 
 }
 
