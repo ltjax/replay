@@ -110,9 +110,9 @@ namespace math {
 #ifdef replay_unsafe_bit_magic
 		*reinterpret_cast< int* >( &value ) &= 0x7FFFFFFF;
 		*reinterpret_cast< int* >( &value ) |= (*reinterpret_cast< const int* >( &sign ) & 0x80000000);
-        return value;
+		return value;
 #else
-        return boost::math::copysign( value, sign );
+		return boost::math::copysign( value, sign );
 #endif
 	}
 
@@ -219,9 +219,16 @@ namespace math {
 		Values in between are interpolated by the polynomial x*x*(3-2*x).
 		\ingroup Math
 	*/
-	inline float smoothstep( float edge0, float edge1, float x )
+	inline float smoothstep(float edge0, float edge1, float x)
 	{
-		x = saturate( (x-edge0)/(edge1-edge0) );
+		// Early out to avoid divisions by zero if edge0==edge1.
+		if (x <= edge0)
+			return 0.f;
+		else if (x >= edge1)
+			return 1.f;
+
+		// Do actual interpolation in-between edges.
+		x = (x-edge0)/(edge1-edge0);
 		return x*x*(3.0f-2.f*x);
 	}
 
@@ -257,7 +264,7 @@ namespace math {
 	/** convert radians to degrees.
 		\ingroup Math
 	*/
-    inline float
+	inline float
 	convert_to_degrees( const float radians )
 	{
 		static float factor = 180.f / 3.14159265358979323846f;
