@@ -101,26 +101,34 @@ template < class T > struct box
 
 	/** expand this box by a margin.
 	*/
-	box< T >	expanded( const T margin ) const
+	box<T>	expanded( const T margin ) const
 	{
 		return box< T >( left-margin, bottom-margin, right+margin, top+margin );
 	}
 
 	/** set the box by constraints.
 	*/
-	void	set( const T x1, const T y1, const T x2, const T y2 ) { left=x1; right=x2; bottom=y1; top=y2; }
+	void		set( const T x1, const T y1, const T x2, const T y2 ) { left=x1; right=x2; bottom=y1; top=y2; }
 	
 	/** set the size of the box.
 	*/
-	void	set_size( const T w, const T h ) { right = left + w; top = bottom + h; }
+	void		set_size( const T w, const T h ) { right = left + w; top = bottom + h; }
 	
 	/** set the origin of the box.
 	*/
-	void	set_origin( const T x, const T y ) { this->translate( x - left, y - bottom ); }
+	void		set_origin( const T x, const T y ) { this->translate( x - left, y - bottom ); }
 
 	/** check whether a given point is inside the box.
 	*/
-	bool	is_inside( const T x, const T y ) const { return ( x >= left ) && ( x <= right ) && ( y >= bottom ) && ( y <= top ); }
+	bool		is_inside( const T x, const T y ) const { return ( x >= left ) && ( x <= right ) && ( y >= bottom ) && ( y <= top ); }
+
+	/** Create a box from size and origin vectors.
+	*/
+	template <class P> static
+	box<T>		from_origin_and_size(P origin, P size)
+	{
+		return box<T>(origin[0], origin[1], origin[0]+size[0], origin[1]+size[1]);
+	}
 };
 
 }
