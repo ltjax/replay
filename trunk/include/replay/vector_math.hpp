@@ -85,7 +85,7 @@ namespace replay {
 		The type to be used only needs have operator[] available.
 		\ingroup Math
 	*/
-	template < class ArrayType, std::size_t n >
+	template <std::size_t n>
 	class array_less
 	{
 	public:
@@ -94,6 +94,7 @@ namespace replay {
 			\param rhs The right-hand side of the operator.
 			\returns The result of the comparison.
 		*/
+		template <class ArrayType>
 		bool operator()( const ArrayType& lhs, const ArrayType& rhs ) const
 		{
 			for ( std::size_t i=0; i<n; ++i )
