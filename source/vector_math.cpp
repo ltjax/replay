@@ -489,7 +489,7 @@ std::size_t replay::math::gift_wrap( vector2f* point, std::size_t n )
 		return n;
 
 	// Find the starting point on the convex hull
-	std::size_t candidate = std::min_element( point, point+n, array_less<vector2f,2>() ) - point;
+	std::size_t candidate = std::min_element( point, point+n, array_less<2>() ) - point;
 	std::swap( point[0], point[candidate] ); // move it to the front
 
 	// Find all other points
