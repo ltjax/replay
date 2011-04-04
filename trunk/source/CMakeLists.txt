@@ -22,6 +22,9 @@ set( replaySources
 	vector_math.cpp )
 	 
 add_library( replay STATIC ${replay_HEADERS} ${replaySources} )
+if( UNIX )
+set_target_properties( replay PROPERTIES COMPILE_FLAGS -fPIC )
+endif( UNIX )
 
 if( PNG_FOUND )
 target_link_libraries( replay
