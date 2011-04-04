@@ -21,7 +21,7 @@ set( replaySources
 	quaternion.cpp
 	vector_math.cpp )
 	 
-add_library( replay STATIC ${replaySources} )
+add_library( replay STATIC ${replay_HEADERS} ${replaySources} )
 
 if( PNG_FOUND )
 target_link_libraries( replay
