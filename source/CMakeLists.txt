@@ -1,5 +1,6 @@
 if( PNG_FOUND )
 include_directories( ${replay_SOURCE_DIR}/include 
+                     ${Boost_INCLUDE_DIR}
                      ${PNG_INCLUDE_DIR} )
 set( replay_HEADERS
 	${replay_SOURCE_DIR}/include/replay/aabb.hpp
@@ -46,7 +47,8 @@ set( replaySources
 	quaternion.cpp
 	vector_math.cpp )
 else( PNG_FOUND )
-include_directories( ${replay_SOURCE_DIR}/include )
+include_directories( ${replay_SOURCE_DIR}/include
+                     ${Boost_INCLUDE_DIR} )
 set( replay_HEADERS
 	${replay_SOURCE_DIR}/include/replay/aabb.hpp
 	${replay_SOURCE_DIR}/include/replay/affinity.hpp
