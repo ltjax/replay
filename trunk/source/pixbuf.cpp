@@ -90,9 +90,9 @@ replay::pixbuf::internal::fill( const uint8* color )
 
 bool
 replay::pixbuf::internal::blit( unsigned int dx, unsigned int dy,
-							    unsigned int w, unsigned int h,
-							    unsigned int sx, unsigned int sy,
-							    const internal& source )
+								unsigned int w, unsigned int h,
+								unsigned int sx, unsigned int sy,
+								const internal& source )
 {
 	uint8*			dst_pixel = 0;
 	const uint8*	src_pixel = 0;
@@ -123,14 +123,16 @@ replay::pixbuf::internal::blit( unsigned int dx, unsigned int dy,
 
 void replay::pixbuf::internal::flip()
 {
-	for ( uint y = 0; y < (height>>1); ++y )
-	for ( uint x = 0; x < width; ++x )
-	{
-		uint8* p1 = this->data + y*width + x;
-		uint8* p2 = this->data + (height-1-y)*width + x;
+	uint half_height = height>>1;
 
-		for ( uint c = 0; c < channels; ++c )
-			std::swap( p1[ c ], p2[ c ] );
+	for (uint y=0; y<half_height; ++y)
+	for (uint x=0; x<width; ++x)
+	{
+		uint8* left = this->data + (y*width + x)*channels;
+		uint8* right = this->data + ((height-1-y)*width + x)*channels;
+
+		for (uint c=0; c<channels; ++c)
+			std::swap(left[c], right[c]);
 	}
 }
 
@@ -138,7 +140,7 @@ void replay::pixbuf::internal::flip()
 void
 replay::pixbuf::internal::create( unsigned int w, unsigned int h, unsigned int c )
 {
-    free();
+	free();
 
 	width = w; height = h; channels = c;
 	data = new uint8[ width * height * channels ];
@@ -286,7 +288,7 @@ replay::pixbuf::get_sub_image( unsigned int x, unsigned int y, unsigned int w, u
 
 	result->blit( 0, 0, w, h, x, y, *this );
 
-    return result;
+	return result;
 }
 
 /**	Copy a part of one image to another.

@@ -1,7 +1,7 @@
 if( PNG_FOUND )
 include_directories( ${replay_SOURCE_DIR}/include 
-                     ${Boost_INCLUDE_DIR}
-                     ${PNG_INCLUDE_DIR} )
+					 ${Boost_INCLUDE_DIR}
+					 ${PNG_INCLUDE_DIR} )
 set( replay_HEADERS
 	${replay_SOURCE_DIR}/include/replay/aabb.hpp
 	${replay_SOURCE_DIR}/include/replay/affinity.hpp
@@ -48,7 +48,7 @@ set( replaySources
 	vector_math.cpp )
 else( PNG_FOUND )
 include_directories( ${replay_SOURCE_DIR}/include
-                     ${Boost_INCLUDE_DIR} )
+					 ${Boost_INCLUDE_DIR} )
 set( replay_HEADERS
 	${replay_SOURCE_DIR}/include/replay/aabb.hpp
 	${replay_SOURCE_DIR}/include/replay/affinity.hpp
@@ -100,7 +100,7 @@ endif( UNIX )
 
 if( PNG_FOUND )
 target_link_libraries( replay
-                       ${PNG_LIBRARIES} )
+					   ${PNG_LIBRARIES} )
 endif( PNG_FOUND )
 
 install( FILES ${replay_HEADERS} DESTINATION include/replay )
