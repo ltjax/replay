@@ -103,7 +103,7 @@ replay::pixbuf_io::load_from_png_file( std::istream& file )
 	// Read the signature
 	std::istream::pos_type startpos = file.tellg();
 	file.read( (char*)header, PNG_SIGNATURE_BYTES );
-    
+	
 	if ( png_sig_cmp(header, 0, PNG_SIGNATURE_BYTES) )
 		throw pixbuf_io::unrecognized_format();
 
@@ -131,11 +131,11 @@ replay::pixbuf_io::load_from_png_file( std::istream& file )
 	}
 
 	// Jump here on errors
-    if ( setjmp( png_jmpbuf( png_ptr ) ) )
-    {
-        png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
-        throw pixbuf_io::read_error( "Undefined read error." );
-    }
+	if ( setjmp( png_jmpbuf( png_ptr ) ) )
+	{
+		png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
+		throw pixbuf_io::read_error( "Undefined read error." );
+	}
 
 	png_set_read_fn( png_ptr, &file, png_user_read );
 
@@ -191,7 +191,7 @@ replay::pixbuf_io::load_from_png_file( std::istream& file )
 	}
 
 	png_destroy_read_struct(&png_ptr, &info_ptr,
-       &end_info);
+	   &end_info);
 
 	return result;
 }
@@ -214,22 +214,22 @@ replay::pixbuf_io::save_to_png_file( std::ostream& file, const pixbuf& source, i
 
 	png_infop info_ptr = png_create_info_struct( png_ptr );
 
-    if ( !info_ptr )
-    {
+	if ( !info_ptr )
+	{
 		png_destroy_write_struct( &png_ptr, (png_infopp)NULL );
 		throw pixbuf_io::write_error();
-    }
+	}
 
 	if ( setjmp( png_jmpbuf( png_ptr ) ) )
-    {
+	{
 		png_destroy_write_struct( &png_ptr, &info_ptr );
 		throw pixbuf_io::write_error();
-    }
+	}
 
 	png_set_write_fn( png_ptr, &file,
 		&png_user_write, &png_user_flush );
 
-    png_set_compression_level( png_ptr,
+	png_set_compression_level( png_ptr,
 		level );
 
 	int color_type;
