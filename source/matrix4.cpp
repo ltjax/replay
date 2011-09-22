@@ -399,7 +399,7 @@ replay::matrix4::determinant() const
 			if ( !math::fuzzy_zero( factor ) )
 			{
 				factor = -(factor / last[ 3 ]);
-                temp.set_column( index, temp.get_column( index ) + factor*last );
+				temp.set_column( index, temp.get_column( index ) + factor*last );
 			}
 			++index;
 		}
@@ -454,4 +454,15 @@ replay::matrix4::get_row( unsigned int i ) const
 	return vector4f( data[ i ], data[ 4+i ], data[ 8+i ], data[ 12+i ] );
 }
 
+/** Compare two matrices for equality.
+	Performs and element-wise comparison.
+*/
+bool
+replay::matrix4::operator==(const matrix4& rhs) const
+{
+	for (size_t i=0; i<16; ++i)
+		if (data[i] != rhs[i])
+			return false;
 
+	return true;
+}
