@@ -138,6 +138,9 @@ public:
 	matrix4&		operator*=( const float rhs );
 	matrix4&		operator+=( const matrix4& other );
 
+	bool			operator==(const matrix4& rhs) const;
+	bool			operator!=(const matrix4& rhs) const {return !(operator==(rhs));}
+
 };
 
 plane3 operator*( const plane3& p, const matrix4& m );
