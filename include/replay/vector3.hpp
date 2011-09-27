@@ -30,6 +30,7 @@ Copyright (c) 2010 Marius Elvert
 #include <iosfwd>
 #include <replay/common.hpp>
 #include <boost/utility.hpp>
+#include <replay/vector2.hpp>
 
 namespace replay {
 
@@ -87,6 +88,13 @@ public:
 	/** Create a vector with all elements the same value.
 	*/
 	explicit							vector3(value_type value = value_type(0)) {reset(value);}
+
+	/** Create a new vector from seperate values.
+		\param x The first component.
+		\param y The second component.
+		\param z The third component.
+	*/
+										vector3(const vector2<value_type>& xy, value_type z) {reset(xy[0],xy[1],z);}
 	
 	/** Create a new vector from seperate values.
 		\param x The first component.
