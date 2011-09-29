@@ -26,23 +26,25 @@ Copyright (c) 2010 Marius Elvert
 
 #include <replay/pixbuf.hpp>
 #include <vector>
+#include <boost/cstdint.hpp>
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 
-class replay::pixbuf::internal
+// Private implementation that holds the image data
+class replay::pixbuf::internal_t
 {
 public:
-	typedef unsigned char uint8;
-	typedef unsigned short uint16;
-	typedef unsigned int uint;
+	typedef boost::uint8_t		uint8;
+	typedef boost::uint16_t		uint16;
+	typedef unsigned int		uint;
 
-	unsigned char*		data;
-	unsigned int		width;
-	unsigned int		height;
-	unsigned int		channels;
+	unsigned char*				data;
+	unsigned int				width;
+	unsigned int				height;
+	unsigned int				channels;
 
-	internal() : data( 0 ), width( 0 ), height( 0 ), channels( 0 ) {}
-	~internal() { free(); }
+						internal_t();
+						~internal_t();
 
 	void				create( unsigned int w, unsigned int h, unsigned int c );
 	void				free();
@@ -56,19 +58,31 @@ public:
 
 	uint				get_pixel_count() const { return width*height; }
 
-	void				set_pixel( unsigned int x, unsigned int y, const byte* color );
+	void				set_pixel(unsigned int x, unsigned int y, const replay::pixbuf::byte* color);
 	
 	bool				blit( unsigned int dx, unsigned int dy,
 							  unsigned int w, unsigned int h,
 							  unsigned int sx, unsigned int sy,
-							  const internal& source );
+							  const internal_t& source );
 
 	void				fill( const uint8* color );
 };
 
+replay::pixbuf::internal_t::internal_t() :
+	data(0),
+	width(0),
+	height(0),
+	channels(0)
+{
+}
+
+replay::pixbuf::internal_t::~internal_t()
+{
+	free();
+}
 
 void
-replay::pixbuf::internal::set_pixel( unsigned int x, unsigned int y, const byte* color )
+replay::pixbuf::internal_t::set_pixel(unsigned int x, unsigned int y, const byte* color)
 {
 	byte* target = data + (y*width + x)*channels;
 
@@ -78,21 +92,21 @@ replay::pixbuf::internal::set_pixel( unsigned int x, unsigned int y, const byte*
 }
 
 void
-replay::pixbuf::internal::fill( const uint8* color )
+replay::pixbuf::internal_t::fill( const uint8* color )
 {
 	const uint pixelcount = width * height;
 
-	for ( uint i = 0; i < pixelcount; ++i )
-	for ( uint c = 0; c < channels; ++c )
+	for (uint i=0; i<pixelcount; ++i)
+	for (uint c=0; c<channels; ++c)
 		(*this)( i )[ c ] = color[ c ];
 
 }
 
 bool
-replay::pixbuf::internal::blit( unsigned int dx, unsigned int dy,
-								unsigned int w, unsigned int h,
-								unsigned int sx, unsigned int sy,
-								const internal& source )
+replay::pixbuf::internal_t::blit( unsigned int dx, unsigned int dy,
+								  unsigned int w, unsigned int h,
+								  unsigned int sx, unsigned int sy,
+								  const internal_t& source )
 {
 	uint8*			dst_pixel = 0;
 	const uint8*	src_pixel = 0;
@@ -121,7 +135,7 @@ replay::pixbuf::internal::blit( unsigned int dx, unsigned int dy,
 	return true;
 }
 
-void replay::pixbuf::internal::flip()
+void replay::pixbuf::internal_t::flip()
 {
 	uint half_height = height>>1;
 
@@ -138,7 +152,7 @@ void replay::pixbuf::internal::flip()
 
 
 void
-replay::pixbuf::internal::create( unsigned int w, unsigned int h, unsigned int c )
+replay::pixbuf::internal_t::create( unsigned int w, unsigned int h, unsigned int c )
 {
 	free();
 
@@ -147,7 +161,7 @@ replay::pixbuf::internal::create( unsigned int w, unsigned int h, unsigned int c
 }
 
 void
-replay::pixbuf::internal::free()
+replay::pixbuf::internal_t::free()
 {
 	delete[] data;
 	width = height = channels = 0;
@@ -159,7 +173,7 @@ replay::pixbuf::internal::free()
 /** Create a new invalid pixbuf.
 */
 replay::pixbuf::pixbuf()
-: data( new internal )
+: data(new internal_t)
 {
 }
 
@@ -167,7 +181,6 @@ replay::pixbuf::pixbuf()
 */
 replay::pixbuf::~pixbuf()
 {
-	delete data;
 }
 
 /** Get the image width.
@@ -253,20 +266,20 @@ void replay::pixbuf::set_pixel( const unsigned int x, const unsigned int y,
 boost::shared_ptr<replay::pixbuf>
 replay::pixbuf::create( unsigned int x, unsigned int y, color_format format )
 {
-	boost::shared_ptr<replay::pixbuf> result( new pixbuf );
+	boost::shared_ptr<replay::pixbuf> result(new replay::pixbuf);
 
-	switch ( format )
+	switch (format)
 	{
 	case rgb:
-		result->data->create( x, y, 3 );
+		result->data->create(x, y, 3);
 		break;
 
 	case rgba:
-		result->data->create( x, y, 4 );
+		result->data->create(x, y, 4);
 		break;
 
 	default: // greyscale
-		result->data->create( x, y, 1 );
+		result->data->create(x, y, 1);
 		break;
 	};
 
@@ -282,11 +295,11 @@ replay::pixbuf::create( unsigned int x, unsigned int y, color_format format )
 boost::shared_ptr<replay::pixbuf>
 replay::pixbuf::get_sub_image( unsigned int x, unsigned int y, unsigned int w, unsigned int h )
 {
-	boost::shared_ptr<replay::pixbuf> result( new pixbuf );
+	boost::shared_ptr<replay::pixbuf> result(new replay::pixbuf);
 
-	result->data->create( w, h, this->data->channels );
+	result->data->create(w, h, this->data->channels);
 
-	result->blit( 0, 0, w, h, x, y, *this );
+	result->blit(0, 0, w, h, x, y, *this);
 
 	return result;
 }
@@ -348,50 +361,47 @@ replay::pixbuf::flip()
 */
 void replay::pixbuf::convert_to_rgba()
 {
-	if ( data->channels == 4 )
+	// Nothing to do
+	if (data->channels == 4)
 		return;
 
-	internal* new_data = new internal;
-	new_data->create( data->width, data->height, 4 );
+	std::auto_ptr<internal_t> new_data(new internal_t);
 
-	internal::uint pixel_count = data->get_pixel_count();
-	internal::uint8* src = 0;
-	internal::uint8* dst = 0;
+	new_data->create(data->width, data->height, 4);
 
-	if ( data->channels == 3 )
+	internal_t::uint pixel_count = data->get_pixel_count();
+	internal_t::uint8* src = 0;
+	internal_t::uint8* dst = 0;
+
+	if (data->channels == 3)
 	{
 		for ( unsigned int i = 0; i < pixel_count; ++i )
 		{
 			src = (*data)( i );
 			dst = (*new_data)( i );
 
-			dst[ 0 ] = src[ 0 ];
-			dst[ 1 ] = src[ 1 ];
-			dst[ 2 ] = src[ 2 ];
-			dst[ 3 ] = 255;
+			dst[0] = src[0];
+			dst[1] = src[1];
+			dst[2] = src[2];
+			dst[3] = 255;
 		}
 	}
-	else if ( data->channels == 1 )
+	else if (data->channels == 1)
 	{
 		for ( unsigned int i = 0; i < pixel_count; ++i )
 		{
 			src = (*data)( i );
 			dst = (*new_data)( i );
 
-			dst[ 0 ] = src[ 0 ];
-			dst[ 1 ] = src[ 0 ];
-			dst[ 2 ] = src[ 0 ];
-			dst[ 3 ] = 255;
+			dst[0] = src[0];
+			dst[1] = src[0];
+			dst[2] = src[0];
+			dst[3] = 255;
 		}
 	}
 
-	replace_data( new_data );
-}
-
-void replay::pixbuf::replace_data( internal* data )
-{
-	delete this->data;
-	this->data = data;
+	this->data.reset();
+	this->data = new_data;
 }
 
 

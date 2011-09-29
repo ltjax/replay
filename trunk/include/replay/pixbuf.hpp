@@ -40,16 +40,8 @@ namespace replay {
 class pixbuf :
 	public boost::noncopyable
 {
-	class internal;
-	internal*		data;
-
-	pixbuf();
-
-	void							replace_data( internal* data );
 	
 public:
-	friend class pixbuf::internal;
-
 	/** A shared (reference-counted) pointer to a pixbuf.
 	*/
 	typedef boost::shared_ptr<pixbuf>	shared_pixbuf;
@@ -64,46 +56,52 @@ public:
 
 	/** 8-bit unsigned int.
 	*/
-	typedef unsigned char byte;
+	typedef unsigned char		byte;
 
-	~pixbuf();
 
-	unsigned int			get_width() const;
-	unsigned int			get_height() const;
-	unsigned int			get_channels() const;
-	const unsigned char*	get_data() const;
-	unsigned char*			get_data();
+								~pixbuf();
 
-	const unsigned char*	get_pixel( unsigned int i ) const;
+	unsigned int				get_width() const;
+	unsigned int				get_height() const;
+	unsigned int				get_channels() const;
+	const unsigned char*		get_data() const;
+	unsigned char*				get_data();
 
-	unsigned char*			get_pixel( unsigned int x, unsigned int y );
-	const unsigned char*	get_pixel( unsigned int x, unsigned int y ) const;
+	const unsigned char*		get_pixel( unsigned int i ) const;
 
-	bool					blit( unsigned int dx, unsigned int dy,
-								  unsigned int w, unsigned int h,
-								  unsigned int sx, unsigned int sy,
-								  const pixbuf& source ); 
+	unsigned char*				get_pixel( unsigned int x, unsigned int y );
+	const unsigned char*		get_pixel( unsigned int x, unsigned int y ) const;
 
-	bool					blit( unsigned int dx, unsigned int dy,
-								  const pixbuf& source );
+	bool						blit( unsigned int dx, unsigned int dy,
+									  unsigned int w, unsigned int h,
+									  unsigned int sx, unsigned int sy,
+									  const pixbuf& source ); 
 
-	void					fill( const byte r, const byte g, const byte b, const byte a = 255 );
-	void					fill( const byte grey );
+	bool						blit( unsigned int dx, unsigned int dy,
+									  const pixbuf& source );
 
-	void					flip();
+	void						fill( const byte r, const byte g, const byte b, const byte a = 255 );
+	void						fill( const byte grey );
 
-	void					set_pixel( const unsigned int x, const unsigned int y,
-								const byte r, const byte g, const byte b, const byte a );
+	void						flip();
 
-	void					set_pixel( const unsigned int x, const unsigned int y,
-								const byte grey );
+	void						set_pixel( const unsigned int x, const unsigned int y,
+									const byte r, const byte g, const byte b, const byte a );
 
-	void					convert_to_rgba();
+	void						set_pixel( const unsigned int x, const unsigned int y,
+									const byte grey );
+
+	void						convert_to_rgba();
 	
 	static
-	shared_pixbuf			create( unsigned int x, unsigned int y, color_format format );
-	shared_pixbuf			get_sub_image( unsigned int x, unsigned int y, unsigned int w, unsigned int h );
+	shared_pixbuf				create(unsigned int x, unsigned int y, color_format format);
+	shared_pixbuf				get_sub_image(unsigned int x, unsigned int y, unsigned int w, unsigned int h);
 
+private:
+	class internal_t;
+	std::auto_ptr<internal_t>	data;
+
+	pixbuf();
 };
 
 /** A shared (reference-counted) pointer to a pixbuf.
