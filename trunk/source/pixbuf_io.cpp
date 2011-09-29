@@ -35,79 +35,149 @@ Copyright (c) 2010 Marius Elvert
 
 namespace { // BEGIN PRIVATE NAMESPACE
 
-	typedef unsigned char uint8;
-	typedef unsigned short uint16;
+typedef unsigned char uint8;
+typedef unsigned short uint16;
 
-	class tga_header
-	{
-		uint8		id_length;
-		uint8		colormap_type;
-		uint8		image_type;
-		uint8		colormap[ 5 ];
-		uint16		origin[ 2 ];
-		uint16		width;
-		uint16		height;
-		uint8		pixeldepth;
-		uint8		image_descriptor;
+class tga_header
+{
+	uint8		id_length;
+	uint8		colormap_type;
+	uint8		image_type;
+	uint8		colormap[ 5 ];
+	uint16		origin[ 2 ];
+	uint16		width;
+	uint16		height;
+	uint8		pixeldepth;
+	uint8		image_descriptor;
 
-		replay::shared_pixbuf
-					load_type2( replay::ibstream<std::istream>& file );
+	replay::shared_pixbuf
+				load_type2( replay::ibstream<std::istream>& file );
 					
-	public:
-		tga_header() : id_length( 0 ), colormap_type( 0 ), image_type( 0 ),
-			width( 0 ), height( 0 ), pixeldepth( 0 ), image_descriptor( 0 )
+public:
+	tga_header() : id_length( 0 ), colormap_type( 0 ), image_type( 0 ),
+		width( 0 ), height( 0 ), pixeldepth( 0 ), image_descriptor( 0 )
+	{
+		colormap[ 0 ] = colormap[ 1 ] = colormap[ 2 ] = colormap[ 3 ] = colormap[ 4 ] = 0;
+		origin[ 0 ] = origin[ 1 ] = 0;
+	}
+
+	replay::shared_pixbuf
+				load( replay::ibstream<std::istream>& file );
+	void		save( replay::obstream< std::ostream >& file, const replay::pixbuf& source );
+};
+
+// User read function to use istream instead of FILE*
+void png_user_read( png_structp png_ptr, png_bytep data, png_size_t length )
+{
+	std::istream* file = reinterpret_cast< std::istream* >( png_get_io_ptr( png_ptr ) );
+	file->read( (char*)data, static_cast< std::streamsize >( length ) );
+}
+
+
+// User write function to use ostream instead of FILE*
+void png_user_write( png_structp png_ptr, png_bytep data, png_size_t length )
+{
+	std::ostream* file = reinterpret_cast< std::ostream* >( png_get_io_ptr( png_ptr ) );
+	file->write( (char*)data, static_cast< std::streamsize >( length ) );
+}
+
+// User read function to use ostream instead of FILE*
+void png_user_flush( png_structp png_ptr )
+{
+	std::ostream* file = reinterpret_cast< std::ostream* >( png_get_io_ptr( png_ptr ) );
+	file->flush();
+	//*file << std::flush;
+}
+
+replay::shared_pixbuf
+png_convert_paletted(png_structp png_ptr, png_infop info_ptr,
+	png_bytepp row_pointers, const png_uint_32 width, const png_uint_32 height)
+{
+	using namespace replay;
+	png_colorp	palette=0;
+	int			palette_size=0;
+
+	// Attempt to load the palette
+	if (png_get_PLTE(png_ptr, info_ptr, &palette, &palette_size) != PNG_INFO_PLTE)
+		throw pixbuf_io::read_error("Unable to read png-palette, file is corrupt");
+
+	png_bytep		trans=0;
+	int				trans_size=0;
+	png_color_16p	trans_values=0;
+	bool has_transparency = (png_get_tRNS(png_ptr, info_ptr, &trans, &trans_size, &trans_values) == PNG_INFO_tRNS);
+
+	replay::shared_pixbuf result;
+	// Take this path for palettes with transparency data
+	if (has_transparency)
+	{
+		// Need to access both, so find the min for an upper bound
+		palette_size = std::min(trans_size, palette_size);
+
+		result = pixbuf::create(width, height, pixbuf::rgba);
+		unsigned char* pixel = result->get_data();
+
+		// Flip image during load
+		for (png_uint_32 y = 0; y < height; ++y)
+		for (png_uint_32 x = 0; x < width; ++x, pixel+=4)
 		{
-			colormap[ 0 ] = colormap[ 1 ] = colormap[ 2 ] = colormap[ 3 ] = colormap[ 4 ] = 0;
-			origin[ 0 ] = origin[ 1 ] = 0;
+			int offset = row_pointers[height-y-1][x];
+
+			// File data corrupt
+			if (offset >= palette_size)
+				throw pixbuf_io::read_error("Palette index out-of-range, file is corrupt");
+
+			pixel[0] = palette[offset].red;
+			pixel[1] = palette[offset].green;
+			pixel[2] = palette[offset].blue;
+			pixel[3] = trans[offset];
 		}
-
-		replay::shared_pixbuf
-					load( replay::ibstream<std::istream>& file );
-		void		save( replay::obstream< std::ostream >& file, const replay::pixbuf& source );
-	};
-
-	// User read function to use istream instead of FILE*
-	void png_user_read( png_structp png_ptr, png_bytep data, png_size_t length )
+	}
+	else
 	{
-		std::istream* file = reinterpret_cast< std::istream* >( png_get_io_ptr( png_ptr ) );
-		file->read( (char*)data, static_cast< std::streamsize >( length ) );
+		result = pixbuf::create(width, height, pixbuf::rgb);
+		unsigned char* pixel = result->get_data();
+
+		// Flip image during load
+		for (png_uint_32 y = 0; y < height; ++y)
+		for (png_uint_32 x = 0; x < width; ++x, pixel+=3)
+		{
+			int offset = row_pointers[height-y-1][x];
+
+			// File data corrupt
+			if (offset >= palette_size)
+				throw pixbuf_io::read_error("Palette index out-of-range, file is corrupt");
+
+			pixel[0] = palette[offset].red;
+			pixel[1] = palette[offset].green;
+			pixel[2] = palette[offset].blue;
+		}
 	}
 
-
-	// User write function to use ostream instead of FILE*
-	void png_user_write( png_structp png_ptr, png_bytep data, png_size_t length )
-	{
-		std::ostream* file = reinterpret_cast< std::ostream* >( png_get_io_ptr( png_ptr ) );
-		file->write( (char*)data, static_cast< std::streamsize >( length ) );
-	}
-
-	// User read function to use ostream instead of FILE*
-	void png_user_flush( png_structp png_ptr )
-	{
-		std::ostream* file = reinterpret_cast< std::ostream* >( png_get_io_ptr( png_ptr ) );
-		file->flush();
-		//*file << std::flush;
-	}
+	return result;
+}
 
 } // END PRIVATE NAMESPACE
 
 /** Deserialize a PNG encoded file.
+	\params file A standard-stream to the file to decode.
+	\returns A shared_pixbuf containing the loaded image
 	\ingroup Imaging
+	\note Throws pixbuf_io::unrecognized_format or pixbuf_io::read_error when the image cannot be loaded
 */
 replay::shared_pixbuf
-replay::pixbuf_io::load_from_png_file( std::istream& file )
+replay::pixbuf_io::load_from_png_file(std::istream& file)
 {
 	shared_pixbuf		result;
 	unsigned char		header[PNG_SIGNATURE_BYTES];
 
 	// Read the signature
-	std::istream::pos_type startpos = file.tellg();
+	const std::istream::pos_type startpos = file.tellg();
 	file.read( (char*)header, PNG_SIGNATURE_BYTES );
 	
-	if ( png_sig_cmp(header, 0, PNG_SIGNATURE_BYTES) )
+	if (png_sig_cmp(header, 0, PNG_SIGNATURE_BYTES))
 		throw pixbuf_io::unrecognized_format();
 
-	file.seekg( startpos );
+	file.seekg(startpos);
 
 	// Create additional read data structures
 	png_structp png_ptr = png_create_read_struct( PNG_LIBPNG_VER_STRING, 0, 0, 0 );
@@ -117,6 +187,7 @@ replay::pixbuf_io::load_from_png_file( std::istream& file )
 	}
 
 	png_infop info_ptr = png_create_info_struct(png_ptr);
+
 	if ( !info_ptr )
 	{
 		png_destroy_read_struct( &png_ptr, 0, 0 );
@@ -144,42 +215,58 @@ replay::pixbuf_io::load_from_png_file( std::istream& file )
 	png_bytepp row_pointers = png_get_rows(png_ptr, info_ptr);
 
 	// Copy the contents
-	png_uint_32 width;
-	png_uint_32 height;
-	int			bit_depth;
-	int			color_type;
+	png_uint_32 width=0;
+	png_uint_32 height=0;
+	int			bit_depth=0;
+	int			color_type=0;
 
-	png_get_IHDR( png_ptr, info_ptr, &width, &height, &bit_depth, &color_type, 0, 0, 0 );
+	png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type, 0, 0, 0);
 
 	// Create an RGB image (3 channels)
-	if ( color_type == PNG_COLOR_TYPE_RGB )
+	if (color_type == PNG_COLOR_TYPE_RGB)
 	{
 		result = pixbuf::create(width,height,pixbuf::rgb);
 		unsigned char* pixel = result->get_data();
 
 		// Flip image during load
-		for ( png_uint_32 y = 0; y < height; ++y )
-		for ( png_uint_32 x = 0; x < width; ++x, pixel+=3 )
+		for (png_uint_32 y = 0; y < height; ++y)
+		for (png_uint_32 x = 0; x < width; ++x, pixel+=3)
 		{
-			pixel[ 0 ] = row_pointers[ height-y-1 ][ x*3 ];
-			pixel[ 1 ] = row_pointers[ height-y-1 ][ x*3+1 ];
-			pixel[ 2 ] = row_pointers[ height-y-1 ][ x*3+2 ];
+			pixel[0] = row_pointers[height-y-1][x*3];
+			pixel[1] = row_pointers[height-y-1][x*3+1];
+			pixel[2] = row_pointers[height-y-1][x*3+2];
 		}
 	}
 	// Create an RGBA image (4 channels)
-	else if ( color_type == PNG_COLOR_TYPE_RGB_ALPHA )
+	else if (color_type == PNG_COLOR_TYPE_RGB_ALPHA)
 	{
 		result = pixbuf::create(width,height,pixbuf::rgba);
 		unsigned char* pixel = result->get_data();
 
 		// Flip image during load
-		for ( png_uint_32 y = 0; y < height; ++y )
-		for ( png_uint_32 x = 0; x < width; ++x, pixel+=4 )
+		for (png_uint_32 y = 0; y < height; ++y)
+		for (png_uint_32 x = 0; x < width; ++x, pixel+=4)
 		{
-			pixel[ 0 ] = row_pointers[ height-y-1 ][ x*4 ];
-			pixel[ 1 ] = row_pointers[ height-y-1 ][ x*4+1 ];
-			pixel[ 2 ] = row_pointers[ height-y-1 ][ x*4+2 ];
-			pixel[ 3 ] = row_pointers[ height-y-1 ][ x*4+3 ];
+			pixel[0] = row_pointers[height-y-1][x*4];
+			pixel[1] = row_pointers[height-y-1][x*4+1];
+			pixel[2] = row_pointers[height-y-1][x*4+2];
+			pixel[3] = row_pointers[height-y-1][x*4+3];
+		}
+	}
+	// Read a paletted image
+	else if (color_type == PNG_COLOR_TYPE_PALETTE)
+	{
+		try {
+			result = png_convert_paletted(png_ptr, info_ptr, row_pointers, width, height);
+		}
+		catch (std::exception&)
+		{
+			// Make sure we don't leak memory
+			png_destroy_read_struct(&png_ptr, &info_ptr,
+				&end_info);
+
+			// Rethrow
+			throw;
 		}
 	}
 	else
