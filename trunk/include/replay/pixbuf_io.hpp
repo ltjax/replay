@@ -31,12 +31,6 @@ Copyright (c) 2010 Marius Elvert
 #include <boost/filesystem/path.hpp>
 #include "pixbuf.hpp"
 
-#if defined(_MSC_VER)
-#  ifndef REPLAY_NO_AUTO_LINK
-#    pragma comment( lib, "libpng.lib" )
-#  endif
-#endif
-
 namespace replay {
 
 /** Loading and saving functions for raster images.
