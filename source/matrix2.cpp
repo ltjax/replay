@@ -2,7 +2,7 @@
 replay
 Software Library
 
-Copyright (c) 2010 Marius Elvert
+Copyright (c) 2011 Marius Elvert
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,20 @@ Copyright (c) 2010 Marius Elvert
 
 #include <cmath>
 #include <replay/matrix2.hpp>
+
+replay::matrix2::matrix2(const float value)
+{
+	for (std::size_t i=0; i<4; ++i)
+		data[i]=value;
+}
+
+replay::matrix2::matrix2(const vector2f& a, const vector2f& b)
+{
+	data[0]=a[0];
+	data[1]=a[1];
+	data[2]=b[0];
+	data[3]=b[1];
+}
 
 replay::matrix2::matrix2( const float m11, const float m21,
 						  const float m12, const float m22 )
@@ -75,7 +89,7 @@ replay::matrix2::operator*( const vector2f& v ) const
 const replay::matrix2
 replay::matrix2::operator*( const matrix2& other ) const
 {
-    matrix2 result;
+	matrix2 result;
 	return multiply( *this, other, result );
 }
 

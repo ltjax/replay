@@ -31,23 +31,32 @@ Copyright (c) 2010 Marius Elvert
 
 namespace replay {
 
-/** 2x2 float matrix.
+/** 2x2 matrix of floating-point values.
+	Can represent 2D linear maps.
 	\ingroup Math
 */
 class matrix2
 {
-	private:
-		float				data[ 4 ];
 
 	public:
 		/** Create a new uninitialized matrix.
+			\note This leaves the contents of the matrix uninitialized.
 		*/
-		matrix2() {}
+		matrix2(uninitialized_tag) {}
+
+		/** Create a new matrix from a single value.
+			\param value The value to be used for initialization.
+		*/
+		matrix2(const float value=0.f);
+
+		/** Create a matrix from two column vectors.
+		*/
+		matrix2(const vector2f& a, const vector2f& b);
 		
 		/** Create a matrix from four values.
 		*/
-		matrix2(	const float m11, const float m21,
-					const float m12, const float m22 );
+		matrix2(const float m11, const float m21,
+				const float m12, const float m22);
 					
 		/** Constructor for user-defined conversions.
 			\see convertible_tag
@@ -127,6 +136,9 @@ class matrix2
 			\returns false if the matrix is singular, true otherwise.
 		*/
 		bool				invert();
+
+	private:
+		float				data[4];
 };
 
 }
