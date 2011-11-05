@@ -435,7 +435,12 @@ replay::pixbuf_io::save_to_tga_file( std::ostream& file, const pixbuf& source )
 void
 replay::pixbuf_io::save_to_file( const boost::filesystem::path& filename, const pixbuf& source )
 {
-	std::string ext = boost::filesystem::extension( filename );
+#if BOOST_FILESYSTEM_VERSION < 3
+	const std::string ext = boost::filesystem::extension(filename);
+#else
+	const std::string ext = filename.extension().string();
+#endif
+
 	boost::filesystem::ofstream file;
 
 	file.exceptions (
@@ -555,7 +560,11 @@ tga_header::save( replay::obstream<std::ostream>& file, const replay::pixbuf& so
 replay::shared_pixbuf
 replay::pixbuf_io::load_from_file( const boost::filesystem::path& filename )
 {
-	std::string ext = boost::filesystem::extension( filename );
+#if BOOST_FILESYSTEM_VERSION < 3
+	const std::string ext = boost::filesystem::extension(filename);
+#else
+	const std::string ext = filename.extension().string();
+#endif
 
 	boost::filesystem::ifstream file;
 	file.open( filename, std::ios_base::in | std::ios_base::binary );
