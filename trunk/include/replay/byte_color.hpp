@@ -28,6 +28,8 @@ Copyright (c) 2010 Marius Elvert
 #define replay_byte_color_hpp
 
 #include <memory>
+#include <boost/cstdint.hpp>
+#include <replay/vector4.hpp>
 
 namespace replay {
 
@@ -39,36 +41,28 @@ class byte_color4
 public:
 	/** 8-bit unsigned integer.
 	*/
-	typedef unsigned char	byte;
-
-	/** 32-bit unsigned integer.
+	typedef boost::uint8_t	byte;
+	
+	/** Initialized to a specific grey-value. Alpha is fixed at 255.
 	*/
-	typedef unsigned int uint32;
-
-	/** Default ctor that does nothing.
-		\note this also leaves this color uninitialized.
-	*/
-							byte_color4() {}
+							byte_color4(byte greyvalue=0);
 							
-	/** Initialize the color from a uint32 code.
+	/** Initialize the color from a 32-bit unsigned integer.
 	*/
-	explicit				byte_color4( const uint32 rgba );
+	explicit				byte_color4(boost::uint32_t rgba);
 	
 	/** Construct the color from the components.
 	*/
-							byte_color4( const byte r, const byte g, const byte b, const byte a=255 );
+							byte_color4(byte r, byte g, byte b, byte a=255);
 
 	/** Set the color via components.
 	*/
-	void					set( const byte r, const byte g, const byte b, const byte a=255 );
+	void					set(byte r, byte g, byte b, byte a=255);
 	
 	/** Invert all channels.
 	*/
 	void					negate();
 
-	/** Linear interpolation.
-	*/
-	static byte_color4		lerp( const byte_color4& color0, const byte_color4& color1, byte x );
 
 	/** Get a pointer to the raw data.
 	*/
@@ -81,7 +75,7 @@ public:
 	
 	/** Access a color element.
 	*/
-	const byte				operator[]( std::size_t i ) const { return data[i]; }
+	 byte					operator[]( std::size_t i ) const { return data[i]; }
 
 
 	/** Access a color element.
@@ -94,6 +88,12 @@ private:
 	byte					data[4];
 
 };
+
+vector4f					to_float(byte_color4 rhs);
+
+/** Linear interpolation of byte_color4 objects.
+*/
+byte_color4					lerp(byte_color4 lhs, byte_color4 rhs, byte_color4::byte x);
 
 /** sample color palette.
 */

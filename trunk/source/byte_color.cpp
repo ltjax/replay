@@ -26,40 +26,59 @@ Copyright (c) 2010 Marius Elvert
 
 #include <replay/byte_color.hpp>
 
-replay::byte_color4::byte_color4( const byte r, const byte g, const byte b, const byte a )
+replay::byte_color4::byte_color4(byte greyvalue)
 {
-	data[ 0 ] = r; data[ 1 ] = g; data[ 2 ] = b; data[ 3 ] = a;
+	set(greyvalue, greyvalue, greyvalue);
 }
 
-replay::byte_color4::byte_color4( const uint32 rgba )
+replay::byte_color4::byte_color4(byte r, byte g, byte b, byte a)
 {
-	data[ 0 ] = (rgba >> 24);
-	data[ 1 ] = (rgba >> 16) & 0xFF;
-	data[ 2 ] = (rgba >> 8) & 0xFF;
-	data[ 3 ] = rgba & 0xFF;
+	set(r,g,b,a);
 }
 
-void replay::byte_color4::set( const byte r, const byte g, const byte b, const byte a )
+replay::byte_color4::byte_color4(boost::uint32_t rgba)
 {
-	data[ 0 ] = r; data[ 1 ] = g; data[ 2 ] = b; data[ 3 ] = a;
+	data[0] = (rgba >> 24);
+	data[1] = (rgba >> 16) & 0xFF;
+	data[2] = (rgba >> 8) & 0xFF;
+	data[3] = rgba & 0xFF;
+}
+
+void replay::byte_color4::set(byte r, byte g, byte b, byte a)
+{
+	data[0] = r;
+	data[1] = g;
+	data[2] = b;
+	data[3] = a;
 }
 
 void replay::byte_color4::negate()
 {
-	for ( unsigned int i = 0; i < 4; ++i )
-		data[ i ] = 255 - data[ i ];
+	for (std::size_t i=0; i<4; ++i)
+		data[i] = 255 - data[i];
 }
 
 replay::byte_color4
-replay::byte_color4::lerp( const byte_color4& color0, const byte_color4& color1, byte x )
+replay::lerp(byte_color4 lhs, byte_color4 rhs, byte_color4::byte x)
 {
 	byte_color4 result;
 
-	for ( unsigned int i = 0; i < 4; ++i )
+	for (std::size_t i=0; i<4; ++i)
 	{
-		result.data[ i ] = color0.data[ i ] +
-			(( color1.data[ i ] - color0.data[ i ] )*x)/255;
+		result[i] = lhs[i] +
+			((rhs[i]-lhs[i])*x)/255;
 	}
+
+	return result;
+}
+
+replay::vector4f
+replay::to_float(byte_color4 rhs)
+{
+	vector4f result((uninitialized_tag()));
+
+	for (std::size_t i=0; i<4; ++i)
+		result[i] = rhs[i]/255.f;
 
 	return result;
 }
