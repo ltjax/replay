@@ -47,7 +47,7 @@ class matrix2
 		/** Create a new matrix from a single value.
 			\param value The value to be used for initialization.
 		*/
-		matrix2(const float value=0.f);
+		matrix2(float value=0.f);
 
 		/** Create a matrix from two column vectors.
 		*/
@@ -55,8 +55,8 @@ class matrix2
 		
 		/** Create a matrix from four values.
 		*/
-		matrix2(const float m11, const float m21,
-				const float m12, const float m22);
+		matrix2(float m11, float m21,
+				float m12, float m22);
 					
 		/** Constructor for user-defined conversions.
 			\see convertible_tag
@@ -69,20 +69,21 @@ class matrix2
 
 		/** Set the matrix from four values.
 		*/
-		matrix2&			set( const float m11, const float m21,
-								 const float m12, const float m22 );
+		matrix2&			set(float m11, float m21,
+								float m12, float m22);
 
 		/** Set the matrix to the identity transformation.
 		*/
-		matrix2&			set_identity();
+		static matrix2		make_identity();
 		
 		/** Set the matrix to a rotational transformation.
+			\param angle The angle of the rotation in radians.
 		*/
-		matrix2&			set_rotation( const float angle );
+		static matrix2		make_rotation(float angle);
 		
 		/** Set the matrix to a scale transformation.
 		*/
-		matrix2&			set_scale( const vector2f& scale );
+		static matrix2		make_scale(const vector2f& scale);
 		
 		/** Concaternate the given matrix with a rotational transformation.
 		*/
@@ -98,23 +99,31 @@ class matrix2
 		
 		/** Get a matrix element by two indices.
 		*/
-		const float			operator()( const unsigned int row, const unsigned int column ) const { return data[ row + (column<<1) ]; }
+		float				operator()(unsigned int row, unsigned int column) const { return data[ row + (column<<1) ]; }
 		
 		/** Get a matrix element by its column major index.
 		*/
-		float				operator[]( const unsigned int i ) const { return data[i]; }
+		float				operator[](unsigned int i) const { return data[i]; }
 
-		/** Multiply a vector by this matrix.
+		/** Get a matrix column by its index.
 		*/
-		const vector2f		operator*( const vector2f& v ) const;
+		const vector2f		column(unsigned int i) const;
+
+		/** Get a matrix row by its index.
+		*/
+		const vector2f		row(unsigned int i) const;
+
+		/** Right-multiply a (column) vector by this matrix.
+		*/
+		const vector2f		operator*(const vector2f& v) const;
 		
 		/** Multiply two matrices.
 		*/
-		const matrix2		operator*( const matrix2& m ) const;
+		const matrix2		operator*(const matrix2& m) const;
 		
 		/** Multiply-assign a matrix.
 		*/
-		matrix2&			operator*=( const matrix2& m );
+		matrix2&			operator*=(const matrix2& m);
 
 		/** Get a pointer to the data.
 		*/
@@ -140,6 +149,49 @@ class matrix2
 	private:
 		float				data[4];
 };
+
+/** Get the inverse of this matrix.
+	\returns The inverse of m, if it is invertible, and the null-matrix otherwise.
+*/
+inline const matrix2
+inverse(matrix2 m)
+{
+	if (!m.invert())
+		m = matrix2(0.f);
+
+	return m;
+}
+
+/** Get the transpose of this matrix.
+*/
+inline const matrix2
+transpose(const matrix2& rhs)
+{
+	return matrix2(rhs[0], rhs[1],
+				   rhs[2], rhs[3]);
+}
+
+/** Left-multiply a (row) vector by this matrix.
+	This is equivalent to right-multiply with the transpose matrix.
+*/
+inline const vector2f
+operator*(const vector2f& lhs, const matrix2& rhs)
+{
+	return vector2f(lhs[0]*rhs[0]+lhs[1]*rhs[1], lhs[0]*rhs[2]+lhs[1]*rhs[3]);
+}
+
+inline const vector2f
+matrix2::column(unsigned int i) const
+{
+	i *= 2;
+	return vector2f(data[i], data[i+1]);
+}
+
+inline const vector2f
+matrix2::row(unsigned int i) const
+{
+	return vector2f(data[i], data[i+2]);
+}
 
 }
 
