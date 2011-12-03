@@ -27,7 +27,7 @@ Copyright (c) 2011 Marius Elvert
 #include <cmath>
 #include <replay/matrix2.hpp>
 
-replay::matrix2::matrix2(const float value)
+replay::matrix2::matrix2(float value)
 {
 	for (std::size_t i=0; i<4; ++i)
 		data[i]=value;
@@ -41,53 +41,54 @@ replay::matrix2::matrix2(const vector2f& a, const vector2f& b)
 	data[3]=b[1];
 }
 
-replay::matrix2::matrix2( const float m11, const float m21,
-						  const float m12, const float m22 )
+replay::matrix2::matrix2(float m11, float m21,
+						 float m12, float m22)
 {
-	data[ 0 ] = m11; data[ 2 ] = m21;
-	data[ 1 ] = m12; data[ 3 ] = m22;
+	data[0] = m11; data[2] = m21;
+	data[1] = m12; data[3] = m22;
 }
 
 replay::matrix2&
-replay::matrix2::set( const float m11, const float m21,
-					  const float m12, const float m22 )
+replay::matrix2::set(float m11, float m21,
+					 float m12, float m22)
 {
-	data[ 0 ] = m11; data[ 2 ] = m21;
-	data[ 1 ] = m12; data[ 3 ] = m22;
+	data[0] = m11; data[2] = m21;
+	data[1] = m12; data[3] = m22;
 
 	return *this;
 }
 
-replay::matrix2&
-replay::matrix2::set_identity()
+replay::matrix2
+replay::matrix2::make_identity()
 {
-	return set( 1.f, 0.f, 0.f, 1.f );
+	return matrix2(1.f, 0.f, 0.f, 1.f);
 }
 
-replay::matrix2&
-replay::matrix2::set_rotation( const float angle )
+replay::matrix2
+replay::matrix2::make_rotation(float angle)
 {
-	const float sin = std::sin( angle );
-	const float cos = std::cos( angle );
+	const float sin = std::sin(angle);
+	const float cos = std::cos(angle);
 
-	return set( cos,sin, -sin, cos );
+	return matrix2(cos,-sin,
+		           sin, cos);
 }
 
-replay::matrix2&
-replay::matrix2::set_scale( const vector2f& scale )
+replay::matrix2
+replay::matrix2::make_scale(const vector2f& scale)
 {
-	return set( scale[ 0 ], 0.f, 0.f, scale[ 1 ] );
+	return matrix2(scale[0], 0.f, 0.f, scale[1]);
 }
 
 const replay::vector2f
-replay::matrix2::operator*( const vector2f& v ) const
+replay::matrix2::operator*(const vector2f& v) const
 {
-	return vector2f(  data[ 0 ] * v[ 0 ] + data[ 2 ] * v[ 1 ],
-					  data[ 1 ] * v[ 0 ] + data[ 3 ] * v[ 1 ] );
+	return vector2f(data[0]*v[0] + data[2]*v[1],
+					data[1]*v[0] + data[3]*v[1]);
 }
 
 const replay::matrix2
-replay::matrix2::operator*( const matrix2& other ) const
+replay::matrix2::operator*(const matrix2& other) const
 {
 	matrix2 result;
 	return multiply( *this, other, result );
@@ -122,15 +123,11 @@ replay::matrix2::invert()
 {
 	const float d = this->determinant();
 
-	if ( d==0.f )
+	if (d==0.f)
 		return false;
 
-	const float t = d*data[0];
-	data[0] = d*data[3];
-	data[3] = t;
-
-	data[2]=-d*data[1];
-	data[3]=-d*data[2];
+	set(data[3]/d, -data[2]/d,
+	   -data[1]/d,  data[0]/d);
 
 	return true;
 }

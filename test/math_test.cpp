@@ -7,6 +7,7 @@
 #include <replay/math.hpp>
 #include <replay/vector_math.hpp>
 #include <replay/minimal_sphere.hpp>
+#include <replay/matrix2.hpp>
 
 #include <boost/assign/std/vector.hpp>
 #include <boost/assign/std/list.hpp>
@@ -46,6 +47,24 @@ float distance_to_sphere( const IteratorType point_begin, const IteratorType poi
 }
 
 
+}
+
+BOOST_AUTO_TEST_CASE(matrix2_operations)
+{
+	using namespace replay;
+	matrix2 Rotation = matrix2::make_rotation(math::m_pi*0.25f); // 45deg rotation
+	matrix2 Inv = Rotation;
+	BOOST_REQUIRE(Inv.invert());
+
+	using math::fuzzy_equals;
+	using math::fuzzy_zero;
+	matrix2 I = Rotation*Inv;
+	// This should be identity
+	BOOST_REQUIRE(fuzzy_equals(I[0], 1.f) && fuzzy_zero(I[1]) && fuzzy_zero(I[2]) && fuzzy_equals(I[3], 1.f));
+
+	I = Inv*Rotation;
+	// This should be identity
+	BOOST_REQUIRE(fuzzy_equals(I[0], 1.f) && fuzzy_zero(I[1]) && fuzzy_zero(I[2]) && fuzzy_equals(I[3], 1.f));
 }
 
 // This test verifies integer arithmetic with a vector3.
