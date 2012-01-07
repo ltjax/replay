@@ -2,7 +2,7 @@
 replay
 Software Library
 
-Copyright (c) 2010 Marius Elvert
+Copyright (c) 2010-2011 Marius Elvert
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -24,10 +24,11 @@ Copyright (c) 2010 Marius Elvert
 
 */
 
+#include <replay/matrix4.hpp>
 #include <cmath>
 #include <algorithm>
 #include <replay/math.hpp>
-#include <replay/matrix4.hpp>
+#include <replay/matrix3.hpp>
 #include <replay/plane3.hpp>
 #include <replay/quaternion.hpp>
 
@@ -67,22 +68,36 @@ replay::matrix4::matrix4()
 {
 }
 
-/** Create a rotational matrix from a quaternion.
+
+/** Create a matrix from a rotational part and an optional offset.
 */
-replay::matrix4::matrix4( const quaternion& q )
+replay::matrix4::matrix4(const quaternion& rotation, const vector3f& offset)
 {
-	*this = q;
+	*this = rotation;
+
+	data[12] = offset[0];
+	data[13] = offset[1];
+	data[14] = offset[2];
 }
 
-/** Create a matrix from a rotational part and an offset.
+/** Create a matrix from a 3D matrix part and an optional offset.
 */
-replay::matrix4::matrix4( const quaternion& q, const vector3f& offset )
+replay::matrix4::matrix4(const matrix3& rotation, const vector3f& offset)
 {
-	*this = q;
+	// Copy the rotational part
+	for (std::size_t i=0; i<3; ++i)
+		for (std::size_t j=0; j<3; ++j)
+			operator()(i, j) = rotation(i, j);
 
-	data[12] = offset[ 0 ];
-	data[13] = offset[ 1 ];
-	data[14] = offset[ 2 ];
+	// Copy the offset
+	for (std::size_t i=0; i<3; ++i)
+		operator()(i, 3) = offset[i];
+
+	// Setup the affine row
+	data[3] = 0.f;
+	data[7] = 0.f;
+	data[11] = 0.f;
+	data[15] = 1.f;
 }
 
 /** Create a matrix from a rotational part, sign and an offset.
@@ -101,10 +116,10 @@ replay::matrix4::matrix4( const quaternion& q, const vector3f& offset, float sig
 
 /** Create a matrix from the given components.
 */
-replay::matrix4::matrix4( const float a11, const float a21, const float a31, const float a41,
+replay::matrix4::matrix4(const float a11, const float a21, const float a31, const float a41,
 						 const float a12, const float a22, const float a32, const float a42,
 						 const float a13, const float a23, const float a33, const float a43,
-						 const float a14, const float a24, const float a34, const float a44 )
+						 const float a14, const float a24, const float a34, const float a44)
 {
 	data[ 0] = a11; data[ 4] = a21; data[ 8] = a31; data[12] = a41;
 	data[ 1] = a12; data[ 5] = a22; data[ 9] = a32; data[13] = a42;
@@ -115,10 +130,10 @@ replay::matrix4::matrix4( const float a11, const float a21, const float a31, con
 /** Set a matrix from given components.
 */
 replay::matrix4&
-replay::matrix4::set(	 const float a11, const float a21, const float a31, const float a41,
-						 const float a12, const float a22, const float a32, const float a42,
-						 const float a13, const float a23, const float a33, const float a43,
-						 const float a14, const float a24, const float a34, const float a44 )
+replay::matrix4::set(const float a11, const float a21, const float a31, const float a41,
+					 const float a12, const float a22, const float a32, const float a42,
+					 const float a13, const float a23, const float a33, const float a43,
+					 const float a14, const float a24, const float a34, const float a44)
 {
 	data[ 0] = a11; data[ 4] = a21; data[ 8] = a31; data[12] = a41;
 	data[ 1] = a12; data[ 5] = a22; data[ 9] = a32; data[13] = a42;
