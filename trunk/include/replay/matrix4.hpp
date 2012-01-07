@@ -35,6 +35,7 @@ namespace replay {
 
 class quaternion;
 class plane3;
+class matrix3;
 
 /** 4x4 float matrix.
 	uses opengl-like column major internal format:
@@ -46,17 +47,15 @@ class plane3;
 */
 class matrix4
 {
-private:
-	float			data[ 16 ];
 public:
 					matrix4();
-	explicit		matrix4( const quaternion& rotation );
-					matrix4( const quaternion& rotation, const vector3f& offset );
-					matrix4( const quaternion& rotation, const vector3f& offset, float sign );
-					matrix4( const float a11, const float a21, const float a31, const float a41,
-							 const float a12, const float a22, const float a32, const float a42,
-							 const float a13, const float a23, const float a33, const float a43,
-							 const float a14, const float a24, const float a34, const float a44 );
+	explicit		matrix4(const matrix3& rotation, const vector3f& offset=vector3f(0.f));
+	explicit		matrix4(const quaternion& rotation, const vector3f& offset=vector3f(0.f));
+					matrix4(const quaternion& rotation, const vector3f& offset, float sign);
+					matrix4(float a11, float a21, float a31, float a41,
+							float a12, float a22, float a32, float a42,
+							float a13, float a23, float a33, float a43,
+							float a14, float a24, float a34, float a44);
 	
 	/** Constructor for user-defined conversions.
 		\see convertible_tag
@@ -80,10 +79,10 @@ public:
 	const float&	operator[]( const index_type i ) const { return data[i]; }
 
 	
-	matrix4&		set( const float a11, const float a21, const float a31, const float a41,
-						 const float a12, const float a22, const float a32, const float a42,
-						 const float a13, const float a23, const float a33, const float a43,
-						 const float a14, const float a24, const float a34, const float a44 );
+	matrix4&		set(float a11, float a21, float a31, float a41,
+						float a12, float a22, float a32, float a42,
+						float a13, float a23, float a33, float a43,
+						float a14, float a24, float a34, float a44);
 
 	matrix4&		set_identity();
 	matrix4&		set_rotation_x( const float angle );
@@ -141,6 +140,8 @@ public:
 	bool			operator==(const matrix4& rhs) const;
 	bool			operator!=(const matrix4& rhs) const {return !(operator==(rhs));}
 
+private:
+	float			data[16];
 };
 
 plane3 operator*( const plane3& p, const matrix4& m );

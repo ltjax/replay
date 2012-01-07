@@ -35,7 +35,7 @@ namespace replay {
 */
 	
 /** A dynamic sized one dimensional array class that comforms to a range interface.
-	This is more lightweight than std::vector, since it only every allocated space
+	This is more lightweight than std::vector, since it only ever allocates space
 	once, but doesn't support resizing or insertion because of that.
 	\ingroup Container
 */
