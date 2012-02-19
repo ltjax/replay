@@ -2,7 +2,7 @@
 replay
 Software Library
 
-Copyright (c) 2010 Marius Elvert
+Copyright (c) 2012 Marius Elvert
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -25,13 +25,15 @@ Copyright (c) 2010 Marius Elvert
 */
 
 #include <replay/pixbuf_io.hpp>
-#include <png.h>
 #include <boost/scoped_array.hpp>
 #include <replay/bstream.hpp>
 #include <boost/filesystem/convenience.hpp>
 #include <boost/filesystem/fstream.hpp>
 
-#define PNG_SIGNATURE_BYTES 8
+#ifdef REPLAY_USE_LIBPNG
+#  include <png.h>
+#  define PNG_SIGNATURE_BYTES 8
+#endif
 
 namespace { // BEGIN PRIVATE NAMESPACE
 
@@ -66,6 +68,7 @@ public:
 	void		save( replay::obstream< std::ostream >& file, const replay::pixbuf& source );
 };
 
+#ifdef REPLAY_USE_LIBPNG
 // User read function to use istream instead of FILE*
 void png_user_read( png_structp png_ptr, png_bytep data, png_size_t length )
 {
@@ -155,9 +158,11 @@ png_convert_paletted(png_structp png_ptr, png_infop info_ptr,
 
 	return result;
 }
+#endif
 
 } // END PRIVATE NAMESPACE
 
+#ifdef REPLAY_USE_LIBPNG
 /** Deserialize a PNG encoded file.
 	\params file A standard-stream to the file to decode.
 	\returns A shared_pixbuf containing the loaded image
@@ -349,6 +354,7 @@ replay::pixbuf_io::save_to_png_file( std::ostream& file, const pixbuf& source, i
 
 	png_destroy_write_struct( &png_ptr, &info_ptr );
 }
+#endif
 
 replay::shared_pixbuf
 tga_header::load_type2( replay::ibstream<std::istream>& file )
@@ -455,10 +461,12 @@ replay::pixbuf_io::save_to_file( const boost::filesystem::path& filename, const 
 	{
 		save_to_tga_file( file, source );
 	}
+#ifdef REPLAY_USE_LIBPNG
 	else if ( ext == ".png" )
 	{
 		save_to_png_file( file, source );
 	}
+#endif
 	else
 	{
 		throw pixbuf_io::unrecognized_format();
@@ -503,7 +511,7 @@ void
 tga_header::save( replay::obstream<std::ostream>& file, const replay::pixbuf& source )
 {
 	if ( source.get_width() && source.get_height() &&
-		( (source.get_channels() == 3) || (source.get_channels() == 4) ) )
+		((source.get_channels()==3) || (source.get_channels()==4)))
 	{
 		image_type = 2;
 		width = source.get_width();
@@ -518,33 +526,33 @@ tga_header::save( replay::obstream<std::ostream>& file, const replay::pixbuf& so
 	file << id_length << colormap_type << image_type;
 
 	// write colormap dummy data
-	file << colormap[ 0 ] << colormap[ 1 ] << colormap[ 2 ] << colormap[ 3 ] << colormap[ 4 ];
+	file << colormap[0] << colormap[1] << colormap[2] << colormap[3] << colormap[4];
 
 	// write image specification
-	file << origin[ 0 ] << origin[ 1 ] << width << height << pixeldepth << image_descriptor;
+	file << origin[0] << origin[1] << width << height << pixeldepth << image_descriptor;
 
 	unsigned int	pixelcount = width * height;
 	const uint8*	pixel = source.get_data();
 	uint8			buffer[ 4 ];
 	if ( pixeldepth == 24 )
 	{
-		for ( unsigned int i = 0; i < pixelcount; ++i )
+		for (unsigned int i = 0; i < pixelcount; ++i)
 		{
-			buffer[ 2 ] = *(pixel++);
-			buffer[ 1 ] = *(pixel++);
-			buffer[ 0 ] = *(pixel++);
+			buffer[2] = *(pixel++);
+			buffer[1] = *(pixel++);
+			buffer[0] = *(pixel++);
 			
 			file.write( buffer, 3 );
 		}
 	}
 	else // pixeldepth == 32
 	{
-		for ( unsigned int i = 0; i < pixelcount; ++i )
+		for (unsigned int i = 0; i < pixelcount; ++i)
 		{
-			buffer[ 2 ] = *(pixel++);
-			buffer[ 1 ] = *(pixel++);
-			buffer[ 0 ] = *(pixel++);
-			buffer[ 3 ] = *(pixel++);
+			buffer[2] = *(pixel++);
+			buffer[1] = *(pixel++);
+			buffer[0] = *(pixel++);
+			buffer[3] = *(pixel++);
 			
 			file.write( buffer, 4 );
 		}
@@ -582,10 +590,12 @@ replay::pixbuf_io::load_from_file( const boost::filesystem::path& filename )
 	{
 		return load_from_tga_file(file);
 	}
+#ifdef REPLAY_USE_LIBPNG
 	else if ( ext == ".png" )
 	{	
 		return load_from_png_file(file);
 	}
+#endif
 	
 	throw pixbuf_io::unrecognized_format();
 }
