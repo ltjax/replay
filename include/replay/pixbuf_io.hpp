@@ -2,7 +2,7 @@
 replay
 Software Library
 
-Copyright (c) 2010 Marius Elvert
+Copyright (c) 2012 Marius Elvert
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -46,7 +46,7 @@ namespace pixbuf_io
 	public:
 		/** Initialize with an error string.
 		*/
-		explicit read_error( const std::string& str ) : std::runtime_error(str) {}
+		explicit read_error(const std::string& str) : std::runtime_error(str) {}
 	};
 
 	/** Exception that is thrown on write errors.
@@ -59,14 +59,16 @@ namespace pixbuf_io
 	*/
 	class					unrecognized_format : public std::exception {};
 
-	shared_pixbuf			load_from_file( const boost::filesystem::path& filename );
-	void					save_to_file( const boost::filesystem::path& filename, const pixbuf& source );
+	shared_pixbuf			load_from_file(const boost::filesystem::path& filename);
+	void					save_to_file(const boost::filesystem::path& filename, const pixbuf& source);
 
-	shared_pixbuf			load_from_tga_file( std::istream& file );
+	shared_pixbuf			load_from_tga_file(std::istream& file);
+	void					save_to_tga_file(std::ostream& file, const pixbuf& source);
+
+#ifdef REPLAY_USE_LIBPNG
 	shared_pixbuf			load_from_png_file( std::istream& file );
-
-	void					save_to_tga_file( std::ostream& file, const pixbuf& source );
 	void					save_to_png_file( std::ostream& file, const pixbuf& source, int level = 1 );
+#endif
 }
 
 }

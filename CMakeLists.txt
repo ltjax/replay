@@ -1,23 +1,28 @@
-project( replay )
+PROJECT(replay)
 
-cmake_minimum_required( VERSION 2.8 )
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
-set( Boost_ADDITIONAL_VERSIONS "1.42.0" "1.42" )
-set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${replay_BINARY_DIR}/build )
-set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${replay_BINARY_DIR}/build )
+option(REPLAY_USE_LIBPNG "Use libpng to load png files" ON)
 
-set( Boost_USE_STATIC_LIBS OFF )
-if( WIN32 )
-find_package( Boost 1.42 REQUIRED )
-else( WIN32 )
-set( Boost_USE_MULTITHREADED OFF )
-find_package( Boost 1.42 REQUIRED COMPONENTS unit_test_framework )
-endif( WIN32 )
+SET(Boost_ADDITIONAL_VERSIONS "1.42.0" "1.42" "1.47" "1.47.0" "1.48" "1.48.0")
 
-find_package( PNG QUIET )
-if( PNG_FOUND )
-message("libPNG found, using it.")
-endif( PNG_FOUND )
+SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${replay_BINARY_DIR}/build)
+SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${replay_BINARY_DIR}/build)
 
-add_subdirectory( source )
-add_subdirectory( test )
+SET(Boost_USE_STATIC_LIBS OFF)
+
+IF(WIN32)
+	FIND_PACKAGE(Boost 1.42 REQUIRED)
+ELSE()
+	SET(Boost_USE_MULTITHREADED OFF)
+	FIND_PACKAGE(Boost 1.42 REQUIRED COMPONENTS unit_test_framework)
+ENDIF()
+
+LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
+
+IF (REPLAY_USE_LIBPNG)
+	FIND_PACKAGE(PNG REQUIRED)
+ENDIF()
+
+ADD_SUBDIRECTORY(source)
+ADD_SUBDIRECTORY(test)
