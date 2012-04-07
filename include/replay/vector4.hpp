@@ -73,6 +73,10 @@ public:
 	*/
 	vector4<type>&					reset(const vector2<type>& xy, const vector2<type>& zw);
 
+	/** Assemble a 4D vector by concatenating a 2D vector and 2 more values.
+	*/
+	vector4<type>&					reset(const vector2<type>& xy, value_type z, value_type w);
+
 	/** Set the elements of the vector individually.
 		\param x The first component.
 		\param y The second component.
@@ -128,6 +132,10 @@ public:
 		\param w The fourth component.
 	*/
 									vector4(value_type x, value_type y, value_type z, value_type w) {reset(x,y,z,w);}
+
+	/** Assemble a 4D vector by concatenating a 2D vector and 2 more values.
+	*/
+									vector4(const vector2<type>& xy, value_type z, value_type w) {reset(xy, z, w);}
 
 	/** Convert an array-like type to a 4D vector.
 		The parameter needs to be indexable for at least 4 elements.

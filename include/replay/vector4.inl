@@ -114,6 +114,18 @@ replay::vector4<type>::reset(const vector2< type >& ab, const vector2< type >& c
 
 template <class type> inline
 replay::vector4<type>&
+replay::vector4<type>::reset(const vector2< type >& ab, const value_type z, const value_type w)
+{
+	data[0] = ab[0];
+	data[1] = ab[1];
+	data[2] = z;
+	data[3] = w;
+
+	return *this;
+}
+
+template <class type> inline
+replay::vector4<type>&
 replay::vector4<type>::reset(const value_type x, const value_type y, const value_type z, const value_type w)
 {
 	data[0] = x;
