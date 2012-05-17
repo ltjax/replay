@@ -28,25 +28,33 @@ Copyright (c) 2010 Marius Elvert
 #include <cmath>
 #include <replay/aabb.hpp>
 #include <replay/math.hpp>
+#include <replay/vector_math.hpp>
 
 /** Create a new empty box that contains nothing.
 */
-replay::aabb::aabb( )
+replay::aabb::aabb()
 {
 	clear();
 }
 
 /** Create a new box that extends in all directions from the origin.
 */
-replay::aabb::aabb( const float x )
-: base_class( vector3f( -x ), vector3f( x ) )
+replay::aabb::aabb(const float size)
+: base_class(vector3f(-size), vector3f(size))
+{
+}
+
+/** Create a new box containing a single point.
+*/
+replay::aabb::aabb(const vector3f& point)
+: base_class(point, point)
 {
 }
 
 /** Create a new box from range.
 */
-replay::aabb::aabb( const vector3f& min, const vector3f& max )
-: base_class( min, max )
+replay::aabb::aabb(const vector3f& min, const vector3f& max)
+: base_class(min, max)
 {
 }
 
@@ -55,10 +63,16 @@ replay::aabb::aabb( const vector3f& min, const vector3f& max )
 */
 replay::aabb& replay::aabb::clear()
 {
-	(*this)[ 0 ].reset( std::numeric_limits<float>::max() );
-	(*this)[ 1 ].reset( -std::numeric_limits<float>::max() );
+	(*this)[0].reset( std::numeric_limits<float>::max() );
+	(*this)[1].reset( -std::numeric_limits<float>::max() );
 
 	return *this;
+}
+
+bool replay::aabb::empty() const
+{
+	// One of the ranges has to be empty
+	return max(0)<min(0) || max(1)<min(1) || max(2)<min(2);
 }
 
 /** Compute the square distance to the box using Arvo's algorithm.
@@ -119,7 +133,7 @@ replay::fcouple replay::aabb::project( const vector3f& x ) const
 
 /** Classify the box in respect to a plane.
 */
-replay::aabb::clsfctn replay::aabb::classify( const plane3& x ) const
+replay::aabb::classify_result replay::aabb::classify( const plane3& x ) const
 {
 	unsigned int mask;
 	fcouple result;
@@ -156,7 +170,7 @@ replay::aabb& replay::aabb::move( const vector3f& delta )
 
 /** Enlarge the aabb to contain another aabb.
 */
-replay::aabb& replay::aabb::insert( const aabb& x )
+replay::aabb& replay::aabb::insert(const aabb& x)
 {
 	for ( unsigned int i = 0; i < 3; ++i )
 	{
@@ -178,7 +192,7 @@ replay::aabb& replay::aabb::insert( const vector3f* points, unsigned int count )
 
 	float t = 0.f;
 	
-	// insert first point explicitly to assert max_i > min_i
+	// insert first point explicitly to assert max_i >= min_i
 	insert(points[0]);
 
 	for ( unsigned int i=1; i < count; ++i )
@@ -319,8 +333,16 @@ replay::aabb& replay::aabb::expand( const replay::vector3f& x )
 
 /** Create the aabb [min-x,max+x].
 */
-replay::aabb replay::aabb::expanded( const replay::vector3f& x ) const
+replay::aabb const replay::aabb::expanded(const replay::vector3f& x) const
 {
-	return aabb( this->min() - x, this->max() + x );
+	return aabb(min()-x, max()+x);
 }
 
+
+replay::aabb&  replay::aabb::intersect(const replay::aabb& rhs)
+{
+	min()=replay::math::vector_max(min(), rhs.min());
+	max()=replay::math::vector_min(max(), rhs.max());
+
+	return *this;
+}
