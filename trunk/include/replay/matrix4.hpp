@@ -28,6 +28,7 @@ Copyright (c) 2010 Marius Elvert
 #define replay_matrix4_hpp
 
 #include <cstddef>
+#include <replay/common.hpp>
 #include <replay/vector3.hpp>
 #include <replay/vector4.hpp>
 
@@ -48,7 +49,20 @@ class matrix3;
 class matrix4
 {
 public:
-					matrix4();
+	/** Create an uninitialized matrix.
+	*/
+					matrix4(uninitialized_tag);
+					
+	/** Initialize the diagonal.
+		\param d Value for the diagonal elements
+	*/
+	explicit 		matrix4(float diagonal);
+
+	/** Initialize the diagonal.
+		\param v 3D vector to initialize the diagonal elements
+	*/
+	explicit 		matrix4(const vector4f& diagonal);
+
 	explicit		matrix4(const matrix3& rotation, const vector3f& offset=vector3f(0.f));
 	explicit		matrix4(const quaternion& rotation, const vector3f& offset=vector3f(0.f));
 					matrix4(const quaternion& rotation, const vector3f& offset, float sign);
@@ -192,7 +206,7 @@ matrix4::multiply( const matrix4& a, const matrix4& b, matrix4& result )
 inline const matrix4
 matrix4::operator*( const matrix4& m ) const
 {
-	matrix4 result;
+	matrix4 result((uninitialized_tag()));
 
 	multiply( *this, m, result );
 

@@ -62,10 +62,25 @@ replay::plane3 operator*( const replay::plane3& p, const replay::matrix4& m )
 	return result;
 }
 
-/** Create an uninitialized matrix.
-*/
-replay::matrix4::matrix4()
+replay::matrix4::matrix4(uninitialized_tag)
 {
+}
+
+replay::matrix4::matrix4(float d)
+{
+	set(d, 0.f, 0.f, 0.f,
+		0.f, d, 0.f, 0.f,
+		0.f, 0.f, d, 0.f,
+		0.f, 0.f, 0.f, d);
+}
+
+
+replay::matrix4::matrix4(const vector4f& d)
+{
+	set(d[0], 0.f, 0.f, 0.f,
+		0.f, d[1], 0.f, 0.f,
+		0.f, 0.f, d[2], 0.f,
+		0.f, 0.f, 0.f, d[3]);
 }
 
 

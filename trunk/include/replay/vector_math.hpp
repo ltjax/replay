@@ -31,6 +31,7 @@ Copyright (c) 2010 Marius Elvert
 #include <algorithm>
 #include <boost/tuple/tuple.hpp>
 #include <boost/array.hpp>
+#include <boost/optional.hpp>
 #include <replay/math.hpp>
 #include <replay/vector2.hpp>
 #include <replay/vector3.hpp>
@@ -167,7 +168,7 @@ namespace math {
 	inline matrix4				make_perspective_matrix( float fovy,
 										float aspect, float neardist, float fardist )
 	{
-		matrix4 result;
+		matrix4 result((uninitialized_tag()));
 		set_perspective_matrix( result, fovy, aspect, neardist, fardist );
 		return result;
 	}
@@ -184,7 +185,7 @@ namespace math {
 	inline matrix4				make_orthographic_matrix( const fcouple& width,
 										const fcouple& height, const fcouple& depth )
 	{
-		matrix4 result;
+		matrix4 result((uninitialized_tag()));
 		set_orthographic_matrix( result, width, height, depth );
 		return result;
 	}
@@ -357,6 +358,13 @@ namespace math {
 
 	}
 }
+
+/** Invert the matrix using the cramer-rule.
+	\param rhs The matrix to find the inverse of
+	\param epsilon Numerical epsilon to determine if the matrix is singular. Must be 0.0 or greater.
+	\returns The inverse of the given matrix on success, none otherwise.
+*/
+boost::optional<matrix4>	cramer_invert(const matrix4& rhs, double epsilon=0.0);
 
 /** Find the closest point to a given point on a line.
 	\param line line on which to look for the closest point.

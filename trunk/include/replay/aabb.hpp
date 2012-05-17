@@ -47,15 +47,16 @@ public:
 	/** Classification relative to a plane.
 		\see classify
 	*/
-	enum clsfctn
+	enum classify_result
 	{
 		negative, /**< All points have a negative distance to the plane. */
 		positive, /**< All points have a positive distance to the plane. */
 		spanning  /**< The points have mixed signs in their distances to the plane, so the box intersects the plane. */
 	};
-									aabb( );
-	explicit						aabb( const float extends );
-									aabb( const vector3f& min, const vector3f& max );
+									aabb();
+	explicit						aabb(float size);
+	explicit						aabb(const vector3f& point);
+									aabb(const vector3f& min, const vector3f& max);
 	
 	/** Constructor for user-defined conversions.
 		\see convertible_tag
@@ -66,19 +67,23 @@ public:
 	}
 
 	aabb&							clear();
-	aabb&							move( const vector3f& delta );
+	aabb&							move(const vector3f& delta);
+
+	/** Check if this bounding box is empty, i.e. does not contain any points.
+	*/
+	bool							empty() const;
 
 	/** Enlarge the box to contain the given point.
 		\param point The point to be inserted.
 	*/
-	aabb&							insert( const vector3f& point )
+	aabb&							insert(const vector3f& point)
 	{
-		for ( unsigned int i = 0; i < 3; ++i )
+		for (unsigned int i=0; i<3; ++i)
 		{
-			if ( point[ i ] < (*this)[ 0 ][ i ] )
-				(*this)[ 0 ][ i ] = point[ i ];
-			if ( point[ i ] > (*this)[ 1 ][ i ] )
-				(*this)[ 1 ][ i ] = point[ i ];
+			if (point[i] < min(i))
+				min(i) = point[i];
+			if (point[i] > max(i))
+				max(i) = point[i];
 		}
 		
 		return *this;
@@ -87,7 +92,8 @@ public:
 	aabb&							insert( const vector3f* points, unsigned int count );
 	aabb&							insert( const vector3f* points, const unsigned short* indices, unsigned int count );
 	aabb&							insert( const vector3f* points, const unsigned int* indices, unsigned int count );
-	aabb&							insert( const aabb& x );
+	aabb&							insert(const aabb& rhs);
+	aabb const						inserted(aabb rhs) const;
 
 	vector3f&						compute_arvo_vector( const vector3f& point, vector3f& result ) const;
 	
@@ -118,10 +124,10 @@ public:
 	bool							contains( const vector3f& point ) const;
 
 	fcouple							project( const vector3f& x ) const;
-	clsfctn							classify( const plane3& x ) const;
+	classify_result					classify(const plane3& x) const;
 
-	aabb&							expand( const vector3f& x );
-	aabb							expanded( const vector3f& x ) const;
+	aabb&							expand(const vector3f& x);
+	aabb const						expanded(const vector3f& x) const;
 
 	/** Get the minimum in all three dimensions.
 	*/
@@ -134,12 +140,12 @@ public:
 	/** Get the minimum element in the given dimension.
 	*/
 	template < class IndexType >
-	float&							min( IndexType i ) { return get0()[i]; }
+	float&							min(IndexType i) {return get0()[i];}
 
 	/** Get the minimum element in the given dimension.
 	*/
 	template < class IndexType >
-	float							min( IndexType i ) const { return get0()[i]; }
+	float							min(IndexType i) const {return get0()[i];}
 
 	/** Get the maximum in all three dimensions.
 	*/
@@ -151,17 +157,36 @@ public:
 
 	/** Get the maximum element in the given dimension.
 	*/
-	template < class IndexType >
-	float&							max( IndexType i ) { return get1()[i]; }
+	template <class IndexType>
+	float&							max(IndexType i) {return get1()[i];}
 
 	/** Get the maximum element in the given dimension.
 	*/
-	template < class IndexType >
-	float							max( IndexType i ) const { return get1()[i]; }
+	template <class IndexType>
+	float							max(IndexType i) const {return get1()[i];}
+	
+	/** Intersect this box with another.
+	*/
+	aabb&							intersect(const replay::aabb& rhs);
 
-
+	/** Create a box that is the intersection of this and another.
+	*/
+	aabb const						intersected(replay::aabb rhs) const;
 };
 
+}
+
+inline
+replay::aabb const replay::aabb::inserted(replay::aabb rhs) const
+{
+	return rhs.insert(*this);
+}
+
+inline
+replay::aabb const
+replay::aabb::intersected(replay::aabb rhs) const
+{
+	return rhs.intersect(*this);
 }
 
 #endif
