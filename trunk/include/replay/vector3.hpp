@@ -210,6 +210,16 @@ vector3<type> operator/(vector3<type> lhs, const type& rhs)
 	return lhs /= rhs;
 }
 
+/** Scalar division.
+	\relates vector3
+	\ingroup Math
+*/
+template <class type> inline
+vector3<type> operator/(const type& lhs, const vector3<type>& rhs)
+{
+	return vector3<type>(lhs/rhs[0],lhs/rhs[1],lhs/rhs[2]);
+}
+
 
 /** A convenience typedef for a 3d floating-point vector.
 	\relates vector3
