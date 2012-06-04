@@ -36,70 +36,80 @@ namespace replay {
 	\note Consider using \ref fixed_table instead when the size is known at compile time.
 	\ingroup Container
 */
-template < class T > class table
+template <class T> class table
 {
-private:
-	typedef	T				object_type;
-	typedef unsigned int	size_type;
-	typedef table< T >		self_type;
-
-	object_type*			buffer;
-	size_type				width;
-	size_type				height;
-
 public:
+	typedef	T					value_type;
+	typedef std::size_t 		size_type;
+
 
 	/** An iterator to use with this type.
 		\note This is currently implemented as a raw pointer.
 	*/
-	typedef object_type*		iterator;
+	typedef value_type*			iterator;
 
 	/** An immutable iterator to use with this type.
 		\note This is currently implemented as a const raw pointer.
 	*/
-	typedef const object_type*	const_iterator;
+	typedef const value_type*	const_iterator;
 
 	/** Fill the table with the given value.
 	*/
-	void				fill( const object_type& value )
+	void						fill(const value_type& value)
 	{
-		const size_type num_elements = width*height;
-		for ( size_type i = 0; i < num_elements; ++i )
-			buffer[ i ] = value;
+		const size_type num_elements = m_width*m_height;
+		for (size_type i=0; i<num_elements; ++i)
+			m_buffer[i] = value;
 	}
 
 	/** Construct a table of given width and height.
 	*/
-	table( const size_type width, const size_type height )
-	: buffer( new object_type[ width*height ] ), width( width ), height( height ) {}
+	table(size_type w, size_type h)
+	: m_buffer(new value_type[w*h]), m_width(w), m_height(h)
+	{
+	}
 
 	/** Construct a table of given width and height and fill it with the given value.
 	*/
-	table( const size_type width, const size_type height, const object_type& value )
-	: buffer( new object_type[ width*height ] ), width( width ), height( height )
+	table(size_type w, size_type h, const value_type& value)
+	: m_buffer(new value_type[w*h]), m_width(w), m_height(h)
 	{
-		fill( value );
+		try {
+			fill(value);
+		}
+		catch (...)
+		{
+			delete[] m_buffer;
+			throw;
+		}
 	}
+
 	/** Default constructor. 
 		Creates an invalid table.
 	*/ 
-	table() : buffer( 0 ), width( 0 ), height( 0 ) {}
+	table() : m_buffer(0), m_width(0), m_height(0) {}
 
 
 	/** Copy constructor.
 		Will create a table of equal size and copy all elements over.
 	*/
-	table( const table< object_type >& other )
-	: buffer( 0 ), width( other.width ), height( other.height )
+	table(const table<value_type>& rhs)
+	: m_buffer(0), m_width(rhs.m_width), m_height(rhs.m_height)
 	{
-		if ( width && height )
+		if (m_width && m_height)
 		{
-			const size_type num_elements = width*height;
-
-			buffer = new object_type[ num_elements ];
+			const size_type num_elements = m_width*m_height;
+			m_buffer=new value_type[num_elements];
 			
-			for ( size_type i = 0; i < num_elements; ++i )
-				buffer[ i ] = other.buffer[ i ];
+			try {
+				for (size_type i=0; i<num_elements; ++i)
+					m_buffer[i] = rhs.m_buffer[i];
+			}
+			catch (...)
+			{
+				delete[] m_buffer;
+				throw;
+			}
 		}
 	}
 
@@ -108,58 +118,61 @@ public:
 	*/
 	~table()
 	{
-		clear();
+		delete[] m_buffer;
 	}
 	
 
 	/** Get an iterator to the beginning of the table.
 	*/
-	iterator			begin() { return iterator(buffer); }
+	iterator				begin() {return iterator(m_buffer);}
 	
 	
 	/** Get an iterator to the beginning of the table.
 	*/
-	const_iterator		begin() const { return const_iterator(buffer); }
+	const_iterator			begin() const {return const_iterator(m_buffer) }
 
 
 	/** Get an iterator the end of the table.
 	*/
-	iterator			end() { return iterator(buffer+width*height); }
+	iterator				end() {return iterator(m_buffer+width*height);}
 
 	/** Get an iterator the end of the table.
 	*/
-	const_iterator		end() const { return const_iterator(buffer+width*height); }
+	const_iterator			end() const {return const_iterator(m_buffer+width*height);}
 
 	/** Invalidate the table and free the memory.
 	*/
-	void				clear()
-	{ delete[] buffer; this->width = 0; this->height = 0; this->buffer = 0; }
+	void					clear()
+	{delete[] m_buffer; m_width=0; m_height=0; m_buffer=0;}
 
 	/** Assign a table and copy the contained data.
 	*/
-	self_type&			operator=( const self_type& other )
+	table&					operator=(const table& rhs)
 	{
-		if ( (this->width == other.width) && (this->height == other.height) )
+		if (&rhs == this)
+			return *this;
+
+		if ((m_width == rhs.m_width) && (m_height == rhs.m_height))
 		{
-			const size_type num_elements = width*height;
+			const size_type num_elements = m_width*m_height;
 				
-			for ( size_type i = 0; i < num_elements; ++i )
-				buffer[ i ] = other.buffer[ i ];
+			for (size_type i=0; i<num_elements; ++i)
+				buffer[i] = other.buffer[i];
 		}
 		else
 		{
 			clear();
-			this->width = other.width;
-			this->height = other.height;
+			m_width = rhs.m_width;
+			m_height = rhs.m_height;
 
-			if ( width && height )
+			if (width && height)
 			{
 				const size_type num_elements = width*height;
 
-				buffer = new object_type[ num_elements ];
+				m_buffer = new value_type[num_elements];
 				
-				for ( size_type i = 0; i < num_elements; ++i )
-					buffer[ i ] = other.buffer[ i ];
+				for (size_type i=0; i<num_elements; ++i)
+					buffer[i] = other.buffer[i];
 			}
 		}
 
@@ -168,13 +181,17 @@ public:
 
 	/** Resize the table and write the value to all elements.
 	*/
-	void				resize( const size_type width, const size_type height, const object_type& value )
-	{ this->width = width; this->height = height; delete[] buffer; buffer = new object_type[ width*height ]; fill( value ); }
+	void					resize(size_type w, size_type h, const value_type& value)
+	{table rhs(w, h, value); swap(*this, rhs);}
 
 	/** Resize the table and invalidate all contents.
 	*/
-	void				resize( const size_type width, const size_type height )
-	{ this->width = width; this->height = height; delete[] buffer; buffer = new object_type[ width*height ]; }
+	void					resize(size_type w, size_type h)
+	{table rhs(w, h); swap(*this, rhs);}
+
+	/** Compute the linear memory offset of an element.
+	*/
+	size_type				element_offset(size_type x, size_type y) const {return (m_width*y)+x;}
 
 	/** Access the table.
 		\param x The column in the table.
@@ -182,7 +199,7 @@ public:
 		\returns A mutable reference to an element.
 		\note The order of the parameters is reversed from typical mathematical notation.
 	*/
-	object_type&		operator()( const size_type x, const size_type y ) { return buffer[ (width*y)+x ]; }
+	value_type&				operator()(size_type x, size_type y) {return m_buffer[element_offset(x, y)];}
 	
 	/** Access the matrix.
 		\param x The column in the table.
@@ -190,68 +207,69 @@ public:
 		\returns A const reference to an element.
 		\note The order of the parameters is reversed from typical mathematical notation.
 	*/
-	const object_type&	operator()( const size_type x, const size_type y ) const { return buffer[ (width*y)+x ]; }
+	const value_type&		operator()(size_type x, size_type y) const {return m_buffer[element_offset(x, y)];}
 
-	/** Compute the linear memory offset of an element.
+	/** Checks whether the matrix is empty.
 	*/
-	size_type			get_index( const size_type x, const size_type y ) const { return (width*y)+x; }
-
-	/** Checks whether the matrix is valid.
-	*/
-	bool				is_valid() const { return buffer != 0; }
+	bool					empty() const {return m_buffer==0;}
 
 	/** Get an element via its linear offset.
 		\see get_index
 	*/
-	object_type&		get( const size_type i ) { return buffer[ i ]; }
+	value_type&				get(size_type i) {return m_buffer[i];}
 	
 	/** Get an element via its linear offset.
 		\see get_index
 	*/
-	const object_type&	get( const size_type i ) const { return buffer[ i ]; }
+	const value_type&		get(size_type i) const {return m_buffer[i];}
 
 	/** Get the width of the table, i.e. the number of columns.
 	*/
-	size_type			get_width() const { return width; }
+	size_type				width() const {return m_width;}
 	
 	/** Get the height of the table, i.e. the number of rows.
 	*/
-	size_type			get_height() const { return height; }
+	size_type				height() const {return m_height;}
 
 	/** Get a pointer to the raw %buffer.
 		\returns A const pointer to the internal %buffer.
 		\note The internal memory layout is a continguous and row-major.
 	*/
-	const object_type*	ptr() const { return buffer; }
+	const value_type*		ptr() const {return m_buffer;}
 	
 	/** Get a pointer to the raw %buffer.
 		\returns A mutable pointer to the internal %buffer.
 		\note The internal memory layout is a continguous and row-major.
 	*/
-	object_type*		ptr() { return buffer; }
+	value_type*				ptr() {return m_buffer;}
 
 	/** Swap the contents of two tables.
 		\note This is a constant-time operation.
 	*/
-	static void			swap( self_type& a, self_type& b )
+	static void				swap(table& lhs, table& rhs)
 	{
-		object_type* temp_pointer = a.buffer;
-		a.buffer = b.buffer;
-		b.buffer = temp_pointer;
+		value_type* const data=lhs.m_buffer;
+		lhs.m_buffer=rhs.m_buffer;
+		rhs.m_buffer=data;
 
-		size_type temp = a.width;
-		a.width = b.width;
-		b.width = temp;
+		const size_type w = lhs.m_width;
+		lhs.m_width = rhs.m_width;
+		rhs.m_width = w;
 
-		temp = a.height;
-		a.height = b.height;
-		b.height = temp;
+		const size_type h = lhs.m_height;
+		lhs.m_height = rhs.m_height;
+		rhs.m_height = h;
 	};
 
 	/** Swap the contents of this and another table.
 		\note This is a constant-time operation.
 	*/
-	void				swap( self_type& rhs ) { swap( *this, rhs ); }
+	void					swap(table& rhs) {swap(*this, rhs);}
+
+private:
+	value_type*				m_buffer;
+	size_type				m_width;
+	size_type				m_height;
 };
 
 /** A fixed size two dimensional array.
