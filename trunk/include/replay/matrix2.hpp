@@ -95,23 +95,23 @@ class matrix2
 
 		/** Get a matrix element by two indices.
 		*/
-		float&				operator()( const unsigned int row, const unsigned int column ) { return data[ row + (column<<1) ]; }
+		float&				operator()(std::size_t row, std::size_t column) { return data[row + (column<<1)]; }
 		
 		/** Get a matrix element by two indices.
 		*/
-		float				operator()(unsigned int row, unsigned int column) const { return data[ row + (column<<1) ]; }
+		float				operator()(std::size_t row, std::size_t column) const { return data[row + (column<<1)]; }
 		
 		/** Get a matrix element by its column major index.
 		*/
-		float				operator[](unsigned int i) const { return data[i]; }
+		float				operator[](std::size_t i) const { return data[i]; }
 
 		/** Get a matrix column by its index.
 		*/
-		const vector2f		column(unsigned int i) const;
+		const vector2f		column(std::size_t i) const;
 
 		/** Get a matrix row by its index.
 		*/
-		const vector2f		row(unsigned int i) const;
+		const vector2f		row(std::size_t i) const;
 
 		/** Right-multiply a (column) vector by this matrix.
 		*/
@@ -181,14 +181,14 @@ operator*(const vector2f& lhs, const matrix2& rhs)
 }
 
 inline const vector2f
-matrix2::column(unsigned int i) const
+matrix2::column(std::size_t i) const
 {
 	i *= 2;
 	return vector2f(data[i], data[i+1]);
 }
 
 inline const vector2f
-matrix2::row(unsigned int i) const
+matrix2::row(std::size_t i) const
 {
 	return vector2f(data[i], data[i+2]);
 }

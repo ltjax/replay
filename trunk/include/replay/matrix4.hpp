@@ -131,11 +131,11 @@ public:
 
 	/** Get matrix elements by their indices.
 	*/
-	float&			operator()( unsigned int r, unsigned int c ) { return data[ (c<<2)+r ]; }
+	float&			operator()(std::size_t row, std::size_t column) {return data[(column<<2)+row];}
 	
 	/** Get matrix elements by their indices.
 	*/
-	float			operator()( unsigned int r, unsigned int c ) const { return data[ (c<<2)+r ]; }
+	float			operator()(std::size_t row, std::size_t column) const {return data[(column<<2)+row];}
 
 	const matrix4	operator*( const matrix4& other ) const;
 	const matrix4	operator+( const matrix4& other ) const;

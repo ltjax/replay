@@ -293,10 +293,10 @@ replay::vector3f& replay::aabb::compute_center( vector3f& result ) const
 
 /** Compute a given corner of the box, whereas the n'th bit in the index corresponds to the n'th axis in space.
 */
-replay::vector3f& replay::aabb::compute_corner( unsigned int index, vector3f& result ) const
+replay::vector3f& replay::aabb::corner(std::size_t index, vector3f& result) const
 {
-	for ( unsigned int i = 0; i < 3; ++i )
-		result[ i ] = ((index&(1<<i))?get1():get0())[ i ];
+	for (std::size_t axis=0; axis<3; ++axis)
+		result[axis]=(index&(std::size_t(1)<<axis))?max(axis):min(axis);
 
 	return result;
 }

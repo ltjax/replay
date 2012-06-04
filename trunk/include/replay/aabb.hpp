@@ -109,12 +109,11 @@ public:
 	inline vector3f					compute_center() const
 									{ vector3f temp; return compute_center( temp ); }
 
-	vector3f&						compute_corner( unsigned int index, vector3f& result ) const;
+	vector3f&						corner(std::size_t i, vector3f& result) const;
 	
 	/** Compute a corner of the aabb.
 	*/
-	inline vector3f					compute_corner( unsigned int index ) const
-									{ vector3f temp; return compute_corner( index, temp ); }
+	inline vector3f					corner(std::size_t i) const;
 
 	aabb&							compute_subinterval( unsigned int index, const vector3f& pivot, aabb& result ) const;
 
@@ -187,6 +186,13 @@ replay::aabb const
 replay::aabb::intersected(replay::aabb rhs) const
 {
 	return rhs.intersect(*this);
+}
+
+inline
+replay::vector3f replay::aabb::corner(std::size_t i) const
+{
+	vector3f temp((replay::uninitialized_tag()));
+	return corner(i, temp);
 }
 
 #endif
