@@ -1,24 +1,33 @@
-include_directories( ${replay_SOURCE_DIR}/include 
-             ${Boost_INCLUDE_DIR} )
 
-set( TestSources
-    math_test.cpp 
-    minibox_test.cpp )
 
-if( CMAKE_COMPILER_IS_GNUCXX )
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBOOST_TEST_DYN_LINK" )
-endif( CMAKE_COMPILER_IS_GNUCXX )
+SET(TARGET_NAME	replay-test)
 
-link_directories(
+INCLUDE_DIRECTORIES(
+	${replay_SOURCE_DIR}/include 
+	${Boost_INCLUDE_DIR}
+)
+
+IF(CMAKE_COMPILER_IS_GNUCXX)
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBOOST_TEST_DYN_LINK")
+ENDIF(CMAKE_COMPILER_IS_GNUCXX)
+
+LINK_DIRECTORIES(
   ${Boost_LIBRARY_DIRS}
 )
 
-add_executable( replay-test ${TestSources} )
+ADD_EXECUTABLE(${TARGET_NAME} 
+    math_test.cpp 
+    minibox_test.cpp
+)
 
-target_link_libraries( replay-test
-            replay
-            ${Boost_LIBRARIES} )
+TARGET_LINK_LIBRARIES(${TARGET_NAME}
+	replay
+	${Boost_LIBRARIES}
+)
 
-add_custom_command( TARGET replay-test
-                    POST_BUILD
-            COMMAND replay-test ARGS --report_level=short )
+ADD_CUSTOM_COMMAND(
+	TARGET ${TARGET_NAME}
+	POST_BUILD
+	COMMAND ${TARGET_NAME}
+	ARGS --report_level=short --result_code=no
+)
