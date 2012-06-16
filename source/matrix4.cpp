@@ -115,6 +115,16 @@ replay::matrix4::matrix4(const matrix3& rotation, const vector3f& offset)
 	data[15] = 1.f;
 }
 
+/** Create a matrix from scale and offset.
+*/
+replay::matrix4::matrix4(const vector3f& s, const vector3f& o)
+{
+	set(s[0], 0.f, 0.f, o[0],
+		0.f, s[1], 0.f, o[1],
+		0.f, 0.f, s[2], o[2],
+		0.f, 0.f, 0.f,  1.f);
+}
+
 /** Create a matrix from a rotational part, sign and an offset.
 */
 replay::matrix4::matrix4( const quaternion& q, const vector3f& offset, float sign )
