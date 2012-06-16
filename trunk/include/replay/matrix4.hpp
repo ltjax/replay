@@ -65,11 +65,13 @@ public:
 
 	explicit		matrix4(const matrix3& rotation, const vector3f& offset=vector3f(0.f));
 	explicit		matrix4(const quaternion& rotation, const vector3f& offset=vector3f(0.f));
+	explicit		matrix4(const vector3f& scale, const vector3f& offset=vector3f(0.f));
 					matrix4(const quaternion& rotation, const vector3f& offset, float sign);
 					matrix4(float a11, float a21, float a31, float a41,
 							float a12, float a22, float a32, float a42,
 							float a13, float a23, float a33, float a43,
 							float a14, float a24, float a34, float a44);
+
 	
 	/** Constructor for user-defined conversions.
 		\see convertible_tag
