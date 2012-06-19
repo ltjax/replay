@@ -113,6 +113,25 @@ private:
 	type					data[2];
 };
 
+/** Construct the vector that is pointing away from the input 90 degrees to the left.
+	\relates vector2
+	\ingroup Math
+*/
+template <class type> inline
+vector2<type> const left(const vector2<type>& rhs)
+{
+	return vector2<type>(-rhs[1], rhs[0]);
+}
+
+/** Construct the vector that is pointing away from the input 90 degrees to the right.
+	\relates vector2
+	\ingroup Math
+*/
+template <class type> inline
+vector2<type> const right(const vector2<type>& rhs)
+{
+	return vector2<type>(rhs[1], -rhs[0]);
+}
 
 /** Vector dot product of two 2D vectors.
 	\relates vector2
