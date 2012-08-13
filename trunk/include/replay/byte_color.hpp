@@ -89,6 +89,12 @@ private:
 
 };
 
+/** Create a color from a 4D vector.
+*/
+byte_color4					from_float(vector4f const& rhs);
+
+/** Create a 4D vector from this color.
+*/
 vector4f					to_float(byte_color4 rhs);
 
 /** Linear interpolation of byte_color4 objects.
