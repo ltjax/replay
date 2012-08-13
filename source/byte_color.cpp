@@ -83,3 +83,13 @@ replay::to_float(byte_color4 rhs)
 	return result;
 }
 
+replay::byte_color4 replay::from_float(vector4f const& rhs)
+{
+	replay::byte_color4 result;
+
+	for (std::size_t i=0; i<4; ++i)
+		result[i] = static_cast<replay::byte_color4::byte>(std::max(std::min(static_cast<int>(rhs[i]*255.f), 255), 0));
+
+	return result;
+}
+
