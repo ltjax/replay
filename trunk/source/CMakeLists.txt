@@ -56,6 +56,12 @@ SET(replaySources
 	quaternion.cpp
 	vector_math.cpp
 )
+
+IF(REPLAY_USE_STBIMAGE)
+	ADD_DEFINITIONS(-DREPLAY_USE_STBIMAGE -DSTBI_NO_STDIO)
+	INCLUDE_DIRECTORIES(${REPLAY_STBIMAGE_PATH})
+	LIST(APPEND replaySources ${REPLAY_STBIMAGE_PATH}/stb_image.c)
+ENDIF()
 	
 ADD_LIBRARY(replay STATIC ${replay_HEADERS} ${replaySources})
 

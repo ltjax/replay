@@ -35,6 +35,11 @@ Copyright (c) 2012 Marius Elvert
 #  define PNG_SIGNATURE_BYTES 8
 #endif
 
+#ifdef REPLAY_USE_STBIMAGE
+#  define STBI_HEADER_FILE_ONLY
+#  include <stb_image.c>
+#endif
+
 namespace { // BEGIN PRIVATE NAMESPACE
 
 typedef unsigned char uint8;
@@ -559,6 +564,29 @@ tga_header::save( replay::obstream<std::ostream>& file, const replay::pixbuf& so
 	}
 }
 
+namespace 
+{
+	int stb_read_callback(void* user, char* data, int size)
+	{
+		boost::filesystem::ifstream* file(reinterpret_cast<boost::filesystem::ifstream*>(user));
+		file->read(data, size);
+		return file->gcount();
+	}
+
+	void stb_skip_callback(void* user, unsigned n)
+	{
+		
+		boost::filesystem::ifstream* file(reinterpret_cast<boost::filesystem::ifstream*>(user));
+		file->ignore(n);
+	}
+
+	int stb_eof_callback(void* user)
+	{
+		boost::filesystem::ifstream* file(reinterpret_cast<boost::filesystem::ifstream*>(user));
+		return file->eof() ? 1 : 0;
+	}
+}
+
 /** Load an image.
 	The format is guessed from the filename's extension.
 	\note Only TGA and PNG are supported right now.
@@ -575,11 +603,50 @@ replay::pixbuf_io::load_from_file( const boost::filesystem::path& filename )
 #endif
 
 	boost::filesystem::ifstream file;
-	file.open( filename, std::ios_base::in | std::ios_base::binary );
+	file.open(filename, std::ios_base::in | std::ios_base::binary);
 
-	if ( !file.good() )
+	if (!file.good())
 		return shared_pixbuf();
 
+
+#ifdef REPLAY_USE_STBIMAGE
+	stbi_io_callbacks callbacks;
+	callbacks.read=&stb_read_callback;
+	callbacks.skip=&stb_skip_callback;
+	callbacks.eof=&stb_eof_callback;
+
+	int rx=0, ry=0, comp=0;
+	unsigned char* data=stbi_load_from_callbacks(&callbacks, &file, &rx, &ry, &comp, 0);
+
+	if (!data)
+	{
+		throw pixbuf_io::unrecognized_format();
+	}
+
+	replay::pixbuf::color_format format=pixbuf::rgba;
+	if (comp!=4)
+	{
+		if (comp==3)
+			format=replay::pixbuf::rgb;
+		else if (comp==1)
+			format=replay::pixbuf::greyscale;
+		else
+		{
+			stbi_image_free(data);
+			throw pixbuf_io::unrecognized_format();
+		}
+	}
+	replay::shared_pixbuf result=replay::pixbuf::create(rx, ry, format);
+	unsigned char* target=result->get_data();
+	
+	std::size_t byte_count=rx*ry*comp;
+	for (std::size_t i=0; i<byte_count; ++i)
+		target[i]=data[i];
+	
+	stbi_image_free(data);
+	result->flip();
+	return result;
+#else
 	file.exceptions (
 		std::ifstream::badbit |
 		std::ifstream::eofbit |
@@ -590,6 +657,7 @@ replay::pixbuf_io::load_from_file( const boost::filesystem::path& filename )
 	{
 		return load_from_tga_file(file);
 	}
+#endif
 #ifdef REPLAY_USE_LIBPNG
 	else if ( ext == ".png" )
 	{	
