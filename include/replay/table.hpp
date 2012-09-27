@@ -129,16 +129,16 @@ public:
 	
 	/** Get an iterator to the beginning of the table.
 	*/
-	const_iterator			begin() const {return const_iterator(m_buffer) }
+	const_iterator			begin() const {return const_iterator(m_buffer); }
 
 
 	/** Get an iterator the end of the table.
 	*/
-	iterator				end() {return iterator(m_buffer+width*height);}
+	iterator				end() {return iterator(m_buffer+width()*height());}
 
 	/** Get an iterator the end of the table.
 	*/
-	const_iterator			end() const {return const_iterator(m_buffer+width*height);}
+	const_iterator			end() const {return const_iterator(m_buffer+width()*height());}
 
 	/** Invalidate the table and free the memory.
 	*/
