@@ -75,19 +75,34 @@ public:
 	
 	/** Access a color element.
 	*/
-	 byte					operator[]( std::size_t i ) const { return data[i]; }
-
+	byte					operator[](std::size_t i) const { return data[i]; }
 
 	/** Access a color element.
 	*/
-	byte&					operator[]( std::size_t i ) { return data[i]; }
+	byte&					operator[](std::size_t i) { return data[i]; }
 
+	/** In-place add a color.
+		Clamps all channels.
+	*/
+	byte_color4&			operator+=(byte_color4 const& rhs);
 
+	/** In-place subtract a color.
+		Clamps all channels.
+	*/
+	byte_color4&			operator-=(byte_color4 const& rhs);
 
 private:
 	byte					data[4];
 
 };
+
+/** Add two colors, while clamping all channels.
+*/
+inline byte_color4			operator+(byte_color4 lhs, byte_color4 const& rhs) {return (lhs += rhs);}
+
+/** Add two colors, while clamping all channels.
+*/
+inline byte_color4			operator-(byte_color4 lhs, byte_color4 const& rhs) {return (lhs -= rhs);}
 
 /** Create a color from a 4D vector.
 */
