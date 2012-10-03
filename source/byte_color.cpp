@@ -36,6 +36,23 @@ replay::byte_color4::byte_color4(byte r, byte g, byte b, byte a)
 	set(r,g,b,a);
 }
 
+replay::byte_color4& replay::byte_color4::operator+=(byte_color4 const& rhs)
+{
+	for (std::size_t i=0; i<4; ++i)
+		data[i] = static_cast<byte>(std::min(int(rhs.data[i])+data[i], 255));
+
+	return *this;
+}
+
+replay::byte_color4& replay::byte_color4::operator-=(byte_color4 const& rhs)
+{
+	for (std::size_t i=0; i<4; ++i)
+		data[i] = static_cast<byte>(std::max(int(data[i])-rhs.data[i], 0));
+
+	return *this;
+}
+
+
 replay::byte_color4::byte_color4(boost::uint32_t rgba)
 {
 	data[0] = (rgba >> 24);
