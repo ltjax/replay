@@ -568,7 +568,7 @@ namespace
 {
 	int stb_read_callback(void* user, char* data, int size)
 	{
-		boost::filesystem::ifstream* file(reinterpret_cast<boost::filesystem::ifstream*>(user));
+		std::istream* file(reinterpret_cast<std::istream*>(user));
 		file->read(data, size);
 		return file->gcount();
 	}
@@ -576,13 +576,13 @@ namespace
 	void stb_skip_callback(void* user, unsigned n)
 	{
 		
-		boost::filesystem::ifstream* file(reinterpret_cast<boost::filesystem::ifstream*>(user));
+		std::istream* file(reinterpret_cast<std::istream*>(user));
 		file->ignore(n);
 	}
 
 	int stb_eof_callback(void* user)
 	{
-		boost::filesystem::ifstream* file(reinterpret_cast<boost::filesystem::ifstream*>(user));
+		std::istream* file(reinterpret_cast<std::istream*>(user));
 		return file->eof() ? 1 : 0;
 	}
 }
@@ -616,7 +616,7 @@ replay::pixbuf_io::load_from_file( const boost::filesystem::path& filename )
 	callbacks.eof=&stb_eof_callback;
 
 	int rx=0, ry=0, comp=0;
-	unsigned char* data=stbi_load_from_callbacks(&callbacks, &file, &rx, &ry, &comp, 0);
+	unsigned char* data=stbi_load_from_callbacks(&callbacks, static_cast<std::istream*>(&file), &rx, &ry, &comp, 0);
 
 	if (!data)
 	{
@@ -668,4 +668,51 @@ replay::pixbuf_io::load_from_file( const boost::filesystem::path& filename )
 	throw pixbuf_io::unrecognized_format();
 }
 
+#ifdef REPLAY_USE_STBIMAGE
+/** Load an image.
+	The format is guessed from the files contents.
+	\param filename Path of the file to be loaded.
+	\ingroup Imaging
+*/
+replay::shared_pixbuf
+replay::pixbuf_io::load_from_file(std::istream& file)
+{
+	stbi_io_callbacks callbacks;
+	callbacks.read=&stb_read_callback;
+	callbacks.skip=&stb_skip_callback;
+	callbacks.eof=&stb_eof_callback;
+
+	int rx=0, ry=0, comp=0;
+	unsigned char* data=stbi_load_from_callbacks(&callbacks, static_cast<std::istream*>(&file), &rx, &ry, &comp, 0);
+
+	if (!data)
+	{
+		throw pixbuf_io::unrecognized_format();
+	}
+
+	replay::pixbuf::color_format format=pixbuf::rgba;
+	if (comp!=4)
+	{
+		if (comp==3)
+			format=replay::pixbuf::rgb;
+		else if (comp==1)
+			format=replay::pixbuf::greyscale;
+		else
+		{
+			stbi_image_free(data);
+			throw pixbuf_io::unrecognized_format();
+		}
+	}
+	replay::shared_pixbuf result=replay::pixbuf::create(rx, ry, format);
+	unsigned char* target=result->get_data();
+	
+	std::size_t byte_count=rx*ry*comp;
+	for (std::size_t i=0; i<byte_count; ++i)
+		target[i]=data[i];
+	
+	stbi_image_free(data);
+	result->flip();
+	return result;
+}
+#endif
 #endif
