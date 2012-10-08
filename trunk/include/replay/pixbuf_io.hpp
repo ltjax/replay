@@ -59,10 +59,7 @@ namespace pixbuf_io
 	*/
 	class					unrecognized_format : public std::exception {};
 
-#ifdef REPLAY_USE_STBIMAGE
 	shared_pixbuf			load_from_file(std::istream& file);
-#endif
-
 	shared_pixbuf			load_from_file(const boost::filesystem::path& filename);
 	void					save_to_file(const boost::filesystem::path& filename, const pixbuf& source);
 

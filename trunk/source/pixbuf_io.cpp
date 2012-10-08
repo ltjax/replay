@@ -668,7 +668,6 @@ replay::pixbuf_io::load_from_file( const boost::filesystem::path& filename )
 	throw pixbuf_io::unrecognized_format();
 }
 
-#ifdef REPLAY_USE_STBIMAGE
 /** Load an image.
 	The format is guessed from the files contents.
 	\param filename Path of the file to be loaded.
@@ -677,6 +676,7 @@ replay::pixbuf_io::load_from_file( const boost::filesystem::path& filename )
 replay::shared_pixbuf
 replay::pixbuf_io::load_from_file(std::istream& file)
 {
+#ifdef REPLAY_USE_STBIMAGE
 	stbi_io_callbacks callbacks;
 	callbacks.read=&stb_read_callback;
 	callbacks.skip=&stb_skip_callback;
@@ -713,6 +713,8 @@ replay::pixbuf_io::load_from_file(std::istream& file)
 	stbi_image_free(data);
 	result->flip();
 	return result;
-}
+#else
+	throw pixbuf_io::unrecognized_format();
 #endif
+}
 #endif
