@@ -25,6 +25,7 @@ Copyright (c) 2010 Marius Elvert
 */
 
 #include <replay/byte_color.hpp>
+#include <algorithm>
 
 replay::byte_color4::byte_color4(byte greyvalue)
 {
