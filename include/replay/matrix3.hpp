@@ -175,7 +175,7 @@ public:
 
 	/** Get a column via template parameter. */
 	template < unsigned int idx >
-	const vector3f			get_column() const { return vector3f( data + idx*3 ); }
+	const vector3f			get_column() const {return vector3f::cast(data+idx*3);}
 
 	/** get the first row. */
 	template < unsigned int idx >
