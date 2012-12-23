@@ -147,35 +147,9 @@ public:
 
 	/** Assign a table and copy the contained data.
 	*/
-	table&					operator=(const table& rhs)
+	table&					operator=(table rhs)
 	{
-		if (&rhs == this)
-			return *this;
-
-		if ((m_width == rhs.m_width) && (m_height == rhs.m_height))
-		{
-			const size_type num_elements = m_width*m_height;
-				
-			for (size_type i=0; i<num_elements; ++i)
-				buffer[i] = other.buffer[i];
-		}
-		else
-		{
-			clear();
-			m_width = rhs.m_width;
-			m_height = rhs.m_height;
-
-			if (width && height)
-			{
-				const size_type num_elements = width*height;
-
-				m_buffer = new value_type[num_elements];
-				
-				for (size_type i=0; i<num_elements; ++i)
-					buffer[i] = other.buffer[i];
-			}
-		}
-
+		rhs.swap(*this);
 		return *this;
 	}
 

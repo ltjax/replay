@@ -89,11 +89,7 @@ inline float square_distance_point_triangle( float w, const replay::vector2f& t,
 	}	
 }
 
-inline replay::vector2f complement( const replay::vector2f& rhs )
-{
-	return replay::vector2f( rhs[1], -rhs[0] );
-}
-
+#if 0 // unused
 inline float det3( float a, float b, float c,
 				   float d, float e, float f,
 				   float g, float h, float i )
@@ -104,6 +100,7 @@ inline float det3( float a, float b, float c,
 
 	return r;
 }
+#endif
 
 }
 
