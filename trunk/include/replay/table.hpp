@@ -27,6 +27,8 @@ Copyright (c) 2010 Marius Elvert
 #ifndef replay_table_hpp
 #define replay_table_hpp
 
+#include <algorithm>
+
 namespace replay {
 
 	
