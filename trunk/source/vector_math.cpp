@@ -704,7 +704,7 @@ boost::optional<replay::matrix4> replay::cramer_invert(const replay::matrix4& m,
 
 	double det = m[0]*inv[0] + m[1]*inv[4] + m[2]*inv[8] + m[3]*inv[12];
 
-	if (abs(det) <= epsilon)
+	if (std::abs(det) <= epsilon)
 		return boost::none;
 
 	det = 1.0 / det;
