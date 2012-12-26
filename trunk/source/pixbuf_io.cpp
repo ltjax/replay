@@ -577,7 +577,8 @@ namespace
 	{
 		
 		std::istream* file(reinterpret_cast<std::istream*>(user));
-		file->ignore(n);
+		for (unsigned i=0; i<n; ++i)
+            file->get();
 	}
 
 	int stb_eof_callback(void* user)
@@ -687,7 +688,8 @@ replay::pixbuf_io::load_from_file(std::istream& file)
 
 	if (!data)
 	{
-		throw pixbuf_io::unrecognized_format();
+        const char* failure=stbi_failure_reason();
+		throw pixbuf_io::read_error(failure);
 	}
 
 	replay::pixbuf::color_format format=pixbuf::rgba;
