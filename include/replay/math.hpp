@@ -40,33 +40,6 @@ namespace math {
 		\ingroup Math
 	*/
 	const float default_epsilon = 0.000001f;
-	
-	/** the ratio of a circle's circumference to its diameter.
-		\ingroup Math
-	*/
-	const float m_pi = 3.14159265358979323846f;
-
-	/** get the absolute of a value.
-		\ingroup Math
-	*/
-	template < class type > inline type
-	abs( type value )
-	{
-		return ( value >= 0 ) ? value : -value;
-	}
-	
-	/** get the absolute of a value.
-		\ingroup Math
-	*/
-	
-#ifdef replay_unsafe_bit_magic
-	template <> inline float
-	abs< float >( float value )
-	{
-		*reinterpret_cast< int* >( &value ) &= 0x7FFFFFFF;
-		return value;
-	}
-#endif
 
 	/** multiply a only by the sign of b.
 		\ingroup Math
