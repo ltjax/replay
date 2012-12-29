@@ -220,7 +220,7 @@ replay::magnitude( const vector2f& vector )
 float
 replay::math::max_norm( const vector2f& vector )
 {
-	return std::max(math::abs(vector[0]), math::abs(vector[1]));
+	return std::max(std::abs(vector[0]), std::abs(vector[1]));
 }
 
 float
@@ -238,8 +238,8 @@ replay::magnitude( const vector4f& vector )
 float
 replay::math::max_norm( const vector3f& vector )
 {
-	return std::max( std::max( math::abs( vector[ 0 ] ),
-		math::abs( vector[ 1 ] ) ), math::abs( vector[ 2 ] ) );
+	return std::max(std::max(std::abs(vector[0]),
+		std::abs(vector[1])), std::abs(vector[2]));
 }
 
 void
@@ -456,13 +456,13 @@ const replay::vector3f replay::math::construct_perpendicular( const vector3f& x 
 {
     vector3f result;
 	std::size_t p = 0;
-	float m = math::abs( x[ 0 ] );
+	float m = std::abs(x[0]);
 
 	// Find the maximum element
-	for ( std::size_t i=1; i<3; ++i )
+	for (std::size_t i=1; i<3; ++i)
 	{
-		register float t = abs( x[ i ] );
-		if ( m < t )
+		register float t = std::abs(x[i]);
+		if (m < t)
 		{
 			m = t;
 			p = i;
@@ -616,9 +616,9 @@ bool replay::math::lup::decompose( matrix3& m, vector3<std::size_t>& p, float ep
 	p.reset(0,1,2);
 
 	// find the pivot in the first row
-	if ( math::abs( m(1,0) ) > math::abs( m(2,0) ) )
+	if (std::abs(m(1,0)) > std::abs(m(2,0)))
 	{
-		if ( math::abs( m(1,0) ) > math::abs( m(0,0) ) ) // row 1 has the biggest element
+		if (std::abs(m(1,0)) > std::abs(m(0,0))) // row 1 has the biggest element
 		{
 			best = 1;
 			m.swap_rows(0,1);
@@ -626,7 +626,7 @@ bool replay::math::lup::decompose( matrix3& m, vector3<std::size_t>& p, float ep
 	}
 	else
 	{
-		if ( math::abs( m(2,0) ) > math::abs( m(0,0) ) ) // row 2 has the pivot
+		if (std::abs(m(2,0)) > std::abs(m(0,0))) // row 2 has the pivot
 		{
 			best = 2;
 			m.swap_rows(0,2);
@@ -649,7 +649,7 @@ bool replay::math::lup::decompose( matrix3& m, vector3<std::size_t>& p, float ep
 	m(2,1) -= m(2,0)*m(0,1); m(2,2) -= m(2,0)*m(0,2);
 
 	// find the new pivot
-	if ( math::abs( m(1,1) ) < math::abs( m(2,1) ) )
+	if (std::abs(m(1,1)) < std::abs(m(2,1)))
 	{
 		// swap rows again
 		m.swap_rows( 1, 2 );
