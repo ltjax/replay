@@ -168,22 +168,36 @@ public:
 	/** Compute the linear memory offset of an element.
 	*/
 	size_type				element_offset(size_type x, size_type y) const {return (m_width*y)+x;}
-
+	
 	/** Access the table.
 		\param x The column in the table.
 		\param y The row in the table.
 		\returns A mutable reference to an element.
-		\note The order of the parameters is reversed from typical mathematical notation.
 	*/
 	value_type&				operator()(size_type x, size_type y) {return m_buffer[element_offset(x, y)];}
 	
-	/** Access the matrix.
+	/** Access the table.
 		\param x The column in the table.
 		\param y The row in the table.
 		\returns A const reference to an element.
-		\note The order of the parameters is reversed from typical mathematical notation.
 	*/
 	const value_type&		operator()(size_type x, size_type y) const {return m_buffer[element_offset(x, y)];}
+
+	/** Access the table.
+		\param rhs Array-like (x,y) coordinate into the table.
+		\returns A mutable reference to an element.
+	*/
+	template <class T>
+	value_type&				operator()(T const& rhs) {return m_buffer[element_offset(rhs[0], rhs[1])];}
+	
+	/** Access the table.
+		\param rhs Array-like (x,y) coordinate into the table.
+		\param y The row in the table.
+		\returns A const reference to an element.
+	*/
+	template <class T>
+	const value_type&		operator()(T const& rhs) const {return m_buffer[element_offset(rhs[0], rhs[1])];}
+
 
 	/** Checks whether the matrix is empty.
 	*/
