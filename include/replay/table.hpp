@@ -187,16 +187,16 @@ public:
 		\param rhs Array-like (x,y) coordinate into the table.
 		\returns A mutable reference to an element.
 	*/
-	template <class T>
-	value_type&				operator()(T const& rhs) {return m_buffer[element_offset(rhs[0], rhs[1])];}
+	template <class ArrayType>
+	value_type&				operator()(ArrayType const& rhs) {return m_buffer[element_offset(rhs[0], rhs[1])];}
 	
 	/** Access the table.
 		\param rhs Array-like (x,y) coordinate into the table.
 		\param y The row in the table.
 		\returns A const reference to an element.
 	*/
-	template <class T>
-	const value_type&		operator()(T const& rhs) const {return m_buffer[element_offset(rhs[0], rhs[1])];}
+	template <class ArrayType>
+	const value_type&		operator()(ArrayType const& rhs) const {return m_buffer[element_offset(rhs[0], rhs[1])];}
 
 
 	/** Checks whether the matrix is empty.
