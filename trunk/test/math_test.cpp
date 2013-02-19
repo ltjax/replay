@@ -8,6 +8,7 @@
 #include <replay/vector_math.hpp>
 #include <replay/minimal_sphere.hpp>
 #include <replay/matrix2.hpp>
+#include <boost/math/constants/constants.hpp>
 
 #include <boost/assign/std/vector.hpp>
 #include <boost/assign/std/list.hpp>
@@ -52,7 +53,7 @@ float distance_to_sphere( const IteratorType point_begin, const IteratorType poi
 BOOST_AUTO_TEST_CASE(matrix2_operations)
 {
 	using namespace replay;
-	matrix2 Rotation = matrix2::make_rotation(math::m_pi*0.25f); // 45deg rotation
+	matrix2 Rotation = matrix2::make_rotation(boost::math::constants::pi<float>()*0.25f); // 45deg rotation
 	matrix2 Inv = Rotation;
 	BOOST_REQUIRE(Inv.invert());
 
