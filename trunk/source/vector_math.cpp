@@ -665,7 +665,7 @@ bool replay::math::lup::decompose( matrix3& m, vector3<std::size_t>& p, float ep
 	return true;
 }
 
-boost::optional<replay::matrix4> replay::cramer_invert(const replay::matrix4& m, double epsilon)
+boost::optional<replay::matrix4> replay::inverse(const replay::matrix4& m, double epsilon)
 {
 	double inv[16];
 

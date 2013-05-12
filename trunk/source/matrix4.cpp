@@ -298,14 +298,10 @@ replay::matrix4::operator=( const quaternion& q )
 /** Multiply the matrix by a scalar.
 */
 const replay::matrix4
-replay::matrix4::operator*(const float rhs) const
+replay::matrix4::operator*(float rhs) const
 {
 	matrix4 result = *this;
-
-	for ( std::size_t i=0; i<16; ++i )
-		result[i] *= rhs;
-
-	return result;
+	return result *= rhs;
 }
 
 /** Inplace add two matrices component wise.

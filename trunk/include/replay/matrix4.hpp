@@ -139,19 +139,19 @@ public:
 	*/
 	float			operator()(std::size_t row, std::size_t column) const {return data[(column<<2)+row];}
 
-	const matrix4	operator*( const matrix4& other ) const;
-	const matrix4	operator+( const matrix4& other ) const;
-	const matrix4	operator*( const float rhs ) const;
+	const matrix4	operator*(const matrix4& other) const;
+	const matrix4	operator+(const matrix4& other) const;
+	const matrix4	operator*(float rhs) const;
 
-	const vector4f	operator*( const vector4f& other ) const;
-	const vector3f	operator*( const vector3f& other ) const;
+	const vector4f	operator*(const vector4f& other) const;
+	const vector3f	operator*(const vector3f& other) const;
 
-	const vector4f	multiply3( const vector3f& rhs ) const;
+	const vector4f	multiply3(const vector3f& rhs) const;
 
-	matrix4&		operator=( const quaternion& rotation );
-	matrix4&		operator*=( const matrix4& other );
-	matrix4&		operator*=( const float rhs );
-	matrix4&		operator+=( const matrix4& other );
+	matrix4&		operator=(const quaternion& rotation);
+	matrix4&		operator*=(const matrix4& other);
+	matrix4&		operator*=(float rhs);
+	matrix4&		operator+=(const matrix4& other);
 
 	bool			operator==(const matrix4& rhs) const;
 	bool			operator!=(const matrix4& rhs) const {return !(operator==(rhs));}
@@ -160,7 +160,15 @@ private:
 	float			data[16];
 };
 
-plane3 operator*( const plane3& p, const matrix4& m );
+plane3 operator*(const plane3& p, const matrix4& m);
+
+/** Left-side scalar multiplication for matrices.
+*/
+inline matrix4 operator*(float lhs, matrix4 const& rhs)
+{
+	// Commutative in this case!
+	return rhs*lhs;
+}
 
 /** Get a pointer to the elements.
 */
@@ -206,11 +214,11 @@ matrix4::multiply( const matrix4& a, const matrix4& b, matrix4& result )
 /** Multiply two matrices.
 */
 inline const matrix4
-matrix4::operator*( const matrix4& m ) const
+matrix4::operator*(const matrix4& m) const
 {
 	matrix4 result((uninitialized_tag()));
 
-	multiply( *this, m, result );
+	multiply(*this, m, result);
 
 	return result;
 }
@@ -218,13 +226,13 @@ matrix4::operator*( const matrix4& m ) const
 /** Multiply a vector by the matrix, assuming the forth component to be 1 and the last row in the matrix to be [0,0,0,1]. 
 */
 inline const vector3f
-matrix4::operator*( const vector3f& other ) const
+matrix4::operator*(const vector3f& other) const
 {
 	vector3f result;
 
-	result[ 0 ] = data[0]*other[0] + data[4]*other[1] + data[ 8]*other[2] + data[12];
-	result[ 1 ] = data[1]*other[0] + data[5]*other[1] + data[ 9]*other[2] + data[13];
-	result[ 2 ] = data[2]*other[0] + data[6]*other[1] + data[10]*other[2] + data[14];
+	result[0] = data[0]*other[0] + data[4]*other[1] + data[ 8]*other[2] + data[12];
+	result[1] = data[1]*other[0] + data[5]*other[1] + data[ 9]*other[2] + data[13];
+	result[2] = data[2]*other[0] + data[6]*other[1] + data[10]*other[2] + data[14];
 
 	return result;
 }
@@ -232,14 +240,14 @@ matrix4::operator*( const vector3f& other ) const
 /** Multiply a vector by the matrix, assuming the forth component to be 1. 
 */
 inline const vector4f
-matrix4::multiply3( const vector3f& other ) const
+matrix4::multiply3(const vector3f& other) const
 {
 	vector4f result;
 
-	result[ 0 ] = data[0]*other[0] + data[4]*other[1] + data[ 8]*other[2] + data[12];
-	result[ 1 ] = data[1]*other[0] + data[5]*other[1] + data[ 9]*other[2] + data[13];
-	result[ 2 ] = data[2]*other[0] + data[6]*other[1] + data[10]*other[2] + data[14];
-	result[ 3 ] = data[3]*other[0] + data[7]*other[1] + data[11]*other[2] + data[15];
+	result[0] = data[0]*other[0] + data[4]*other[1] + data[ 8]*other[2] + data[12];
+	result[1] = data[1]*other[0] + data[5]*other[1] + data[ 9]*other[2] + data[13];
+	result[2] = data[2]*other[0] + data[6]*other[1] + data[10]*other[2] + data[14];
+	result[3] = data[3]*other[0] + data[7]*other[1] + data[11]*other[2] + data[15];
 
 	return result;
 }
@@ -247,14 +255,14 @@ matrix4::multiply3( const vector3f& other ) const
 /** Multiply a vector by the matrix.
 */
 inline const vector4f
-matrix4::operator*( const vector4f& other ) const
+matrix4::operator*(const vector4f& other) const
 {
 	vector4f result;
 
-	result[ 0 ] = data[0]*other[0] + data[4]*other[1] + data[ 8]*other[2] + data[12]*other[3];
-	result[ 1 ] = data[1]*other[0] + data[5]*other[1] + data[ 9]*other[2] + data[13]*other[3];
-	result[ 2 ] = data[2]*other[0] + data[6]*other[1] + data[10]*other[2] + data[14]*other[3];
-	result[ 3 ] = data[3]*other[0] + data[7]*other[1] + data[11]*other[2] + data[15]*other[3];
+	result[0] = data[0]*other[0] + data[4]*other[1] + data[ 8]*other[2] + data[12]*other[3];
+	result[1] = data[1]*other[0] + data[5]*other[1] + data[ 9]*other[2] + data[13]*other[3];
+	result[2] = data[2]*other[0] + data[6]*other[1] + data[10]*other[2] + data[14]*other[3];
+	result[3] = data[3]*other[0] + data[7]*other[1] + data[11]*other[2] + data[15]*other[3];
 
 	return result;
 }
@@ -262,10 +270,11 @@ matrix4::operator*( const vector4f& other ) const
 /** Inplace multiply the matrix by a scalar.
 */
 inline matrix4&
-matrix4::operator*=(const float rhs)
+matrix4::operator*=(float rhs)
 {
-	for ( std::size_t i=0; i<16; ++i )
+	for (std::size_t i=0; i<16; ++i)
 		data[i]*=rhs;
+
 	return *this;
 }
 

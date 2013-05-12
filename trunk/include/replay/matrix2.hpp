@@ -27,6 +27,7 @@ Copyright (c) 2010 Marius Elvert
 #ifndef replay_matrix2_hpp
 #define replay_matrix2_hpp
 
+#include <boost/optional/optional.hpp>
 #include <replay/vector2.hpp>
 
 namespace replay {
@@ -44,10 +45,11 @@ class matrix2
 		*/
 		matrix2(uninitialized_tag) {}
 
-		/** Create a new matrix from a single value.
+		/** Create a new matrix with a given diagonal value.
+			All the elements on the diagonal will be set to it, all others will be zero.
 			\param value The value to be used for initialization.
 		*/
-		matrix2(float value=0.f);
+		matrix2(float diagonal=0.f);
 
 		/** Create a matrix from two column vectors.
 		*/
@@ -113,6 +115,14 @@ class matrix2
 		*/
 		const vector2f		row(std::size_t i) const;
 
+		/** Inplace multiplication by a scalar.
+		*/
+		matrix2&			operator*=(float rhs);
+
+		/** Right-multiplay a scalar by this matrix.
+		*/
+		const matrix2		operator*(float rhs) const;
+
 		/** Right-multiply a (column) vector by this matrix.
 		*/
 		const vector2f		operator*(const vector2f& v) const;
@@ -139,27 +149,24 @@ class matrix2
 
 		/** Compute the determinant of the matrix.
 		*/
-		float				determinant() const;
+		double				determinant() const;
 
 		/** Invert the matrix.
 			\returns false if the matrix is singular, true otherwise.
 		*/
-		bool				invert();
+		bool				invert(double epsilon=0.0);
 
 	private:
 		float				data[4];
 };
 
-/** Get the inverse of this matrix.
-	\returns The inverse of m, if it is invertible, and the null-matrix otherwise.
+/** Left-multiplay a scalar by a matrix.
 */
 inline const matrix2
-inverse(matrix2 m)
+operator*(float lhs, matrix2 const& rhs)
 {
-	if (!m.invert())
-		m = matrix2(0.f);
-
-	return m;
+	// Commutative in this case
+	return rhs*lhs;
 }
 
 /** Get the transpose of this matrix.

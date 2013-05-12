@@ -36,6 +36,7 @@ Copyright (c) 2010 Marius Elvert
 #include <replay/vector2.hpp>
 #include <replay/vector3.hpp>
 #include <replay/lines3.hpp>
+#include <replay/matrix2.hpp>
 #include <replay/matrix3.hpp>
 #include <replay/matrix4.hpp>
 #include <replay/plane3.hpp>
@@ -359,12 +360,27 @@ namespace math {
 	}
 }
 
-/** Invert the matrix using the cramer-rule.
+/** Get the inverse the matrix using the cramer-rule.
 	\param rhs The matrix to find the inverse of
 	\param epsilon Numerical epsilon to determine if the matrix is singular. Must be 0.0 or greater.
 	\returns The inverse of the given matrix on success, none otherwise.
 */
-boost::optional<matrix4>	cramer_invert(const matrix4& rhs, double epsilon=0.0);
+inline
+boost::optional<matrix2>	inverse(matrix2 rhs)
+{
+	if (!rhs.invert())
+		return boost::none;
+
+	return rhs;
+}
+
+/** Get the inverse the matrix using the cramer-rule.
+	\param rhs The matrix to find the inverse of
+	\param epsilon Numerical epsilon to determine if the matrix is singular. Must be 0.0 or greater.
+	\returns The inverse of the given matrix on success, none otherwise.
+*/
+boost::optional<matrix4>	inverse(const matrix4& rhs, double epsilon=0.0);
+
 
 /** Find the closest point to a given point on a line.
 	\param line line on which to look for the closest point.

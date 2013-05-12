@@ -27,10 +27,12 @@ Copyright (c) 2011 Marius Elvert
 #include <cmath>
 #include <replay/matrix2.hpp>
 
-replay::matrix2::matrix2(float value)
+replay::matrix2::matrix2(float diagonal)
 {
-	for (std::size_t i=0; i<4; ++i)
-		data[i]=value;
+	data[0]=diagonal;
+	data[1]=0.f;
+	data[2]=0.f;
+	data[3]=diagonal;
 }
 
 replay::matrix2::matrix2(const vector2f& a, const vector2f& b)
@@ -90,12 +92,12 @@ replay::matrix2::operator*(const vector2f& v) const
 const replay::matrix2
 replay::matrix2::operator*(const matrix2& other) const
 {
-	matrix2 result;
-	return multiply( *this, other, result );
+	matrix2 result((uninitialized_tag()));
+	return multiply(*this, other, result);
 }
 
 replay::matrix2&
-replay::matrix2::multiply( const matrix2& a, const matrix2& b, matrix2& result )
+replay::matrix2::multiply(const matrix2& a, const matrix2& b, matrix2& result)
 {
 	result.data[ 0 ] = a.data[ 0 ] * b.data[ 0 ] + a.data[ 2 ] * b.data[ 1 ];
 	result.data[ 1 ] = a.data[ 1 ] * b.data[ 0 ] + a.data[ 3 ] * b.data[ 1 ];
@@ -105,29 +107,37 @@ replay::matrix2::multiply( const matrix2& a, const matrix2& b, matrix2& result )
 	return result;
 }
 
-
 replay::matrix2&
-replay::matrix2::operator*=( const matrix2& Matrix )
+replay::matrix2::operator*=(float rhs)
 {
-	return ( (*this) = ( (*this) * Matrix ) );
+	for (int i=0; i<4; ++i)
+		data[i] *= rhs;
+
+	return *this;
 }
 
-float
+replay::matrix2&
+replay::matrix2::operator*=(const matrix2& Matrix)
+{
+	return ((*this) = ((*this) * Matrix));
+}
+
+double
 replay::matrix2::determinant() const
 {
-	return data[0]*data[3]-data[1]*data[2];
+	return static_cast<double>(data[0])*data[3]-data[1]*data[2];
 }
 
 bool
-replay::matrix2::invert()
+replay::matrix2::invert(double epsilon)
 {
-	const float d = this->determinant();
+	const double d(this->determinant());
 
-	if (d==0.f)
+	if (std::abs(d)<=epsilon)
 		return false;
 
-	set(data[3]/d, -data[2]/d,
-	   -data[1]/d,  data[0]/d);
+	set(static_cast<float>(data[3]/d), -static_cast<float>(data[2]/d),
+	   -static_cast<float>(data[1]/d),  static_cast<float>(data[0]/d));
 
 	return true;
 }
