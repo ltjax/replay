@@ -570,7 +570,7 @@ namespace
 	{
 		std::istream* file(reinterpret_cast<std::istream*>(user));
 		file->read(data, size);
-		return file->gcount();
+		return static_cast<int>(file->gcount());
 	}
 
 	void stb_skip_callback(void* user, unsigned n)
