@@ -658,12 +658,12 @@ replay::pixbuf_io::load_from_file( const boost::filesystem::path& filename )
 	{
 		return load_from_tga_file(file);
 	}
-#endif
 #ifdef REPLAY_USE_LIBPNG
 	else if ( ext == ".png" )
 	{	
 		return load_from_png_file(file);
 	}
+#endif
 #endif
 	
 	throw pixbuf_io::unrecognized_format();
