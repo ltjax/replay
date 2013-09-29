@@ -25,75 +25,84 @@ Copyright (c) 2010 Marius Elvert
 */
 
 #include <replay/box_packer.hpp>
+#include <boost/noncopyable.hpp>
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 
-class replay::box_packer::node
+class replay::box_packer::node :
+	public boost::noncopyable
 {
-	node*			child;
-	box< int >		rectangle;
-	bool			in_use;
-
 public:
-	node( const box< int >& rect ) : child( 0 ), rectangle( rect ), in_use( false ) {}
-	node() : child( 0 ), in_use( false ) {}
-	~node() { delete[] child; }
+	node(replay::box<int> const& rect=replay::box<int>())
+	: child(0), rectangle(rect), in_use(false)
+	{
+	}
 
-	const box< int >&	get_rectangle() const throw() { return rectangle; }
-	const node* insert( const couple< int >& size, int padding );
+	~node()
+	{
+		delete[] child;
+	}
+
+	replay::box<int> const&		get_rectangle() const throw() {return rectangle;}
+	node const*					insert(replay::couple<int> const& size, int padding);
+
+private:
+	node*				child;
+	replay::box<int>	rectangle;
+	bool				in_use;
 };
 
 const replay::box_packer::node*
-replay::box_packer::node::insert( const couple< int >& size, int padding  )
+replay::box_packer::node::insert(const couple<int>& size, int padding)
 {
-	if ( child == 0 )
+	// Try to recurse down
+	if (child != 0)	
 	{
-		if ( in_use )
-			return 0;
+		const node* result = child[0].insert( size, padding );
 
-		const int dw = rectangle.get_width() - ( size[ 0 ] );
-		const int dh = rectangle.get_height() - ( size[ 1 ] );
+		return (result!=0) ? result : child[1].insert(size, padding);
+	}
 
-		if ( ( dw < 0 ) || ( dh < 0 ) )
-			return 0;
+	if (in_use)
+		return 0;
 
-		// perfect fit?
-		if ( ( dw == 0 ) &&	( dh == 0 ) )
-		{
-			this->in_use = true;
-			return this;
-		}
+	const int dw = rectangle.get_width() - size[0];
+	const int dh = rectangle.get_height() - size[1];
 
-		child = new node[ 2 ];
+	if ( ( dw < 0 ) || ( dh < 0 ) )
+		return 0;
 
-		// split
-		if ( dw > dh )
-		{
-			// divide width
-			child[ 0 ].rectangle.set( rectangle.left, rectangle.bottom,
-				rectangle.left+size[ 0 ], rectangle.top );
+	// perfect fit?
+	if ( ( dw == 0 ) &&	( dh == 0 ) )
+	{
+		this->in_use = true;
+		return this;
+	}
 
-			child[ 1 ].rectangle.set( rectangle.left+size[ 0 ]+(padding<<1), rectangle.bottom,
-				rectangle.right, rectangle.top );
-		}
-		else
-		{
-			// devide height
-			child[ 0 ].rectangle.set( rectangle.left, rectangle.bottom,
-				rectangle.right, rectangle.bottom+size[ 1 ] );
+	child = new node[ 2 ];
 
-			child[ 1 ].rectangle.set( rectangle.left, rectangle.bottom+size[ 1 ]+(padding<<1),
-				rectangle.right, rectangle.top );
-		}
+	// split
+	if ( dw > dh )
+	{
+		// divide width
+		child[0].rectangle.set(rectangle.left, rectangle.bottom,
+			rectangle.left+size[0], rectangle.top);
 
-		return child[ 0 ].insert( size, padding );		
+		child[1].rectangle.set(rectangle.left+size[0]+(padding<<1), rectangle.bottom,
+			rectangle.right, rectangle.top);
 	}
 	else
 	{
-		const node* result = child[ 0 ].insert( size, padding );
+		// devide height
+		child[0].rectangle.set(rectangle.left, rectangle.bottom,
+			rectangle.right, rectangle.bottom+size[1]);
 
-		return ( result ) ? result : child[ 1 ].insert( size, padding );
+		child[1].rectangle.set(rectangle.left, rectangle.bottom+size[1]+(padding<<1),
+			rectangle.right, rectangle.top);
 	}
+
+	// first child is constructed to fit, so insert it there
+	return child[0].insert( size, padding );
 }
 
 #endif 
