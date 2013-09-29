@@ -44,30 +44,29 @@ namespace replay
 class box_packer :
 	public boost::noncopyable
 {
-private:
-	class node;
-	node*					root;
-	int						padding;
-	
 public:
-
 	/** Exception class that is thrown when a rect cannot be packed.
 		\see pixbuf_packer::pack
 	*/
 	class pack_overflow : public std::exception {};
 
 
-	box_packer( int width, int height, int padding = 0 );
+	box_packer(int width, int height, int padding=0);
 	~box_packer();
 
 
-	const box< int >&		pack( int width, int height );
+	const box< int >&		pack(int width, int height);
 	
-	bool					pack( int width, int height, box< int >* rect );
+	bool					pack(int width, int height, box<int>* rect);
 
 	int						get_width() const;
 	int						get_height() const;
 	int						get_padding() const;
+
+private:
+	class node;
+	node*					root;
+	int						padding;
 
 };
 
