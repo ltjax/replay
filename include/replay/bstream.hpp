@@ -30,6 +30,8 @@ Copyright (c) 2010 Marius Elvert
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <boost/cstdint.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 
 namespace replay {
 	
@@ -37,147 +39,172 @@ namespace replay {
 	Allows wrapping of standard streams for binary reading.
 */
 
-template < class istream > class ibstream
+class input_binary_stream
 {
-private:
-	istream&		stream;
 public:
-
-	/** construct the stream wrapper.
+	/** Construct the stream wrapper.
 	*/
-	ibstream( istream& internal ) : stream( internal ) {}
-	/**Seek to a relative position in the stream.
-	\param offset The offset to seek to, this is relative to the way parameter.
-	\param way The seek direction, can be ios_base::beg, ios_base::cur or ios_base::end.
-	\return *this*/
-	ibstream&		seekg( std::ios::off_type offset, std::ios_base::seekdir way ) { stream.seekg( offset, way ); return *this; }
-	/**Seek to an absolute position in the stream.
-	\param position The streampos object position to seek to.
-	\return *this*/
-	ibstream&		seekg( std::ios::pos_type position )	{ stream.seekg( position ); return *this; }
-
-	/**Read the stream.
+	explicit input_binary_stream(std::istream& rhs)
+	: m_stream(rhs)
+	{
+	}
+	
+	/** Read the stream.
 	\param pointer Pointer to the stream.
 	\param s Size
 	\return *this*/
-	ibstream&		read( void* pointer, std::streamsize s ){ stream.read( reinterpret_cast< char* >( pointer ), s ); return *this; } 
-	
-	/**Reads the stream, size is calculated from the type.
-	\param x The stream to read.
-	\return *this*/
-	template < class datatype >
-	ibstream&		read( datatype& x )						{ stream.read( reinterpret_cast< char* >( &x ), sizeof( datatype ) ); return *this; }
-
-	/**Reading operator for unsigned ints.*/
-	ibstream&		operator>>( unsigned int& x )			{ return read( x ); }
-	/**Reading operator for signed ints.*/
-	ibstream&		operator>>( signed int& x )				{ return read( x ); }
-
-	/**Binary stream reading operator for unsigned chars.*/	
-	ibstream&		operator>>( unsigned char& x )			{ return read( x ); }
-	/**Reading operator for signed chars.*/
-	ibstream&		operator>>( signed char& x )			{ return read( x ); }
-
-	/**Reading operator for unsigned shorts.*/
-	ibstream&		operator>>( unsigned short& x )			{ return read( x ); }
-	/**Reading operator for signed shorts.*/
-	ibstream&		operator>>( signed short& x )			{ return read( x ); }
-
-	/**Reading operator for floats.*/
-	ibstream&		operator>>( float& x )					{ return read( x ); }
-	/**Reading operator for doubles.*/
-	ibstream&		operator>>( double& x )					{ return read( x ); }
-
-	/**Read a single unsigned int.*/
-	unsigned int	read_uint()								{ unsigned int result; read( result ); return result; }
-
-	/**Reading operator for strings.
-	*/
-	ibstream&		operator>>( std::string& x )
+	input_binary_stream& read(void* pointer, std::streamsize s)
 	{
-		unsigned int length = 0;
-		read( length );
-
-		if ( length )
-		{
-			x.resize( length );
-			read( &(x[0]), length );
-		}
-
+		m_stream.read(reinterpret_cast<char*>(pointer), s);
+		return *this;
+	} 
+	
+	/** Reads the stream, size is calculated from the type.
+		\param result The variable to be read to.
+		\return *this.
+	*/
+	template <class T>
+	input_binary_stream& read(T& result)
+	{
+		m_stream.read(reinterpret_cast<char*>(&result), sizeof(T));
 		return *this;
 	}
 
+	/** Reads the stream, size is calculated from the type.
+		\return The data that was read.
+	*/
+	template <class T>
+	T read()
+	{
+		T result;
+		m_stream.read(reinterpret_cast<char*>(&result), sizeof(T));
+		return result;
+	}
+
+	/**Reading operator for unsigned ints.*/
+	input_binary_stream& operator>>(boost::uint32_t& x)			{return read(x);}
+	/**Reading operator for signed ints.*/
+	input_binary_stream& operator>>(boost::int32_t& x)			{return read(x);}
+
+	/**Binary stream reading operator for unsigned chars.*/	
+	input_binary_stream& operator>>(boost::uint8_t& x)			{return read(x);}
+
+	/**Reading operator for signed chars.*/
+	input_binary_stream& operator>>(boost::int8_t& x)			{return read(x);}
+
+	/**Reading operator for unsigned shorts.*/
+	input_binary_stream& operator>>(boost::uint16_t& x)			{return read(x);}
+	/**Reading operator for signed shorts.*/
+	input_binary_stream& operator>>(boost::int16_t& x)			{return read(x);}
+
+	/**Reading operator for floats.*/
+	input_binary_stream& operator>>(float& x)					{return read(x);}
+	/**Reading operator for doubles.*/
+	input_binary_stream& operator>>(double& x)					{return read(x);}
+	
+private:
+	std::istream& m_stream;
 };
+
+/**	Reading operator for strings.
+*/
+inline
+input_binary_stream& operator>>(input_binary_stream& lhs, std::string& x)
+{
+	boost::uint32_t const length=lhs.read<boost::uint32_t>();
+
+	if (length>0)
+	{
+		x.resize(length);
+		lhs.read(&(x[0]), length);
+	}
+
+	return lhs;
+}
 
 /** Binary output stream Wrapper.
 	Allows wrapping of standard streams for binary writing.
 */
-template < class ostream > class obstream
+class output_binary_stream
 {
-private:
-	ostream&		stream;
 public:
-
 	/** Construct the stream wrapper.
 	*/
-	obstream( ostream& internal ) : stream( internal ) {}
-
-	/**Seek to a relative position in the stream.
-	\param offset The offset to seek to, this is relative to the way parameter.
-	\param way The seek direction, can be ios_base::beg, ios_base::cur or ios_base::end.
-	\return *this*/
-	obstream&		seekg( std::ios::off_type offset, std::ios_base::seekdir way ) { stream.seekg( offset, way ); return *this; }
-	/**Seek to an absolute position in the stream.
-	\param position The streampos object position to seek to.
-	\return *this*/
-	obstream&		seekg( std::ios::pos_type position )	{ stream.seekg( position ); return *this; }
+	explicit output_binary_stream(std::ostream& rhs)
+	: m_stream(rhs)
+	{
+	}
 
 	/**Write to the stream.
 	\param pointer Pointer to the stream.
 	\param s Size
 	\return *this*/
-	obstream&		write( const void* pointer, std::streamsize s ){ stream.write( reinterpret_cast< const char* >( pointer ), s ); return *this; } 
-	template < class datatype >
+	output_binary_stream& write(void const* pointer, std::streamsize s)
+	{
+		m_stream.write(reinterpret_cast<char const*>(pointer), s);
+		return *this;
+	} 
+
 	/**Writes to the stream, size is calculated from the type.
 	\param x The stream to write to.
 	\return *this*/
-	obstream&		write( const datatype& x )					{ stream.write( reinterpret_cast< const char* >( &x ), sizeof( datatype ) ); return *this; }
-
-	/**Writing operator for unsigned ints.*/
-	obstream&		operator<<( unsigned int x )			{ return write( x ); }
-	/**Writing operator for signed ints.*/
-	obstream&		operator<<( signed int x )				{ return write( x ); }
-	
-	/**Writing operator for unsigned chars.*/
-	obstream&		operator<<( unsigned char x )			{ return write( x ); }
-	/**Writing operator for signed chars.*/
-	obstream&		operator<<( signed char x )				{ return write( x ); }
-
-	/**Writing operator for unsigned shorts.*/
-	obstream&		operator<<( unsigned short x )			{ return write( x ); }
-	/**Writing operator for signed shorts.*/
-	obstream&		operator<<( signed short x )			{ return write( x ); }
-
-	/**Writing operator for floats.*/
-	obstream&		operator<<( float x )					{ return write( x ); }
-	/**Writing operator for doubles.*/
-	obstream&		operator<<( const double& x )			{ return write( x ); }
-
-	/** Writing operator for strings.
-	*/
-	obstream&		operator<<( const std::string& x )
+	template <class T>
+	output_binary_stream& write(T const& rhs)
 	{
-		unsigned int length = x.length();
-		write( length );
-
-		if ( length )
-		{
-			write( &(x[0]), length );
-		}
-
+		m_stream.write(reinterpret_cast<char const*>(&rhs), sizeof(T));
 		return *this;
 	}
+
+	/**Writing operator for unsigned ints.*/
+	output_binary_stream& operator<<(boost::uint32_t rhs) {return write(rhs);}
+	/**Writing operator for signed ints.*/
+	output_binary_stream& operator<<(boost::int32_t rhs) {return write(rhs);}
+	
+	/**Writing operator for unsigned chars.*/
+	output_binary_stream& operator<<(boost::uint8_t rhs) {return write(rhs);}
+	/**Writing operator for signed chars.*/
+	output_binary_stream& operator<<(boost::int8_t rhs) {return write(rhs);}
+
+	/**Writing operator for unsigned shorts.*/
+	output_binary_stream& operator<<(boost::uint16_t rhs) {return write(rhs);}
+	/**Writing operator for signed shorts.*/
+	output_binary_stream& operator<<(boost::int16_t rhs) {return write(rhs);}
+
+	/**Writing operator for floats.*/
+	output_binary_stream& operator<<(float rhs) {return write(rhs);}
+	/**Writing operator for doubles.*/
+	output_binary_stream& operator<<(double rhs)	{return write(rhs);}
+
+private:
+	std::ostream& m_stream;
 };
+
+/** Writing operator for strings.
+*/
+inline
+output_binary_stream& operator<<(output_binary_stream& lhs, std::string const& rhs)
+{
+	lhs.write(boost::numeric_cast<boost::uint32_t>(rhs.size()));
+
+	if (rhs.length()>0)
+	{
+		lhs.write(&(rhs[0]), rhs.size());
+	}
+
+	return lhs;
+}
+
+inline
+input_binary_stream binary_stream(std::istream& rhs)
+{
+	return input_binary_stream(rhs);
+}
+
+inline
+output_binary_stream binary_stream(std::ostream& rhs)
+{
+	return output_binary_stream(rhs);
+}
 
 }
 

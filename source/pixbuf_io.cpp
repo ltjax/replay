@@ -29,6 +29,7 @@ Copyright (c) 2012 Marius Elvert
 #include <replay/bstream.hpp>
 #include <boost/filesystem/convenience.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include <boost/cstdint.hpp>
 
 #ifdef REPLAY_USE_LIBPNG
 #  include <png.h>
@@ -47,30 +48,36 @@ typedef unsigned short uint16;
 
 class tga_header
 {
-	uint8		id_length;
-	uint8		colormap_type;
-	uint8		image_type;
-	uint8		colormap[ 5 ];
-	uint16		origin[ 2 ];
-	uint16		width;
-	uint16		height;
-	uint8		pixeldepth;
-	uint8		image_descriptor;
-
-	replay::shared_pixbuf
-				load_type2( replay::ibstream<std::istream>& file );
 					
 public:
-	tga_header() : id_length( 0 ), colormap_type( 0 ), image_type( 0 ),
-		width( 0 ), height( 0 ), pixeldepth( 0 ), image_descriptor( 0 )
+	tga_header()
+	: id_length(0)
+	, colormap_type(0)
+	, image_type(0)
+	, width(0)
+	, height(0)
+	, pixeldepth(0)
+	, image_descriptor(0)
 	{
-		colormap[ 0 ] = colormap[ 1 ] = colormap[ 2 ] = colormap[ 3 ] = colormap[ 4 ] = 0;
-		origin[ 0 ] = origin[ 1 ] = 0;
+		colormap[0] = colormap[1] = colormap[2] = colormap[3] = colormap[4] = 0;
+		origin[0] = origin[1] = 0;
 	}
 
-	replay::shared_pixbuf
-				load( replay::ibstream<std::istream>& file );
-	void		save( replay::obstream< std::ostream >& file, const replay::pixbuf& source );
+	replay::shared_pixbuf	load(replay::input_binary_stream& file);
+	void					save(replay::output_binary_stream& file, replay::pixbuf const& source);
+
+private:
+	boost::uint8_t			id_length;
+	boost::uint8_t			colormap_type;
+	boost::uint8_t			image_type;
+	boost::uint8_t			colormap[5];
+	boost::uint16_t			origin[2];
+	boost::uint16_t			width;
+	boost::uint16_t			height;
+	boost::uint8_t			pixeldepth;
+	boost::uint8_t			image_descriptor;
+
+	replay::shared_pixbuf	load_type2(replay::input_binary_stream& file);
 };
 
 #ifdef REPLAY_USE_LIBPNG
@@ -362,7 +369,7 @@ replay::pixbuf_io::save_to_png_file( std::ostream& file, const pixbuf& source, i
 #endif
 
 replay::shared_pixbuf
-tga_header::load_type2( replay::ibstream<std::istream>& file )
+tga_header::load_type2(replay::input_binary_stream& file)
 {
 	using namespace replay;
 
@@ -416,24 +423,24 @@ tga_header::load_type2( replay::ibstream<std::istream>& file )
 	\ingroup Imaging
 */
 replay::shared_pixbuf
-replay::pixbuf_io::load_from_tga_file( std::istream& file )
+replay::pixbuf_io::load_from_tga_file(std::istream& file)
 {
-	tga_header				header;
-	ibstream<std::istream>	binary_file( file );
+	tga_header header;
+	input_binary_stream binary_file(file);
 
-	return header.load( binary_file );
+	return header.load(binary_file);
 }
 
 /** Serialize by encoding a TGA file.
 	\ingroup Imaging
 */
 void
-replay::pixbuf_io::save_to_tga_file( std::ostream& file, const pixbuf& source )
+replay::pixbuf_io::save_to_tga_file(std::ostream& file, const pixbuf& source)
 {
-	tga_header					header;
-	obstream<std::ostream>	binary_file( file );
+	tga_header header;
+	output_binary_stream binary_file(file);
 
-	header.save( binary_file, source );
+	header.save(binary_file, source);
 }
 
 
@@ -444,7 +451,7 @@ replay::pixbuf_io::save_to_tga_file( std::ostream& file, const pixbuf& source )
 	\ingroup Imaging
 */
 void
-replay::pixbuf_io::save_to_file( const boost::filesystem::path& filename, const pixbuf& source )
+replay::pixbuf_io::save_to_file(const boost::filesystem::path& filename, const pixbuf& source)
 {
 #if BOOST_FILESYSTEM_VERSION < 3
 	const std::string ext = boost::filesystem::extension(filename);
@@ -460,9 +467,9 @@ replay::pixbuf_io::save_to_file( const boost::filesystem::path& filename, const 
 		std::ifstream::failbit
 	);
 
-	file.open( filename, std::ios_base::out | std::ios_base::binary );
+	file.open(filename, std::ios_base::out|std::ios_base::binary);
 
-	if ( ext == ".tga" )
+	if (ext==".tga")
 	{
 		save_to_tga_file( file, source );
 	}
@@ -481,7 +488,7 @@ replay::pixbuf_io::save_to_file( const boost::filesystem::path& filename, const 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 
 replay::shared_pixbuf
-tga_header::load( replay::ibstream<std::istream>& file )
+tga_header::load(replay::input_binary_stream& file)
 {
 	using namespace replay;
 
@@ -513,7 +520,7 @@ tga_header::load( replay::ibstream<std::istream>& file )
 }
 
 void
-tga_header::save( replay::obstream<std::ostream>& file, const replay::pixbuf& source )
+tga_header::save(replay::output_binary_stream& file, replay::pixbuf const& source)
 {
 	if ( source.get_width() && source.get_height() &&
 		((source.get_channels()==3) || (source.get_channels()==4)))
