@@ -68,7 +68,7 @@ replay::matrix3::multiply( const matrix3& a, const vector3f& v, vector3f& result
 const replay::matrix3
 replay::matrix3::operator*( const matrix3& other ) const
 {
-	matrix3	result;
+	matrix3	result((uninitialized_tag()));
 
 	multiply( *this, other, result );
 
@@ -169,8 +169,17 @@ replay::matrix3::operator+=( const matrix3& m )
 /** Create an uninitialized matrix.
 	\note Contents at this point are undefined!
 */
-replay::matrix3::matrix3()
+replay::matrix3::matrix3(uninitialized_tag)
 {
+}
+
+/** Create a uniform scaling matrix.
+*/
+replay::matrix3::matrix3(float d)
+{
+	data[0] =   d; data[3] = 0.f; data[6] = 0.f;
+	data[1] = 0.f; data[4] =   d; data[7] = 0.f;
+	data[2] = 0.f; data[5] = 0.f; data[8] =   d;
 }
 
 /** Create a matrix from the individual components.
@@ -294,7 +303,7 @@ replay::matrix3::set_scale( const vector3f& v )
 void
 replay::matrix3::rotate( matrix3& m, const float angle, const vector3f& axis )
 {
-	matrix3 temp;
+	matrix3 temp((replay::uninitialized_tag()));
 
 	temp.set_rotation( angle, axis );
 
@@ -306,7 +315,7 @@ replay::matrix3::rotate( matrix3& m, const float angle, const vector3f& axis )
 void
 replay::matrix3::scale( matrix3& m, const float x, const float y, const float z )
 {
-	matrix3 temp;
+	matrix3 temp((replay::uninitialized_tag()));
 
 	temp.set_scale( x,y,z );
 
@@ -316,9 +325,9 @@ replay::matrix3::scale( matrix3& m, const float x, const float y, const float z 
 /** Concaternate this matrix with a scale matrix.
 */
 void
-replay::matrix3::scale( matrix3& m, const vector3f& v )
+replay::matrix3::scale(matrix3& m, vector3f const& v)
 {
-	matrix3 temp;
+	matrix3 temp((replay::uninitialized_tag()));
 
 	temp.set_scale( v );
 
@@ -330,9 +339,9 @@ replay::matrix3::scale( matrix3& m, const vector3f& v )
 replay::matrix3&
 replay::matrix3::transpose()
 {
-	std::swap( data[ 1 ], data[ 3 ] );
-	std::swap( data[ 5 ], data[ 7 ] );
-	std::swap( data[ 2 ], data[ 6 ] );
+	std::swap(data[1], data[3]);
+	std::swap(data[5], data[7]);
+	std::swap(data[2], data[6]);
 
 	return *this;
 }
@@ -362,17 +371,17 @@ replay::matrix3::determinant() const
 const replay::matrix3
 replay::matrix3::inverted() const
 {
-	const float d = determinant();
+	float const d=determinant();
 
-	return matrix3(   ( data[4]*data[8] - data[7]*data[5] ) / d,
-					 -( data[3]*data[8] - data[5]*data[6] ) / d,
-                      ( data[3]*data[7] - data[4]*data[6] ) / d,
-					 -( data[1]*data[8] - data[7]*data[2] ) / d,
-                      ( data[0]*data[8] - data[2]*data[6] ) / d,
-                     -( data[0]*data[7] - data[1]*data[6] ) / d,
-                      ( data[1]*data[5] - data[2]*data[4] ) / d,
-                     -( data[0]*data[5] - data[2]*data[3] ) / d,
-                      ( data[0]*data[4] - data[3]*data[1] ) / d );
+	return matrix3(   (data[4]*data[8] - data[7]*data[5]) / d,
+					 -(data[3]*data[8] - data[5]*data[6]) / d,
+                      (data[3]*data[7] - data[4]*data[6]) / d,
+					 -(data[1]*data[8] - data[7]*data[2]) / d,
+                      (data[0]*data[8] - data[2]*data[6]) / d,
+                     -(data[0]*data[7] - data[1]*data[6]) / d,
+                      (data[1]*data[5] - data[2]*data[4]) / d,
+                     -(data[0]*data[5] - data[2]*data[3]) / d,
+                      (data[0]*data[4] - data[3]*data[1]) / d );
 }
 
 /** Get the transposed matrix.
@@ -380,7 +389,7 @@ replay::matrix3::inverted() const
 const replay::matrix3
 replay::matrix3::transposed() const
 {
-	return matrix3( data[ 0 ], data[ 1 ], data[ 2 ],
-					data[ 3 ], data[ 4 ], data[ 5 ],
-					data[ 6 ], data[ 7 ], data[ 8 ] );
+	return matrix3(data[0], data[1], data[2],
+				   data[3], data[4], data[5],
+				   data[6], data[7], data[8]);
 }
