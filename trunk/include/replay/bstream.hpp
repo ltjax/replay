@@ -102,25 +102,27 @@ public:
 	/**Reading operator for doubles.*/
 	input_binary_stream& operator>>(double& x)					{return read(x);}
 	
+		
+	/**	Reading operator for strings.
+	*/
+	inline
+	input_binary_stream& operator>>(std::string& x)
+	{
+		boost::uint32_t const length=read<boost::uint32_t>();
+
+		if (length>0)
+		{
+			x.resize(length);
+			read(&(x[0]), length);
+		}
+
+		return *this;
+	}
+	
 private:
 	std::istream& m_stream;
 };
 
-/**	Reading operator for strings.
-*/
-inline
-input_binary_stream& operator>>(input_binary_stream& lhs, std::string& x)
-{
-	boost::uint32_t const length=lhs.read<boost::uint32_t>();
-
-	if (length>0)
-	{
-		x.resize(length);
-		lhs.read(&(x[0]), length);
-	}
-
-	return lhs;
-}
 
 /** Binary output stream Wrapper.
 	Allows wrapping of standard streams for binary writing.
