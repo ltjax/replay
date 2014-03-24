@@ -205,6 +205,26 @@ vector2<type> operator/(vector2<type> lhs, const type rhs)
 	return lhs /= rhs;
 }
 
+/** Component-wise min
+\relates vector2
+\ingroup Math
+*/
+template <class type> inline
+vector2<type> min(const vector2<type>& lhs, const vector2<type>& rhs)
+{
+	return vector2<type>(std::min(lhs[0], rhs[0]), std::min(lhs[1], rhs[1]));
+}
+
+/** Component-wise max
+\relates vector2
+\ingroup Math
+*/
+template <class type> inline
+vector2<type> max(const vector2<type>& lhs, const vector2<type>& rhs)
+{
+	return vector2<type>(std::max(lhs[0], rhs[0]), std::max(lhs[1], rhs[1]));
+}
+
 /** Shorthandle for a 2D \c float vector.
 	\relates vector2
 	\ingroup Math	
