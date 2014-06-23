@@ -28,6 +28,7 @@ Copyright (c) 2010 Marius Elvert
 #define replay_vector2_hpp
 
 #include <iosfwd>
+#include <algorithm>
 #include <replay/common.hpp>
 
 namespace replay {
