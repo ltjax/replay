@@ -39,79 +39,55 @@ namespace math {
 	/** default numerical error tolerance.
 		\ingroup Math
 	*/
-	const float default_epsilon = 0.000001f;
+	float const default_epsilon = 0.000001f;
 
 	/** multiply a only by the sign of b.
 		\ingroup Math
 	*/
-	inline void mult_ref_by_sign( float& a, float b )
+	inline void mult_ref_by_sign(float& a, float b)
 	{
-#ifdef replay_unsafe_bit_magic
-		reinterpret_cast< unsigned int& >( a ) ^= (reinterpret_cast< unsigned int& >(b)&0x80000000);
-#else
 		a = boost::math::copysign( a, a*b );
-#endif
 	}
 	
 	/** multiply a only by the sign of b.
 		\ingroup Math
 	*/
-	inline void mult_by_sign( float a, float b, float& result )
+	inline void mult_by_sign(float a, float b, float& result)
 	{
-#ifdef replay_unsafe_bit_magic
-		reinterpret_cast< unsigned int& >( result ) = reinterpret_cast< unsigned int& >( a ) 
-			^ (reinterpret_cast< unsigned int& >(b)&0x80000000);
-#else
 		result = boost::math::copysign( a, a*b );
-#endif
 	}
-	
-	/** get the sign of an integer.
-		\return 1 for negative numbers and 0 for others.
-		\ingroup Math
-	*/
-	/*inline int sign( int a )
-	{
-		return a >> 31;
-	}*/
 	
 	/** copies the sign.
 		\ingroup Math
 	*/
-	inline float copy_sign( float value, const float sign )
+	inline float copy_sign(float value, float sign)
 	{
-#ifdef replay_unsafe_bit_magic
-		*reinterpret_cast< int* >( &value ) &= 0x7FFFFFFF;
-		*reinterpret_cast< int* >( &value ) |= (*reinterpret_cast< const int* >( &sign ) & 0x80000000);
-		return value;
-#else
 		return boost::math::copysign( value, sign );
-#endif
 	}
 
 	/** return true if the value is within a treshold of zero.
 		\ingroup Math
 	*/
-	inline bool fuzzy_zero( const float value, const float epsilon )
+	inline bool fuzzy_zero(float value, float epsilon)
 	{
-		return abs(value) < epsilon;
+		return std::abs(value) < epsilon;
 	}
 
 	/** return true if the value is within a treshold of zero.
 		\ingroup Math
 	*/
-	inline bool fuzzy_zero( const float value )
+	inline bool fuzzy_zero(float value)
 	{
-		return abs(value) < default_epsilon;
+		return std::abs(value) < default_epsilon;
 	}
 
 	/** Return true if a is within a treshold of b.
 		This is used to compare floating point numbers.
 		\ingroup Math
 	*/
-	inline bool fuzzy_equals( const float a, const float b, const float epsilon=default_epsilon )
+	inline bool fuzzy_equals(float a, float b, float epsilon=default_epsilon)
 	{
-		return abs(a-b) < epsilon;
+		return std::abs(a-b) < epsilon;
 	}
 
 	/** check if the value is in the range. borders count as in.
@@ -181,7 +157,7 @@ namespace math {
 		\param x Value to be saturated.
 		\ingroup Math
 	*/
-	inline float saturate( float x )
+	inline float saturate(float x)
 	{
 		if ( x < 0.f )	return 0.f;
 		else return std::min(x,1.f);
@@ -209,29 +185,18 @@ namespace math {
 		\ingroup Math
 	*/
 	inline unsigned int
-	sign( float value ) // returns 1 for - and 0 for +
+	sign(float value) // returns 1 for - and 0 for +
 	{
-#ifdef replay_unsafe_bit_magic
-		return (*reinterpret_cast< unsigned int* >( &value )) >> 31;
-#else
 		return value < 0.f ? 1 : 0;
-#endif
 	}
 
 	/** compare signs.
 		\ingroup Math
 	*/
 	inline unsigned int
-	same_sign( float a, float b )
+	same_sign(float a, float b)
 	{
-#ifdef replay_unsafe_bit_magic
-		return ((
-			( *reinterpret_cast< unsigned int* >( &a ) ) ^
-			~( *reinterpret_cast< unsigned int* >( &b ) )
-			) >> 31 );
-#else
-		return a*b < 0.f ? 0 : 1;		
-#endif
+		return a*b < 0.f ? 0 : 1;
 	}
 
 	/** convert radians to degrees.

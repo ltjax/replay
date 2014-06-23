@@ -461,7 +461,7 @@ const replay::vector3f replay::math::construct_perpendicular( const vector3f& x 
 	// Find the maximum element
 	for (std::size_t i=1; i<3; ++i)
 	{
-		register float t = std::abs(x[i]);
+		float const t = std::abs(x[i]);
 		if (m < t)
 		{
 			m = t;
