@@ -218,7 +218,7 @@ private:
 					left = i;
 
 				else if ( x == hull[right][0] && y > hull[right][1] )
-					right = 1;
+					right = i;
 			}
 
 			// Check for new y
