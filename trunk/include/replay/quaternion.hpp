@@ -170,6 +170,20 @@ public:
 
 };
 
+/** Compare two quaternions for equality.
+*/
+inline bool operator==(quaternion const& lhs, quaternion const& rhs)
+{
+	return lhs.w==rhs.w&&lhs.x==rhs.x&&lhs.y==rhs.y&&lhs.z==rhs.z;
+}
+
+/** Compare two quaternions for inequality.
+*/
+inline bool operator!=(quaternion const& lhs, quaternion const& rhs)
+{
+	return !(lhs==rhs);
+}
+
 /** Compute the multiplicative inverse of a quaternion.
 	\param[in] a Quaternion to compute the inverse of.
 	\returns The inverse to the given quaternion.

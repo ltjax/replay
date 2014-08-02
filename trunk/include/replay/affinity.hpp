@@ -2,7 +2,7 @@
 replay
 Software Library
 
-Copyright (c) 2010 Marius Elvert
+Copyright (c) 2014 Marius Elvert
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -120,6 +120,21 @@ public:
 	}
 };
 
+/** Check two affinities for equality.
+*/
+inline
+bool				operator==(const affinity& lhs, const affinity& rhs)
+{
+	return lhs.position==rhs.position && lhs.orientation==rhs.orientation;
+}
+
+/** Check two affinities for inequality.
+*/
+inline
+bool				operator!=(const affinity& lhs, const affinity& rhs)
+{
+	return !(lhs==rhs);
+}
 
 /** Get this mapping as a homogenous 4x4 matrix.
 */
