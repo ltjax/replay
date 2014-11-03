@@ -67,14 +67,14 @@ public:
 	/** Construct a table of given width and height.
 	*/
 	table(size_type w, size_type h)
-	: m_buffer(new value_type[w*h]), m_width(w), m_height(h)
+	: m_buffer((w && h) ? new value_type[w*h] : 0), m_width(w), m_height(h)
 	{
 	}
 
 	/** Construct a table of given width and height and fill it with the given value.
 	*/
 	table(size_type w, size_type h, const value_type& value)
-	: m_buffer(new value_type[w*h]), m_width(w), m_height(h)
+	: m_buffer((w && h) ? new value_type[w*h] : 0), m_width(w), m_height(h)
 	{
 		try {
 			fill(value);
