@@ -137,16 +137,21 @@ replay::pixbuf::internal_t::blit( unsigned int dx, unsigned int dy,
 
 void replay::pixbuf::internal_t::flip()
 {
-	uint half_height = height>>1;
+	uint const half_height = height>>1;
+
+	// Temporary swap space
+	uint row_byte_count=width*channels;
+	std::vector<uint8> buffer(row_byte_count);
 
 	for (uint y=0; y<half_height; ++y)
-	for (uint x=0; x<width; ++x)
 	{
-		uint8* left = this->data + (y*width + x)*channels;
-		uint8* right = this->data + ((height-1-y)*width + x)*channels;
+		uint8* row0 = this->data + (y*width)*channels;
+		uint8* row1 = this->data + ((height-1-y)*width)*channels;
 
-		for (uint c=0; c<channels; ++c)
-			std::swap(left[c], right[c]);
+		// Swap rows
+		std::copy(row0, row0+row_byte_count, buffer.begin());
+		std::copy(row1, row1+row_byte_count, row0);
+		std::copy(buffer.begin(), buffer.end(), row1);		
 	}
 }
 
@@ -370,33 +375,35 @@ void replay::pixbuf::convert_to_rgba()
 	new_data->create(data->width, data->height, 4);
 
 	internal_t::uint pixel_count = data->get_pixel_count();
-	internal_t::uint8* src = 0;
-	internal_t::uint8* dst = 0;
+	internal_t::uint8* src=data->data;
+	internal_t::uint8* dst=new_data->data;
+
 
 	if (data->channels == 3)
 	{
-		for ( unsigned int i = 0; i < pixel_count; ++i )
+		for (unsigned int i = 0; i < pixel_count; ++i)
 		{
-			src = (*data)( i );
-			dst = (*new_data)( i );
-
 			dst[0] = src[0];
 			dst[1] = src[1];
 			dst[2] = src[2];
 			dst[3] = 255;
+
+			src+=3;
+			dst+=4;
 		}
 	}
 	else if (data->channels == 1)
 	{
-		for ( unsigned int i = 0; i < pixel_count; ++i )
+		for (unsigned int i = 0; i < pixel_count; ++i)
 		{
-			src = (*data)( i );
-			dst = (*new_data)( i );
 
 			dst[0] = src[0];
 			dst[1] = src[0];
 			dst[2] = src[0];
 			dst[3] = 255;
+
+			++src;
+			dst+=4;
 		}
 	}
 
