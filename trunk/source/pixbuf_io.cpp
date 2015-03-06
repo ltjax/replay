@@ -37,8 +37,8 @@ Copyright (c) 2012 Marius Elvert
 #endif
 
 #ifdef REPLAY_USE_STBIMAGE
-#  define STBI_HEADER_FILE_ONLY
-#  include <stb_image.c>
+#  define STB_IMAGE_IMPLEMENTATION
+#  include <stb_image.h>
 #endif
 
 namespace { // BEGIN PRIVATE NAMESPACE
@@ -580,11 +580,11 @@ namespace
 		return static_cast<int>(file->gcount());
 	}
 
-	void stb_skip_callback(void* user, unsigned n)
+	void stb_skip_callback(void* user, int n)
 	{
 		
 		std::istream* file(reinterpret_cast<std::istream*>(user));
-		for (unsigned i=0; i<n; ++i)
+		for (int i=0; i<n; ++i)
             file->get();
 	}
 
