@@ -18,7 +18,6 @@ The implementation of critical algorithms is checked via unit testing (using Boo
 ## Install ##
 
 To use replay, just check out the source for the subversion server. There are currently build files for:
-  * Visual Studio 2010
   * CMake
 Linux is supported via CMake. Build file contributions for other systems are very welcome.
 
@@ -32,5 +31,6 @@ Replay depends (only) on the following libraries:
   * The **Boost** C++ Libraries (http://www.boost.org/).
 
 And optionally:
+  * **stb_image** (https://github.com/nothings/stb)
   * **libpng** (http://www.libpng.org/).
   * **zlib** (http://www.zlib.net/).
