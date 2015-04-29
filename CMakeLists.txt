@@ -1,41 +1,42 @@
-PROJECT(replay)
+project(replay)
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8)
 
-OPTION(REPLAY_USE_STBIMAGE "Use stb_image.c to load image files" ON)
-OPTION(REPLAY_USE_LIBPNG "Use libpng to load png files" ON)
-OPTION(REPLAY_ENABLE_UNIT_TESTS "Build the unit tests" ON)
+option(REPLAY_USE_STBIMAGE "Use stb_image.c to load image files" ON)
+option(REPLAY_USE_LIBPNG "Use libpng to load png files" ON)
+option(REPLAY_ENABLE_UNIT_TESTS "Build the unit tests" ON)
 
-SET(Boost_ADDITIONAL_VERSIONS "1.42.0" "1.42" "1.47" "1.47.0" "1.48" "1.48.0")
 
-SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${replay_BINARY_DIR}/build)
-SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${replay_BINARY_DIR}/build)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${replay_BINARY_DIR}/build)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${replay_BINARY_DIR}/build)
 
-SET(Boost_USE_STATIC_LIBS OFF)
+# Replay is typically included in a host project that already has boost
+if(NOT Boost_FOUND)
+  if(WIN32)
+    find_package(Boost REQUIRED)
+  else()
+    set(Boost_USE_MULTITHREADED OFF)
+    
+    if(REPLAY_ENABLE_UNIT_TESTS)
+        find_package(Boost 1.42 REQUIRED COMPONENTS unit_test_framework)
+    else()
+        find_package(Boost 1.42)
+    endif()
+  endif()
+endif()
 
-IF(WIN32)
-	#FIND_PACKAGE(Boost REQUIRED)
-ELSE()
-	SET(Boost_USE_MULTITHREADED OFF)
-    IF(REPLAY_ENABLE_UNIT_TESTS)
-        FIND_PACKAGE(Boost 1.42 REQUIRED COMPONENTS unit_test_framework)
-    ELSE()
-        FIND_PACKAGE(Boost 1.42)
-    ENDIF()
-ENDIF()
+link_directories(${Boost_LIBRARY_DIRS})
 
-LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
+if (REPLAY_USE_LIBPNG)
+	find_package(PNG REQUIRED)
+endif()
 
-IF (REPLAY_USE_LIBPNG)
-	FIND_PACKAGE(PNG REQUIRED)
-ENDIF()
+if (REPLAY_USE_STBIMAGE)
+	find_path(REPLAY_STBIMAGE_PATH stb_image.h)
+endif()
 
-IF (REPLAY_USE_STBIMAGE)
-	FIND_PATH(REPLAY_STBIMAGE_PATH stb_image.c)
-ENDIF()
+add_subdirectory(source)
 
-ADD_SUBDIRECTORY(source)
-
-IF (REPLAY_ENABLE_UNIT_TESTS)
-	ADD_SUBDIRECTORY(test)
-ENDIF()
+if (REPLAY_ENABLE_UNIT_TESTS)
+	add_subdirectory(test)
+endif()
