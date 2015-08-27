@@ -2,7 +2,7 @@
 replay
 Software Library
 
-Copyright (c) 2010 Marius Elvert
+Copyright (c) 2010-2015 Marius Elvert
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -115,12 +115,12 @@ namespace math {
 
 
 
-	/** compute the length of a vector in manhattan norm. (max-norm)
+	/** Compute the length of a vector in manhattan norm. (max-norm)
 		\ingroup Math
 	*/
 	float						max_norm( const vector2f& vector );
 	
-	/** compute the length of a vector in manhatten norm. (max-norm)
+	/** Compute the length of a vector in manhatten norm. (max-norm)
 		\ingroup Math
 	*/
 	float						max_norm( const vector3f& vector );
@@ -399,9 +399,14 @@ float						square_distance( const vector3f& point, const boost::array<vector3f,3
 float						square_distance( const line3& line, const vector3f& point );
 
 /** Compute the square of the euclidean distance of two points.
-	\ingroup Math
+\ingroup Math
 */
-float						square_distance( const vector3f& point0, const vector3f& point1 );
+float						square_distance(vector2f const& lhs, vector2f const& rhs);
+
+/** Compute the square of the euclidean distance of two points.
+\ingroup Math
+*/
+float						square_distance(vector3f const& lhs, vector3f const& rhs);
 
 /** Compute the square of the euclidean distance of two 3d lines.
 */
@@ -419,11 +424,21 @@ float						distance( const replay::line3& line, const replay::vector3f& point );
 */
 float						distance( const replay::plane3& p, const replay::vector3f& point );
 
-
 /** Compute the euclidean distance of two points.
 	\ingroup Math
 */
-inline float				distance( const replay::vector3f& lhs, const replay::vector3f& rhs ) { return std::sqrt(square_distance(lhs,rhs)); }
+inline float				distance(replay::vector2f const& lhs, replay::vector2f const& rhs)
+{
+	return std::sqrt(square_distance(lhs,rhs));
+}
+
+/** Compute the euclidean distance of two points.
+\ingroup Math
+*/
+inline float				distance(replay::vector3f const& lhs, replay::vector3f const& rhs)
+{
+	return std::sqrt(square_distance(lhs, rhs));
+}
 
 /** Compute the euclidean length of a vector.
 	\ingroup Math

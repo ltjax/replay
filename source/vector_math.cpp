@@ -194,9 +194,15 @@ replay::square_distance( const line3& line, const vector3f& point )
 }
 
 float
-replay::square_distance( const vector3f& point0, const vector3f& point1 )
+replay::square_distance(vector2f const& lhs, vector2f const& rhs)
 {
-	return ( point1 - point0 ).squared();
+	return (rhs-lhs).squared();
+}
+
+float
+replay::square_distance(vector3f const& lhs, vector3f const& rhs)
+{
+	return (rhs-lhs).squared();
 }
 
 float
