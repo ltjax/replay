@@ -19,7 +19,6 @@ The implementation of critical algorithms is checked via unit testing (using Boo
 
 To use replay, just check out the source for the subversion server. There are currently build files for:
   * CMake
-Linux is supported via CMake. Build file contributions for other systems are very welcome.
 
 ## History ##
 
