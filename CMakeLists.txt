@@ -2,10 +2,17 @@ project(replay)
 
 cmake_minimum_required(VERSION 2.8)
 
-option(REPLAY_USE_STBIMAGE "Use stb_image.c to load image files" ON)
-option(REPLAY_USE_LIBPNG "Use libpng to load png files" ON)
-option(REPLAY_ENABLE_UNIT_TESTS "Build the unit tests" ON)
+if(NOT DEFINED REPLAY_USE_STBIMAGE)
+  option(REPLAY_USE_STBIMAGE "Use stb_image.c to load image files" ON)
+endif()
 
+if(NOT DEFINED REPLAY_USE_LIBPNG)
+  option(REPLAY_USE_LIBPNG "Use libpng to load png files" ON)
+endif()
+
+if(NOT DEFINED REPLAY_ENABLE_UNIT_TESTS)
+  option(REPLAY_ENABLE_UNIT_TESTS "Build the unit tests" ON)
+endif()
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${replay_BINARY_DIR}/build)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${replay_BINARY_DIR}/build)
@@ -27,16 +34,16 @@ endif()
 
 link_directories(${Boost_LIBRARY_DIRS})
 
-if (REPLAY_USE_LIBPNG)
+if(REPLAY_USE_LIBPNG)
 	find_package(PNG REQUIRED)
 endif()
 
-if (REPLAY_USE_STBIMAGE)
+if(REPLAY_USE_STBIMAGE AND NOT DEFINED REPLAY_STBIMAGE_PATH)
 	find_path(REPLAY_STBIMAGE_PATH stb_image.h)
 endif()
 
 add_subdirectory(source)
 
-if (REPLAY_ENABLE_UNIT_TESTS)
+if(REPLAY_ENABLE_UNIT_TESTS)
 	add_subdirectory(test)
 endif()
