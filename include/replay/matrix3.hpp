@@ -39,9 +39,9 @@ class quaternion;
 class matrix3
 {
 public:
-							matrix3(uninitialized_tag);
+    explicit				matrix3(uninitialized_tag);
 
-							matrix3(float d);
+    explicit				matrix3(float d);
 
 							matrix3(float m11, float m21, float m31,
 									float m12, float m22, float m32,
