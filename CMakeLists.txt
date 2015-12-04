@@ -14,6 +14,10 @@ if(NOT DEFINED REPLAY_ENABLE_UNIT_TESTS)
   option(REPLAY_ENABLE_UNIT_TESTS "Build the unit tests" ON)
 endif()
 
+if(NOT DEFINED REPLAY_ENABLE_INSTALL)
+  option(REPLAY_ENABLE_INSTALL "Create the install target" ON)
+endif()
+
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${replay_BINARY_DIR}/build)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${replay_BINARY_DIR}/build)
 

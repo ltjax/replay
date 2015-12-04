@@ -1,16 +1,16 @@
 
 # Default includes
-INCLUDE_DIRECTORIES(
+include_directories(
 	${replay_SOURCE_DIR}/include 
 	${Boost_INCLUDE_DIR}
 )
 
 # Conditionally include libpng
-IF(REPLAY_USE_LIBPNG)
-	INCLUDE_DIRECTORIES(${PNG_INCLUDE_DIR})
-ENDIF()
+if(REPLAY_USE_LIBPNG)
+  include_directories(${PNG_INCLUDE_DIR})
+endif()
 
-SET(replay_HEADERS
+set(replay_HEADERS
 	${replay_SOURCE_DIR}/include/replay/aabb.hpp
 	${replay_SOURCE_DIR}/include/replay/affinity.hpp
 	${replay_SOURCE_DIR}/include/replay/bounding_rectangle.hpp
@@ -42,7 +42,7 @@ SET(replay_HEADERS
 	${replay_SOURCE_DIR}/include/replay/vector4.inl
 )
 	
-SET(replaySources
+set(replaySources
 	aabb.cpp
 	box_packer.cpp
 	byte_color.cpp
@@ -57,21 +57,23 @@ SET(replaySources
 	vector_math.cpp
 )
 
-IF(REPLAY_USE_STBIMAGE)
-	ADD_DEFINITIONS(-DREPLAY_USE_STBIMAGE -DSTBI_NO_STDIO)
-	INCLUDE_DIRECTORIES(${REPLAY_STBIMAGE_PATH})
-ENDIF()
+if(REPLAY_USE_STBIMAGE)
+  add_definitions(-DREPLAY_USE_STBIMAGE -DSTBI_NO_STDIO)
+  include_directories(${REPLAY_STBIMAGE_PATH})
+endif()
 	
-ADD_LIBRARY(replay STATIC ${replay_HEADERS} ${replaySources})
+add_library(replay STATIC ${replay_HEADERS} ${replaySources})
 
-IF(UNIX)
-	SET_TARGET_PROPERTIES(replay PROPERTIES COMPILE_FLAGS -fPIC)
-ENDIF()
+if(UNIX)
+  set_target_properties(replay PROPERTIES COMPILE_FLAGS -fPIC)
+endif()
 
-IF(REPLAY_USE_LIBPNG)
-	ADD_DEFINITIONS(-DREPLAY_USE_LIBPNG)
-	TARGET_LINK_LIBRARIES(replay ${PNG_LIBRARIES})
-ENDIF()
+if(REPLAY_USE_LIBPNG)
+  add_definitions(-DREPLAY_USE_LIBPNG)
+  target_link_libraries(replay ${PNG_LIBRARIES})
+endif()
 
-INSTALL(FILES ${replay_HEADERS} DESTINATION include/replay)
-INSTALL(TARGETS replay ARCHIVE DESTINATION lib)
+if(REPLAY_ENABLE_INSTALL)
+  install(FILES ${replay_HEADERS} DESTINATION include/replay)
+  install(TARGETS replay ARCHIVE DESTINATION lib)
+endif()
