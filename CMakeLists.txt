@@ -1,6 +1,6 @@
 project(replay)
 
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
 
 if(NOT DEFINED REPLAY_USE_STBIMAGE)
   option(REPLAY_USE_STBIMAGE "Use stb_image.c to load image files" ON)
