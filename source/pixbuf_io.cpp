@@ -31,20 +31,41 @@ Copyright (c) 2012 Marius Elvert
 #include <boost/filesystem/fstream.hpp>
 #include <boost/cstdint.hpp>
 
-#ifdef REPLAY_USE_LIBPNG
-#  include <png.h>
-#  define PNG_SIGNATURE_BYTES 8
-#endif
-
 #ifdef REPLAY_USE_STBIMAGE
 #  define STB_IMAGE_IMPLEMENTATION
 #  include <stb_image.h>
+#endif
+
+#ifdef REPLAY_USE_STBIMAGE_WRITE
+#  define STB_IMAGE_WRITE_IMPLEMENTATION
+#  include <stb_image_write.h>
 #endif
 
 namespace { // BEGIN PRIVATE NAMESPACE
 
 typedef unsigned char uint8;
 typedef unsigned short uint16;
+
+int stb_read_callback(void* user, char* data, int size)
+{
+    std::istream* file(reinterpret_cast<std::istream*>(user));
+    file->read(data, size);
+    return static_cast<int>(file->gcount());
+}
+
+void stb_skip_callback(void* user, int n)
+{
+
+    std::istream* file(reinterpret_cast<std::istream*>(user));
+    for (int i=0; i<n; ++i)
+        file->get();
+}
+
+int stb_eof_callback(void* user)
+{
+    std::istream* file(reinterpret_cast<std::istream*>(user));
+    return file->eof() ? 1 : 0;
+}
 
 class tga_header
 {
@@ -80,291 +101,27 @@ private:
 	replay::shared_pixbuf	load_type2(replay::input_binary_stream& file);
 };
 
-#ifdef REPLAY_USE_LIBPNG
-// User read function to use istream instead of FILE*
-void png_user_read( png_structp png_ptr, png_bytep data, png_size_t length )
-{
-	std::istream* file = reinterpret_cast< std::istream* >( png_get_io_ptr( png_ptr ) );
-	file->read( (char*)data, static_cast< std::streamsize >( length ) );
-}
-
-
-// User write function to use ostream instead of FILE*
-void png_user_write( png_structp png_ptr, png_bytep data, png_size_t length )
-{
-	std::ostream* file = reinterpret_cast< std::ostream* >( png_get_io_ptr( png_ptr ) );
-	file->write( (char*)data, static_cast< std::streamsize >( length ) );
-}
-
-// User read function to use ostream instead of FILE*
-void png_user_flush( png_structp png_ptr )
-{
-	std::ostream* file = reinterpret_cast< std::ostream* >( png_get_io_ptr( png_ptr ) );
-	file->flush();
-	//*file << std::flush;
-}
-
-replay::shared_pixbuf
-png_convert_paletted(png_structp png_ptr, png_infop info_ptr,
-	png_bytepp row_pointers, const png_uint_32 width, const png_uint_32 height)
-{
-	using namespace replay;
-	png_colorp	palette=0;
-	int			palette_size=0;
-
-	// Attempt to load the palette
-	if (png_get_PLTE(png_ptr, info_ptr, &palette, &palette_size) != PNG_INFO_PLTE)
-		throw pixbuf_io::read_error("Unable to read png-palette, file is corrupt");
-
-	png_bytep		trans=0;
-	int				trans_size=0;
-	png_color_16p	trans_values=0;
-	bool has_transparency = (png_get_tRNS(png_ptr, info_ptr, &trans, &trans_size, &trans_values) == PNG_INFO_tRNS);
-
-	replay::shared_pixbuf result;
-	// Take this path for palettes with transparency data
-	if (has_transparency)
-	{
-		// Need to access both, so find the min for an upper bound
-		palette_size = std::min(trans_size, palette_size);
-
-		result = pixbuf::create(width, height, pixbuf::rgba);
-		unsigned char* pixel = result->get_data();
-
-		// Flip image during load
-		for (png_uint_32 y = 0; y < height; ++y)
-		for (png_uint_32 x = 0; x < width; ++x, pixel+=4)
-		{
-			int offset = row_pointers[height-y-1][x];
-
-			// File data corrupt
-			if (offset >= palette_size)
-				throw pixbuf_io::read_error("Palette index out-of-range, file is corrupt");
-
-			pixel[0] = palette[offset].red;
-			pixel[1] = palette[offset].green;
-			pixel[2] = palette[offset].blue;
-			pixel[3] = trans[offset];
-		}
-	}
-	else
-	{
-		result = pixbuf::create(width, height, pixbuf::rgb);
-		unsigned char* pixel = result->get_data();
-
-		// Flip image during load
-		for (png_uint_32 y = 0; y < height; ++y)
-		for (png_uint_32 x = 0; x < width; ++x, pixel+=3)
-		{
-			int offset = row_pointers[height-y-1][x];
-
-			// File data corrupt
-			if (offset >= palette_size)
-				throw pixbuf_io::read_error("Palette index out-of-range, file is corrupt");
-
-			pixel[0] = palette[offset].red;
-			pixel[1] = palette[offset].green;
-			pixel[2] = palette[offset].blue;
-		}
-	}
-
-	return result;
-}
-#endif
-
 } // END PRIVATE NAMESPACE
 
-#ifdef REPLAY_USE_LIBPNG
-/** Deserialize a PNG encoded file.
-	\params file A standard-stream to the file to decode.
-	\returns A shared_pixbuf containing the loaded image
-	\ingroup Imaging
-	\note Throws pixbuf_io::unrecognized_format or pixbuf_io::read_error when the image cannot be loaded
-*/
-replay::shared_pixbuf
-replay::pixbuf_io::load_from_png_file(std::istream& file)
-{
-	shared_pixbuf		result;
-	unsigned char		header[PNG_SIGNATURE_BYTES];
-
-	// Read the signature
-	const std::istream::pos_type startpos = file.tellg();
-	file.read( (char*)header, PNG_SIGNATURE_BYTES );
-	
-	if (png_sig_cmp(header, 0, PNG_SIGNATURE_BYTES))
-		throw pixbuf_io::unrecognized_format();
-
-	file.seekg(startpos);
-
-	// Create additional read data structures
-	png_structp png_ptr = png_create_read_struct( PNG_LIBPNG_VER_STRING, 0, 0, 0 );
-	if ( !png_ptr )
-	{
-		throw pixbuf_io::read_error( "Unable to create PNG read structure." );
-	}
-
-	png_infop info_ptr = png_create_info_struct(png_ptr);
-
-	if ( !info_ptr )
-	{
-		png_destroy_read_struct( &png_ptr, 0, 0 );
-		throw pixbuf_io::read_error( "Unable to create PNG info structure." );
-	}
-
-	png_infop end_info = png_create_info_struct(png_ptr);
-	if ( !end_info )
-	{
-		png_destroy_read_struct( &png_ptr, &info_ptr, 0 );
-		throw pixbuf_io::read_error( "Unable to create PNG end info structure.");
-	}
-
-	// Jump here on errors
-	if ( setjmp( png_jmpbuf( png_ptr ) ) )
-	{
-		png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
-		throw pixbuf_io::read_error( "Undefined read error." );
-	}
-
-	png_set_read_fn( png_ptr, &file, png_user_read );
-
-	png_read_png(png_ptr, info_ptr, PNG_TRANSFORM_IDENTITY | PNG_TRANSFORM_STRIP_16 | PNG_TRANSFORM_PACKING, NULL);
-
-	png_bytepp row_pointers = png_get_rows(png_ptr, info_ptr);
-
-	// Copy the contents
-	png_uint_32 width=0;
-	png_uint_32 height=0;
-	int			bit_depth=0;
-	int			color_type=0;
-
-	png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type, 0, 0, 0);
-
-	// Create an RGB image (3 channels)
-	if (color_type == PNG_COLOR_TYPE_RGB)
-	{
-		result = pixbuf::create(width,height,pixbuf::rgb);
-		unsigned char* pixel = result->get_data();
-
-		// Flip image during load
-		for (png_uint_32 y = 0; y < height; ++y)
-		for (png_uint_32 x = 0; x < width; ++x, pixel+=3)
-		{
-			pixel[0] = row_pointers[height-y-1][x*3];
-			pixel[1] = row_pointers[height-y-1][x*3+1];
-			pixel[2] = row_pointers[height-y-1][x*3+2];
-		}
-	}
-	// Create an RGBA image (4 channels)
-	else if (color_type == PNG_COLOR_TYPE_RGB_ALPHA)
-	{
-		result = pixbuf::create(width,height,pixbuf::rgba);
-		unsigned char* pixel = result->get_data();
-
-		// Flip image during load
-		for (png_uint_32 y = 0; y < height; ++y)
-		for (png_uint_32 x = 0; x < width; ++x, pixel+=4)
-		{
-			pixel[0] = row_pointers[height-y-1][x*4];
-			pixel[1] = row_pointers[height-y-1][x*4+1];
-			pixel[2] = row_pointers[height-y-1][x*4+2];
-			pixel[3] = row_pointers[height-y-1][x*4+3];
-		}
-	}
-	// Read a paletted image
-	else if (color_type == PNG_COLOR_TYPE_PALETTE)
-	{
-		try {
-			result = png_convert_paletted(png_ptr, info_ptr, row_pointers, width, height);
-		}
-		catch (std::exception&)
-		{
-			// Make sure we don't leak memory
-			png_destroy_read_struct(&png_ptr, &info_ptr,
-				&end_info);
-
-			// Rethrow
-			throw;
-		}
-	}
-	else
-	{
-		png_destroy_read_struct(&png_ptr, &info_ptr,
-			&end_info);
-
-		throw pixbuf_io::unrecognized_format();
-	}
-
-	png_destroy_read_struct(&png_ptr, &info_ptr,
-	   &end_info);
-
-	return result;
-}
-
-/** Serialize by encoding a PNG file via libpng.
+#ifdef REPLAY_USE_STBIMAGE_WRITE
+/** Serialize by encoding a PNG file via stbimage_write.
 	\param file The file to serialize to.
 	\param source The image to serialize.
-	\param level Compression level to be used. 0 means no compression, 9 means full compression.
 	\ingroup Imaging
 */
 void
-replay::pixbuf_io::save_to_png_file( std::ostream& file, const pixbuf& source, int level )
+replay::pixbuf_io::save_to_png_file(std::ostream& file, pixbuf const& source)
 {
-	level = std::max( 0, std::min( level, 9 ) );
+    auto write_callback=[](void* context, void* data, int size)
+    {
+        auto file=reinterpret_cast<std::ostream*>(context);
+        file->write(reinterpret_cast<char const*>(data), size);
+    };
 
-	png_structp png_ptr = png_create_write_struct( PNG_LIBPNG_VER_STRING, 0, 0, 0 );
+    int stride=source.get_width()*source.get_channels();
 
-	if ( !png_ptr )
-		throw pixbuf_io::write_error();
-
-	png_infop info_ptr = png_create_info_struct( png_ptr );
-
-	if ( !info_ptr )
-	{
-		png_destroy_write_struct( &png_ptr, (png_infopp)NULL );
-		throw pixbuf_io::write_error();
-	}
-
-	if ( setjmp( png_jmpbuf( png_ptr ) ) )
-	{
-		png_destroy_write_struct( &png_ptr, &info_ptr );
-		throw pixbuf_io::write_error();
-	}
-
-	png_set_write_fn( png_ptr, &file,
-		&png_user_write, &png_user_flush );
-
-	png_set_compression_level( png_ptr,
-		level );
-
-	int color_type;
-
-	switch( source.get_channels() )
-	{
-	default:
-	case 1: color_type = PNG_COLOR_TYPE_GRAY; break;
-	case 2: color_type = PNG_COLOR_TYPE_GRAY_ALPHA; break;
-	case 3: color_type = PNG_COLOR_TYPE_RGB; break;
-	case 4: color_type = PNG_COLOR_TYPE_RGB_ALPHA; break;
-	};
-
-	const png_uint_32 width = source.get_width();
-	const png_uint_32 height = source.get_height();
-
-	png_set_IHDR( png_ptr, info_ptr, width, height, 8, color_type, 
-		PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT );
-
-	// Get pointers to the rows
-	boost::scoped_array<unsigned char*> row_pointer( new unsigned char*[ height ] );
-
-	// const_cast is safe since we never modify the contents
-	for ( png_uint_32 i = 0; i < height; ++i )
-		row_pointer[ i ] = const_cast<unsigned char*>(source.get_pixel( 0, height-i-1 ));
-
-	png_set_rows( png_ptr, info_ptr, row_pointer.get() );
-
-	png_write_png( png_ptr, info_ptr, PNG_TRANSFORM_IDENTITY, 0 );
-
-	png_destroy_write_struct( &png_ptr, &info_ptr );
+    stbi_write_png_to_func(write_callback, &file, source.get_width(), source.get_height(), source.get_channels(),
+                           source.get_data()+stride*(source.get_height()-1), -stride);
 }
 #endif
 
@@ -473,7 +230,7 @@ replay::pixbuf_io::save_to_file(const boost::filesystem::path& filename, const p
 	{
 		save_to_tga_file( file, source );
 	}
-#ifdef REPLAY_USE_LIBPNG
+#ifdef REPLAY_USE_STBIMAGE_WRITE
 	else if ( ext == ".png" )
 	{
 		save_to_png_file( file, source );
@@ -568,30 +325,6 @@ tga_header::save(replay::output_binary_stream& file, replay::pixbuf const& sourc
 			
 			file.write( buffer, 4 );
 		}
-	}
-}
-
-namespace 
-{
-	int stb_read_callback(void* user, char* data, int size)
-	{
-		std::istream* file(reinterpret_cast<std::istream*>(user));
-		file->read(data, size);
-		return static_cast<int>(file->gcount());
-	}
-
-	void stb_skip_callback(void* user, int n)
-	{
-		
-		std::istream* file(reinterpret_cast<std::istream*>(user));
-		for (int i=0; i<n; ++i)
-            file->get();
-	}
-
-	int stb_eof_callback(void* user)
-	{
-		std::istream* file(reinterpret_cast<std::istream*>(user));
-		return file->eof() ? 1 : 0;
 	}
 }
 

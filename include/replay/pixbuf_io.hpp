@@ -66,9 +66,8 @@ namespace pixbuf_io
 	shared_pixbuf			load_from_tga_file(std::istream& file);
 	void					save_to_tga_file(std::ostream& file, const pixbuf& source);
 
-#ifdef REPLAY_USE_LIBPNG
-	shared_pixbuf			load_from_png_file( std::istream& file );
-	void					save_to_png_file( std::ostream& file, const pixbuf& source, int level = 1 );
+#ifdef REPLAY_USE_STBIMAGE_WRITE
+	void					save_to_png_file( std::ostream& file, const pixbuf& source);
 #endif
 }
 

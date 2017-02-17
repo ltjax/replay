@@ -62,18 +62,19 @@ target_link_libraries(${TARGET_NAME}
 # Conditionally use stbimage
 if(REPLAY_USE_STBIMAGE)
   target_compile_definitions(${TARGET_NAME}
-    PRIVATE -DREPLAY_USE_STBIMAGE -DSTBI_NO_STDIO)
+    PUBLIC -DREPLAY_USE_STBIMAGE
+    PRIVATE -DSTBI_NO_STDIO)
   target_include_directories(${TARGET_NAME}
     PRIVATE ${REPLAY_STBIMAGE_PATH})
 endif()
-  
-# Conditionally use libpng
-if(REPLAY_USE_LIBPNG)
+
+# Conditionally use stbimage_write
+if(REPLAY_USE_STBIMAGE_WRITE)
   target_compile_definitions(${TARGET_NAME}
-    PRIVATE -DREPLAY_USE_LIBPNG)
-  target_link_libraries(replay ${PNG_LIBRARIES})
-  target_include_directories(${TARGET_NAME} SYSTEM
-    PRIVATE ${PNG_INCLUDE_DIR})
+    PUBLIC -DREPLAY_USE_STBIMAGE_WRITE
+    PRIVATE -DSTBI_WRITE_NO_STDIO)
+  target_include_directories(${TARGET_NAME}
+    PRIVATE ${REPLAY_STBIMAGE_WRITE_PATH})
 endif()
 
 if(UNIX)
