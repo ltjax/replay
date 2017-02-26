@@ -66,6 +66,7 @@ public:
 	template <class T>
 	input_binary_stream& read(T& result)
 	{
+        static_assert(std::is_pod<T>::value, "Can only read PODs directly");
 		m_stream.read(reinterpret_cast<char*>(&result), sizeof(T));
 		return *this;
 	}
