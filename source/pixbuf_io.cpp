@@ -24,10 +24,9 @@ Copyright (c) 2012 Marius Elvert
 
 */
 
-#include <boost/cstdint.hpp>
 #include <boost/filesystem/convenience.hpp>
 #include <boost/filesystem/fstream.hpp>
-#include <boost/scoped_array.hpp>
+#include <cstdint>
 #include <replay/bstream.hpp>
 #include <replay/pixbuf_io.hpp>
 
@@ -43,9 +42,6 @@ Copyright (c) 2012 Marius Elvert
 
 namespace
 { // BEGIN PRIVATE NAMESPACE
-
-typedef unsigned char uint8;
-typedef unsigned short uint16;
 
 int stb_read_callback(void* user, char* data, int size)
 {
@@ -139,15 +135,15 @@ replay::shared_pixbuf tga_header::load_type2(replay::input_binary_stream& file)
         throw pixbuf_io::unrecognized_format();
 
     // read the freeform id
-    uint8 dummy;
+    std::uint8_t dummy;
     for (int i = 0; i < id_length; ++i)
         file >> dummy;
 
     // now read the image data
     replay::shared_pixbuf result = pixbuf::create(width, height, pixeldepth == 24 ? pixbuf::rgb : pixbuf::rgba);
     unsigned int pixelcount = width * height;
-    uint8* pixel = result->get_data();
-    uint8 buffer[4];
+    std::uint8_t* pixel = result->get_data();
+    std::uint8_t buffer[4];
 
     if (pixeldepth == 24)
     {
@@ -290,8 +286,8 @@ void tga_header::save(replay::output_binary_stream& file, replay::pixbuf const& 
     file << origin[0] << origin[1] << width << height << pixeldepth << image_descriptor;
 
     unsigned int pixelcount = width * height;
-    const uint8* pixel = source.get_data();
-    uint8 buffer[4];
+    const std::uint8_t* pixel = source.get_data();
+    std::uint8_t buffer[4];
     if (pixeldepth == 24)
     {
         for (unsigned int i = 0; i < pixelcount; ++i)

@@ -27,7 +27,7 @@ Copyright (c) 2010 Marius Elvert
 #ifndef replay_box_packer_hpp
 #define replay_box_packer_hpp
 
-#include <boost/utility.hpp>
+#include <boost/noncopyable.hpp>
 #include <replay/box.hpp>
 #include <replay/couple.hpp>
 #include <stdexcept>

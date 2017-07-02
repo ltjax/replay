@@ -27,8 +27,8 @@ Copyright (c) 2010 Marius Elvert
 #ifndef replay_pixbuf_hpp
 #define replay_pixbuf_hpp
 
-#include <boost/shared_ptr.hpp>
-#include <boost/utility.hpp>
+#include <boost/noncopyable.hpp>
+#include <memory>
 #include <string>
 
 namespace replay
@@ -44,11 +44,11 @@ class pixbuf : public boost::noncopyable
 
 public:
     /** A shared (reference-counted) pointer to a pixbuf.
-    */
-    typedef boost::shared_ptr<pixbuf> shared_pixbuf;
+     */
+    typedef std::shared_ptr<pixbuf> shared_pixbuf;
 
     /** Color-Format.
-    */
+     */
     enum color_format
     {
         greyscale, /**< Greyscale (8-bit). */
@@ -57,7 +57,7 @@ public:
     };
 
     /** 8-bit unsigned int.
-    */
+     */
     typedef unsigned char byte;
 
     ~pixbuf();
@@ -99,13 +99,13 @@ public:
 
 private:
     class internal_t;
-    std::auto_ptr<internal_t> data;
+    std::unique_ptr<internal_t> data;
 
     pixbuf();
 };
 
 /** A shared (reference-counted) pointer to a pixbuf.
-*/
+ */
 typedef pixbuf::shared_pixbuf shared_pixbuf;
 }
 

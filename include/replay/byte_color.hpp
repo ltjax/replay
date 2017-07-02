@@ -27,7 +27,7 @@ Copyright (c) 2010 Marius Elvert
 #ifndef replay_byte_color_hpp
 #define replay_byte_color_hpp
 
-#include <boost/cstdint.hpp>
+#include <cstdint>
 #include <memory>
 #include <replay/vector4.hpp>
 
@@ -41,52 +41,52 @@ class byte_color4
 {
 public:
     /** 8-bit unsigned integer.
-    */
-    typedef boost::uint8_t byte;
+     */
+    typedef std::uint8_t byte;
 
     /** Initialized to a specific grey-value. Alpha is fixed at 255.
-    */
+     */
     byte_color4(byte greyvalue = 0);
 
     /** Initialize the color from a 32-bit unsigned integer.
-    */
-    explicit byte_color4(boost::uint32_t rgba);
+     */
+    explicit byte_color4(std::uint32_t rgba);
 
     /** Construct the color from the components.
-    */
+     */
     byte_color4(byte r, byte g, byte b, byte a = 255);
 
     /** Set the color via components.
-    */
+     */
     void set(byte r, byte g, byte b, byte a = 255);
 
     /** Invert all channels.
-    */
+     */
     void negate();
 
     /** Get a pointer to the raw data.
-    */
+     */
     byte* ptr()
     {
         return data;
     }
 
     /** Get a pointer to the raw data.
-    */
+     */
     const byte* ptr() const
     {
         return data;
     }
 
     /** Access a color element.
-    */
+     */
     byte operator[](std::size_t i) const
     {
         return data[i];
     }
 
     /** Access a color element.
-    */
+     */
     byte& operator[](std::size_t i)
     {
         return data[i];
@@ -107,33 +107,33 @@ private:
 };
 
 /** Add two colors, while clamping all channels.
-*/
+ */
 inline byte_color4 operator+(byte_color4 lhs, byte_color4 const& rhs)
 {
     return (lhs += rhs);
 }
 
 /** Add two colors, while clamping all channels.
-*/
+ */
 inline byte_color4 operator-(byte_color4 lhs, byte_color4 const& rhs)
 {
     return (lhs -= rhs);
 }
 
 /** Create a color from a 4D vector.
-*/
+ */
 byte_color4 from_float(vector4f const& rhs);
 
 /** Create a 4D vector from this color.
-*/
+ */
 vector4f to_float(byte_color4 rhs);
 
 /** Linear interpolation of byte_color4 objects.
-*/
+ */
 byte_color4 lerp(byte_color4 lhs, byte_color4 rhs, byte_color4::byte x);
 
 /** sample color palette.
-*/
+ */
 namespace palette
 {
 /** White. */

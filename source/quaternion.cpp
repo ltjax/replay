@@ -179,7 +179,7 @@ void replay::rotate(quaternion& q, const float angle, const vector3f& axis)
     q.normalize();
 }
 
-boost::tuple<replay::vector3f, float> replay::to_axis_angle(const quaternion& obj)
+std::tuple<replay::vector3f, float> replay::to_axis_angle(const quaternion& obj)
 {
     const float angle = 2.f * std::acos(math::clampabs(obj.w, 1.f));
 
@@ -192,8 +192,7 @@ boost::tuple<replay::vector3f, float> replay::to_axis_angle(const quaternion& ob
     else
         factor = 1.f / factor;
 
-    return boost::tuple<replay::vector3f, float>(replay::vector3f(obj.x * factor, obj.y * factor, obj.z * factor),
-                                                 angle);
+    return { replay::vector3f(obj.x * factor, obj.y * factor, obj.z * factor), angle };
 }
 
 const replay::vector3f replay::quaternion::get_transformed_x() const

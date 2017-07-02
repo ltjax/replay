@@ -24,7 +24,8 @@ Copyright (c) 2010 Marius Elvert
 
 */
 
-#include <boost/cstdint.hpp>
+#include <algorithm>
+#include <cstdint>
 #include <replay/pixbuf.hpp>
 #include <vector>
 
@@ -34,8 +35,8 @@ Copyright (c) 2010 Marius Elvert
 class replay::pixbuf::internal_t
 {
 public:
-    typedef boost::uint8_t uint8;
-    typedef boost::uint16_t uint16;
+    typedef std::uint8_t uint8;
+    typedef std::uint16_t uint16;
     typedef unsigned int uint;
 
     unsigned char* data;
@@ -191,47 +192,47 @@ void replay::pixbuf::internal_t::free()
 #endif
 
 /** Create a new invalid pixbuf.
-*/
+ */
 replay::pixbuf::pixbuf()
 : data(new internal_t)
 {
 }
 
 /** Free the image data.
-*/
+ */
 replay::pixbuf::~pixbuf()
 {
 }
 
 /** Get the image width.
-*/
+ */
 unsigned int replay::pixbuf::get_width() const
 {
     return data->width;
 }
 
 /** Get the image height.
-*/
+ */
 unsigned int replay::pixbuf::get_height() const
 {
     return data->height;
 }
 /** Get the image number of channels.
-*/
+ */
 unsigned int replay::pixbuf::get_channels() const
 {
     return data->channels;
 }
 
 /** Get a pointer to the pixel data.
-*/
+ */
 unsigned char* replay::pixbuf::get_data()
 {
     return data->data;
 }
 
 /** Get a constant pointer to the pixel data.
-*/
+ */
 const unsigned char* replay::pixbuf::get_data() const
 {
     return data->data;
@@ -264,7 +265,7 @@ unsigned char* replay::pixbuf::get_pixel(unsigned int x, unsigned int y)
 }
 
 /** Set the pixel.
-*/
+ */
 void replay::pixbuf::set_pixel(
     const unsigned int x, const unsigned int y, const byte r, const byte g, const byte b, const byte a)
 {
@@ -274,17 +275,17 @@ void replay::pixbuf::set_pixel(
 }
 
 /** Set the pixel.
-*/
+ */
 void replay::pixbuf::set_pixel(const unsigned int x, const unsigned int y, const byte grey)
 {
     data->set_pixel(x, y, &grey);
 }
 
 /** Create an image with the given parameters.
-*/
-boost::shared_ptr<replay::pixbuf> replay::pixbuf::create(unsigned int x, unsigned int y, color_format format)
+ */
+std::shared_ptr<replay::pixbuf> replay::pixbuf::create(unsigned int x, unsigned int y, color_format format)
 {
-    boost::shared_ptr<replay::pixbuf> result(new replay::pixbuf);
+    std::shared_ptr<replay::pixbuf> result(new replay::pixbuf);
 
     switch (format)
     {
@@ -310,10 +311,10 @@ boost::shared_ptr<replay::pixbuf> replay::pixbuf::create(unsigned int x, unsigne
     \param w Width of the part to copy.
     \param h Height of the part to copy.
 */
-boost::shared_ptr<replay::pixbuf>
+std::shared_ptr<replay::pixbuf>
 replay::pixbuf::get_sub_image(unsigned int x, unsigned int y, unsigned int w, unsigned int h)
 {
-    boost::shared_ptr<replay::pixbuf> result(new replay::pixbuf);
+    std::shared_ptr<replay::pixbuf> result(new replay::pixbuf);
 
     result->data->create(w, h, this->data->channels);
 
@@ -354,7 +355,7 @@ bool replay::pixbuf::blit(unsigned int dx, unsigned int dy, const pixbuf& source
 }
 
 /** Fill the whole image with the given pixel value.
-*/
+ */
 void replay::pixbuf::fill(const byte r, const byte g, const byte b, const byte a)
 {
     const byte array[] = { r, g, b, a };
@@ -362,7 +363,7 @@ void replay::pixbuf::fill(const byte r, const byte g, const byte b, const byte a
 }
 
 /** Fill the whole image with the given greyscale value.
-*/
+ */
 void replay::pixbuf::fill(const byte grey)
 {
     const byte array[] = { grey, grey, grey, grey };
@@ -370,21 +371,21 @@ void replay::pixbuf::fill(const byte grey)
 }
 
 /** Flip the image vertically.
-*/
+ */
 void replay::pixbuf::flip()
 {
     data->flip();
 }
 
 /** Convert this image to 4-channel RGBA format.
-*/
+ */
 void replay::pixbuf::convert_to_rgba()
 {
     // Nothing to do
     if (data->channels == 4)
         return;
 
-    std::auto_ptr<internal_t> new_data(new internal_t);
+    std::unique_ptr<internal_t> new_data(new internal_t);
 
     new_data->create(data->width, data->height, 4);
 
@@ -421,8 +422,8 @@ void replay::pixbuf::convert_to_rgba()
     }
 
     this->data.reset();
-    this->data = new_data;
+    this->data = std::move(new_data);
 }
 
 /** \defgroup Imaging Image manipulation, loading and saving.
-*/
+ */

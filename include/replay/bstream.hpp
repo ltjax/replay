@@ -27,8 +27,8 @@ Copyright (c) 2010 Marius Elvert
 #ifndef replay_bstream_hpp
 #define replay_bstream_hpp
 
-#include <boost/cstdint.hpp>
 #include <boost/numeric/conversion/cast.hpp>
+#include <cstdint>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -44,7 +44,7 @@ class input_binary_stream
 {
 public:
     /** Construct the stream wrapper.
-    */
+     */
     explicit input_binary_stream(std::istream& rhs)
     : m_stream(rhs)
     {
@@ -127,7 +127,7 @@ public:
     }
 
     /**	Reading operator for strings.
-    */
+     */
     inline input_binary_stream& operator>>(std::string& x)
     {
         boost::uint32_t const length = read<boost::uint32_t>();
@@ -152,7 +152,7 @@ class output_binary_stream
 {
 public:
     /** Construct the stream wrapper.
-    */
+     */
     explicit output_binary_stream(std::ostream& rhs)
     : m_stream(rhs)
     {
@@ -226,7 +226,7 @@ private:
 };
 
 /** Writing operator for strings.
-*/
+ */
 inline output_binary_stream& operator<<(output_binary_stream& lhs, std::string const& rhs)
 {
     lhs.write(boost::numeric_cast<boost::uint32_t>(rhs.size()));

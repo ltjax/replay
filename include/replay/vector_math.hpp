@@ -28,9 +28,8 @@ Copyright (c) 2010-2015 Marius Elvert
 #define replay_vector_math_hpp
 
 #include <algorithm>
-#include <boost/array.hpp>
+#include <array>
 #include <boost/optional.hpp>
-#include <boost/tuple/tuple.hpp>
 #include <ostream>
 #include <replay/lines3.hpp>
 #include <replay/math.hpp>
@@ -54,13 +53,13 @@ public:
     vector2f direction; /**< direction of the line. */
 
     /** Create a degenerated line.
-    */
+     */
     line2()
     {
     }
 
     /** Create a line by setting the origin and direction.
-    */
+     */
     line2(const vector2f& p, const vector2f& d)
     : origin(p)
     , direction(d)
@@ -68,7 +67,7 @@ public:
     }
 
     /** Get a point on the line.
-    */
+     */
     inline vector2f get_point(float x) const
     {
         return direction * x + origin;
@@ -289,7 +288,7 @@ void extract_frustum_sides(const matrix4& scene, plane3* frustum);
 std::size_t gift_wrap(vector2f* points, std::size_t count);
 
 /** Checks whether the given point is inside the given convex hull.
-*/
+ */
 unsigned int convex_hull_contains(vector2f* hull, unsigned int hullsize, const vector2f& point, const float threshold);
 
 /** Compute the intersection of two 2d lines.
@@ -308,7 +307,7 @@ bool intersect_line2(const line2& a, const line2& b, vector2f& result);
 void minimal_sphere(vector3f* p, std::size_t n, vector3f& m, float& r);
 
 /** Matrix decomposition into lower and upper matrices.
-*/
+ */
 namespace lup
 {
 /** Decompose the given matrix into a lower triangular matrix,
@@ -323,7 +322,7 @@ namespace lup
 bool decompose(matrix3& m, vector3<std::size_t>& p, float epsilon = default_epsilon);
 
 /** Solve an equation in LUP decomposed form.
-*/
+ */
 vector3f solve(const matrix3& lu, const vector3<std::size_t>& p, const vector3f& rhs);
 
 /** Solve an equation.
@@ -398,8 +397,8 @@ boost::optional<matrix4> inverse(const matrix4& rhs, double epsilon = 0.0);
 vector3f find_closest_point(const line3& line, const vector3f& point);
 
 /** Compute the square distance of a point to a polygon.
-*/
-float square_distance(const vector3f& point, const boost::array<vector3f, 3>& triangle);
+ */
+float square_distance(const vector3f& point, const std::array<vector3f, 3>& triangle);
 
 /** finds the square of the euclidean distance of a line and a point.
     \ingroup Math
@@ -417,7 +416,7 @@ float square_distance(vector2f const& lhs, vector2f const& rhs);
 float square_distance(vector3f const& lhs, vector3f const& rhs);
 
 /** Compute the square of the euclidean distance of two 3d lines.
-*/
+ */
 float square_distance(const line3& la, const line3& lb);
 
 /** Compute the euclidean distance of a line and a point.

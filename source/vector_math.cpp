@@ -24,9 +24,7 @@ Copyright (c) 2010 Marius Elvert
 
 */
 
-#include <boost/array.hpp>
 #include <boost/range/iterator_range.hpp>
-#include <boost/tuple/tuple.hpp>
 #include <cmath>
 #include <iostream>
 #include <replay/matrix3.hpp>
@@ -38,7 +36,7 @@ namespace
 {
 
 /** Compute the square distance of a point p to a segment from 0,0 to t.
-*/
+ */
 inline float square_distance_point_segment(const replay::vector2f& t, const replay::vector2f& p)
 {
     const float lambda = dot(p, t) / t.squared();
@@ -525,7 +523,7 @@ float replay::square_distance(const line3& la, const line3& lb)
     return square_distance(pa, pb);
 }
 
-float replay::square_distance(const vector3f& point, const boost::array<vector3f, 3>& triangle)
+float replay::square_distance(const vector3f& point, const std::array<vector3f, 3>& triangle)
 {
     const vector3f u = triangle[1] - triangle[0];
     const vector3f v = triangle[2] - triangle[0];

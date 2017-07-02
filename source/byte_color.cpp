@@ -53,7 +53,7 @@ replay::byte_color4& replay::byte_color4::operator-=(byte_color4 const& rhs)
     return *this;
 }
 
-replay::byte_color4::byte_color4(boost::uint32_t rgba)
+replay::byte_color4::byte_color4(std::uint32_t rgba)
 {
     data[0] = (rgba >> 24);
     data[1] = (rgba >> 16) & 0xFF;

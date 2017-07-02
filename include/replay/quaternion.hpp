@@ -27,8 +27,8 @@ Copyright (c) 2010 Marius Elvert
 #ifndef replay_quaternion_hpp
 #define replay_quaternion_hpp
 
-#include <boost/tuple/tuple.hpp>
 #include <replay/vector3.hpp>
+#include <tuple>
 
 namespace replay
 {
@@ -47,7 +47,7 @@ public:
     float z; /**<z*/
 
     /** Set this to the identity rotation.
-    */
+     */
     quaternion& set_identity();
 
     /** Set this to a rotation around an axis.
@@ -65,7 +65,7 @@ public:
     quaternion& set(float w, float x, float y, float z);
 
     /** Create an identity quaternion.
-    */
+     */
     quaternion();
 
     /** Create a rotational quaternion.
@@ -74,7 +74,7 @@ public:
     quaternion(float angle, const vector3f& v);
 
     /** Create a quaternion by setting all individual components.
-    */
+     */
     quaternion(float w, float x, float y, float z);
 
     /** Constructor for user-defined conversions.
@@ -86,23 +86,23 @@ public:
     }
 
     /** Multiply two quaternions.
-    */
+     */
     const quaternion operator*(const quaternion& rhs) const;
 
     /** Add two quaternions.
-    */
+     */
     const quaternion operator+(const quaternion& rhs) const;
 
     /** Subtract two quaternions.
-    */
+     */
     const quaternion operator-(const quaternion& rhs) const;
 
     /** Scalar multiplication.
-    */
+     */
     const quaternion operator*(float v) const;
 
     /** Scalar division.
-    */
+     */
     const quaternion operator/(float v) const;
 
     /** Multiplicative assign of another quaternion.
@@ -121,7 +121,7 @@ public:
     quaternion& operator/=(float rhs);
 
     /** Negated.
-    */
+     */
     const quaternion negated() const;
 
     /** Negate.
@@ -158,27 +158,27 @@ public:
     quaternion& normalize();
 
     /** Get the x vector after transformation by this rotation.
-    */
+     */
     const vector3f get_transformed_x() const;
 
     /** Get the y vector after transformation by this rotation.
-    */
+     */
     const vector3f get_transformed_y() const;
 
     /** Get the z vector after transformation by this rotation.
-    */
+     */
     const vector3f get_transformed_z() const;
 };
 
 /** Compare two quaternions for equality.
-*/
+ */
 inline bool operator==(quaternion const& lhs, quaternion const& rhs)
 {
     return lhs.w == rhs.w && lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z;
 }
 
 /** Compare two quaternions for inequality.
-*/
+ */
 inline bool operator!=(quaternion const& lhs, quaternion const& rhs)
 {
     return !(lhs == rhs);
@@ -197,7 +197,7 @@ const quaternion inverse(const quaternion& obj);
 const float dot(const quaternion& lhs, const quaternion& rhs);
 
 /** Quaternion spherical interpolation.
-*/
+ */
 const quaternion slerp(const quaternion& lhs, const quaternion& rhs, float alpha);
 
 /** Quaternion linear interpolation.
@@ -216,7 +216,7 @@ const quaternion nlerp(const quaternion& lhs, const quaternion& rhs, float alpha
 const quaternion short_rotation(const quaternion& lhs, const quaternion& rhs);
 
 /** Multiply two quaternions.
-*/
+ */
 inline const quaternion multiply(const quaternion& lhs, const quaternion& rhs)
 {
     return quaternion(lhs.w * rhs.w - lhs.x * rhs.x - lhs.y * rhs.y - lhs.z * rhs.z,
@@ -232,10 +232,10 @@ inline const quaternion multiply(const quaternion& lhs, const quaternion& rhs)
     \note The result is undefined if the quaternion is not unit-length.
     \see set_rotation, rotate
 */
-boost::tuple<vector3f, float> to_axis_angle(const quaternion& obj);
+std::tuple<vector3f, float> to_axis_angle(const quaternion& obj);
 
 /** Transform a vector by a quaternion.
-*/
+ */
 vector3f transform(const quaternion& lhs, const vector3f& rhs);
 
 /** Concaternate a rotation to a given quaternion.
@@ -248,7 +248,7 @@ vector3f transform(const quaternion& lhs, const vector3f& rhs);
 void rotate(quaternion& obj, const float angle, const vector3f& axis);
 
 /** Find the shortest arc rotation that maps vector a to vector b.
-*/
+ */
 const quaternion shortest_arc(const vector3f& a, const vector3f& b);
 }
 
