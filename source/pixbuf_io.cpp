@@ -85,15 +85,15 @@ public:
     void save(replay::output_binary_stream& file, replay::pixbuf const& source);
 
 private:
-    boost::uint8_t id_length;
-    boost::uint8_t colormap_type;
-    boost::uint8_t image_type;
-    boost::uint8_t colormap[5];
-    boost::uint16_t origin[2];
-    boost::uint16_t width;
-    boost::uint16_t height;
-    boost::uint8_t pixeldepth;
-    boost::uint8_t image_descriptor;
+    std::uint8_t id_length;
+    std::uint8_t colormap_type;
+    std::uint8_t image_type;
+    std::uint8_t colormap[5];
+    std::uint16_t origin[2];
+    std::uint16_t width;
+    std::uint16_t height;
+    std::uint8_t pixeldepth;
+    std::uint8_t image_descriptor;
 
     replay::shared_pixbuf load_type2(replay::input_binary_stream& file);
 };

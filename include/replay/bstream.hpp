@@ -82,7 +82,7 @@ public:
     }
 
     /**Reading operator for unsigned ints.*/
-    input_binary_stream& operator>>(boost::uint32_t& x)
+    input_binary_stream& operator>>(std::uint32_t& x)
     {
         return read(x);
     }
@@ -93,7 +93,7 @@ public:
     }
 
     /**Binary stream reading operator for unsigned chars.*/
-    input_binary_stream& operator>>(boost::uint8_t& x)
+    input_binary_stream& operator>>(std::uint8_t& x)
     {
         return read(x);
     }
@@ -105,7 +105,7 @@ public:
     }
 
     /**Reading operator for unsigned shorts.*/
-    input_binary_stream& operator>>(boost::uint16_t& x)
+    input_binary_stream& operator>>(std::uint16_t& x)
     {
         return read(x);
     }
@@ -130,7 +130,7 @@ public:
      */
     inline input_binary_stream& operator>>(std::string& x)
     {
-        boost::uint32_t const length = read<boost::uint32_t>();
+        std::uint32_t const length = read<std::uint32_t>();
 
         if (length > 0)
         {
@@ -178,7 +178,7 @@ public:
     }
 
     /**Writing operator for unsigned ints.*/
-    output_binary_stream& operator<<(boost::uint32_t rhs)
+    output_binary_stream& operator<<(std::uint32_t rhs)
     {
         return write(rhs);
     }
@@ -189,7 +189,7 @@ public:
     }
 
     /**Writing operator for unsigned chars.*/
-    output_binary_stream& operator<<(boost::uint8_t rhs)
+    output_binary_stream& operator<<(std::uint8_t rhs)
     {
         return write(rhs);
     }
@@ -200,7 +200,7 @@ public:
     }
 
     /**Writing operator for unsigned shorts.*/
-    output_binary_stream& operator<<(boost::uint16_t rhs)
+    output_binary_stream& operator<<(std::uint16_t rhs)
     {
         return write(rhs);
     }
@@ -229,7 +229,7 @@ private:
  */
 inline output_binary_stream& operator<<(output_binary_stream& lhs, std::string const& rhs)
 {
-    lhs.write(boost::numeric_cast<boost::uint32_t>(rhs.size()));
+    lhs.write(boost::numeric_cast<std::uint32_t>(rhs.size()));
 
     if (rhs.length() > 0)
     {
