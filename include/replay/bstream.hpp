@@ -87,7 +87,7 @@ public:
         return read(x);
     }
     /**Reading operator for signed ints.*/
-    input_binary_stream& operator>>(boost::int32_t& x)
+    input_binary_stream& operator>>(std::int32_t& x)
     {
         return read(x);
     }
@@ -99,7 +99,7 @@ public:
     }
 
     /**Reading operator for signed chars.*/
-    input_binary_stream& operator>>(boost::int8_t& x)
+    input_binary_stream& operator>>(std::int8_t& x)
     {
         return read(x);
     }
@@ -110,7 +110,7 @@ public:
         return read(x);
     }
     /**Reading operator for signed shorts.*/
-    input_binary_stream& operator>>(boost::int16_t& x)
+    input_binary_stream& operator>>(std::int16_t& x)
     {
         return read(x);
     }
@@ -183,7 +183,7 @@ public:
         return write(rhs);
     }
     /**Writing operator for signed ints.*/
-    output_binary_stream& operator<<(boost::int32_t rhs)
+    output_binary_stream& operator<<(std::int32_t rhs)
     {
         return write(rhs);
     }
@@ -194,7 +194,7 @@ public:
         return write(rhs);
     }
     /**Writing operator for signed chars.*/
-    output_binary_stream& operator<<(boost::int8_t rhs)
+    output_binary_stream& operator<<(std::int8_t rhs)
     {
         return write(rhs);
     }
@@ -205,7 +205,7 @@ public:
         return write(rhs);
     }
     /**Writing operator for signed shorts.*/
-    output_binary_stream& operator<<(boost::int16_t rhs)
+    output_binary_stream& operator<<(std::int16_t rhs)
     {
         return write(rhs);
     }
