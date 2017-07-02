@@ -29,95 +29,141 @@ Copyright (c) 2010 Marius Elvert
 
 /**Replay namespace*/
 
-namespace replay {
-	
+namespace replay
+{
+
 /** A homogenous binary tuple type.
-	\ingroup Container
+    \ingroup Container
 */
-template < class T > class couple
+template <class T> class couple
 {
 private:
-	T			array[ 2 ];
+    T array[2];
+
 public:
+    /** Empty constructor.
+        Leave the elements default-initialized.
+    */
+    inline couple()
+    {
+    }
 
-	/** Empty constructor.
-		Leave the elements default-initialized.
-	*/
-	inline couple() {}
+    /**	Constructor.
+        \param a first value.
+        \param b second value.
+        \see replay::make_couple
+    */
+    inline couple(const T& a, const T& b)
+    {
+        array[0] = a;
+        array[1] = b;
+    }
 
-	/**	Constructor.
-		\param a first value.
-		\param b second value.
-		\see replay::make_couple
-	*/
-	inline couple( const T& a, const T& b ) { array[ 0 ] = a; array[ 1 ] = b; }
+    /** Get an element from the couple.
+    */
+    inline T& operator[](const std::size_t i)
+    {
+        return array[i];
+    }
 
-	/** Get an element from the couple.
-	*/
-	inline T& operator[]( const std::size_t i ) { return array[ i ]; }
+    /** Get an element from a couple.
+    */
+    inline const T& operator[](const std::size_t i) const
+    {
+        return array[i];
+    }
 
-	/** Get an element from a couple.
-	*/
-	inline const T& operator[]( const std::size_t i ) const { return array[ i ]; }
+    /** Get the first element.
+    */
+    inline const T& get0() const
+    {
+        return array[0];
+    }
 
-	/** Get the first element.
-	*/
-	inline const T& get0() const { return array[ 0 ]; }
+    /** Get the first element.
+    */
+    inline T& get0()
+    {
+        return array[0];
+    }
 
-	/** Get the first element.
-	*/
-	inline T& get0() { return array[ 0 ]; }
+    /** Get the second element.
+    */
+    inline const T& get1() const
+    {
+        return array[1];
+    }
 
-	/** Get the second element.
-	*/
-	inline const T& get1() const { return array[ 1 ]; }
+    /** Get the second element.
+    */
+    inline T& get1()
+    {
+        return array[1];
+    }
 
-	/** Get the second element.
-	*/
-	inline T& get1() { return array[ 1 ]; }
+    /** Get a pointer to the array.
+    */
+    inline const T* ptr() const
+    {
+        return array;
+    }
 
-	/** Get a pointer to the array.
-	*/
-	inline const T* ptr() const { return array; }
+    /** Get a pointer to the array.
+    */
+    inline T* ptr()
+    {
+        return array;
+    }
 
-	/** Get a pointer to the array.
-	*/
-	inline T* ptr() { return array; }
+    /** Updates the values in the couple.
+        \param a the first value.
+        \param b the seconf value.
+    */
+    inline couple<T>& set(const T& a, const T& b)
+    {
+        array[0] = a;
+        array[1] = b;
+        return *this;
+    }
 
-	/** Updates the values in the couple.
-		\param a the first value.
-		\param b the seconf value.
-	*/
-	inline couple< T >& set( const T& a, const T& b ) { array[ 0 ] = a; array[ 1 ] = b; return *this; }
+    /** Swap the values in the couple.
+    */
+    inline couple<T>& swap()
+    {
+        const T x = array[0];
+        array[0] = array[1];
+        array[1] = x;
+        return *this;
+    }
 
-	/** Swap the values in the couple.
-	*/
-	inline couple< T >& swap() { const T x = array[ 0 ]; array[ 0 ] = array[ 1 ]; array[ 1 ] = x; return *this; }
+    /** Inequantity.
+    */
+    bool operator!=(const couple<T>& other) const
+    {
+        return array[0] != other.array[0] || array[1] != other.array[1];
+    }
 
-	/** Inequantity.
-	*/
-	bool operator!=( const couple< T >& other ) const { return array[ 0 ] != other.array[ 0 ] || array[ 1 ] != other.array[ 1 ]; }
-	
-	/** Equantity.
-	*/
-	bool operator==( const couple< T >& other ) const { return array[ 0 ] == other.array[ 0 ] && array[ 1 ] == other.array[ 1 ]; }
-	
+    /** Equantity.
+    */
+    bool operator==(const couple<T>& other) const
+    {
+        return array[0] == other.array[0] && array[1] == other.array[1];
+    }
 };
 
 /** Couple of floats.
 */
-typedef couple< float > fcouple;
+typedef couple<float> fcouple;
 
 /** Make a couple without providing template parameters
-	\param a The first value.
-	\param b The second value.
-	\return The new couple object.
+    \param a The first value.
+    \param b The second value.
+    \return The new couple object.
 */
-template < class T > couple< T > make_couple( const T& a, const T& b )
+template <class T> couple<T> make_couple(const T& a, const T& b)
 {
-	return couple< T >( a, b );
+    return couple<T>(a, b);
 }
-
 }
 
 #endif // replay_couple_hpp

@@ -27,121 +27,171 @@ Copyright (c) 2010 Marius Elvert
 #ifndef replay_box_hpp
 #define replay_box_hpp
 
-namespace replay {
+namespace replay
+{
 
 /** 2-dimensional rectangle.
 */
-template < class T > struct box
+template <class T> struct box
 {
-	/** x0 */
-	T			left;
-	/** y0 */
-	T			bottom;
-	/** x1 */
-	T			right;
-	/** y1 */
-	T			top;
+    /** x0 */
+    T left;
+    /** y0 */
+    T bottom;
+    /** x1 */
+    T right;
+    /** y1 */
+    T top;
 
-	/** default ctor. leaves the values uninitialized.
-	*/
-	box() {}
+    /** default ctor. leaves the values uninitialized.
+    */
+    box()
+    {
+    }
 
-	/** cast ctor.
-	*/
-	template < class U > explicit
-	box( const box< U >& x ) : left( static_cast< T >( x.left ) ), bottom( static_cast< T >( x.bottom ) ),
-	 right( static_cast< T >( x.right ) ), top( static_cast< T >( x.top ) ) {}
+    /** cast ctor.
+    */
+    template <class U>
+    explicit box(const box<U>& x)
+    : left(static_cast<T>(x.left))
+    , bottom(static_cast<T>(x.bottom))
+    , right(static_cast<T>(x.right))
+    , top(static_cast<T>(x.top))
+    {
+    }
 
-	/** create a box by giving it's constraints.
-	*/
-	box( const T left, const T bottom, const T right, const T top )
-	: left( left ), bottom( bottom ), right( right ), top( top ) {}
+    /** create a box by giving it's constraints.
+    */
+    box(const T left, const T bottom, const T right, const T top)
+    : left(left)
+    , bottom(bottom)
+    , right(right)
+    , top(top)
+    {
+    }
 
-	/** create a box from given sizes.
-	*/
-	box( const T width, const T height )
-	: left( 0 ), bottom( 0 ), right( width ), top( height ) {}
+    /** create a box from given sizes.
+    */
+    box(const T width, const T height)
+    : left(0)
+    , bottom(0)
+    , right(width)
+    , top(height)
+    {
+    }
 
-	/** get the width of the box.
-	*/
-	T		get_width() const { return right - left; }
-	
-	/** get the height of the box.
-	*/
-	T		get_height() const { return top - bottom; }
+    /** get the width of the box.
+    */
+    T get_width() const
+    {
+        return right - left;
+    }
 
-	/** insert a point so that the box encloses the box.
-	*/
-	void	insert( const T x, const T y )
-	{
-		if ( x < left ) left = x; else if ( x > right )	right = x;
-		if ( y < bottom ) bottom = y; else if ( y > top ) top = y;
-	} 
+    /** get the height of the box.
+    */
+    T get_height() const
+    {
+        return top - bottom;
+    }
 
-	/** move the box.
-	*/
-	void	translate( const T x, const T y ) { left += x; right += x; bottom += y; top += y; }
+    /** insert a point so that the box encloses the box.
+    */
+    void insert(const T x, const T y)
+    {
+        if (x < left)
+            left = x;
+        else if (x > right)
+            right = x;
+        if (y < bottom)
+            bottom = y;
+        else if (y > top)
+            top = y;
+    }
 
-	/** clamp this box into another.
-	*/
-	void	clamp_into( const box< T >& b )
-	{
-		left = ( left < b.left ) ? b.left : left;
-		right = ( right < b.right ) ? right : b.right;
-		bottom = ( bottom < b.bottom ) ? b.bottom : bottom;
-		top = ( top < b.top ) ? top : b.top;
-	}
+    /** move the box.
+    */
+    void translate(const T x, const T y)
+    {
+        left += x;
+        right += x;
+        bottom += y;
+        top += y;
+    }
 
-	/** check whether this box intersects the other one.
-	*/
-	bool	intersects( const box< T >& b ) const
-	{
-		return (right > b.left) && ( left < b.right ) && ( top > b.bottom ) && ( bottom < b.top );
-	}
+    /** clamp this box into another.
+    */
+    void clamp_into(const box<T>& b)
+    {
+        left = (left < b.left) ? b.left : left;
+        right = (right < b.right) ? right : b.right;
+        bottom = (bottom < b.bottom) ? b.bottom : bottom;
+        top = (top < b.top) ? top : b.top;
+    }
 
-	/** expand this box by a margin.
-	*/
-	box<T>	expanded( const T margin ) const
-	{
-		return box< T >( left-margin, bottom-margin, right+margin, top+margin );
-	}
+    /** check whether this box intersects the other one.
+    */
+    bool intersects(const box<T>& b) const
+    {
+        return (right > b.left) && (left < b.right) && (top > b.bottom) && (bottom < b.top);
+    }
 
-	/** set the box by constraints.
-	*/
-	void		set( const T x1, const T y1, const T x2, const T y2 ) { left=x1; right=x2; bottom=y1; top=y2; }
-	
-	/** set the size of the box.
-	*/
-	void		set_size( const T w, const T h ) { right = left + w; top = bottom + h; }
-	
-	/** set the origin of the box.
-	*/
-	void		set_origin( const T x, const T y ) { this->translate( x - left, y - bottom ); }
+    /** expand this box by a margin.
+    */
+    box<T> expanded(const T margin) const
+    {
+        return box<T>(left - margin, bottom - margin, right + margin, top + margin);
+    }
 
-	/** check whether a given point is inside the box.
-	*/
-	bool		is_inside( const T x, const T y ) const { return ( x >= left ) && ( x <= right ) && ( y >= bottom ) && ( y <= top ); }
+    /** set the box by constraints.
+    */
+    void set(const T x1, const T y1, const T x2, const T y2)
+    {
+        left = x1;
+        right = x2;
+        bottom = y1;
+        top = y2;
+    }
 
-	/** Create a box from size and origin vectors.
-	*/
-	template <class P> static
-	box<T>		from_origin_and_size(P origin, P size)
-	{
-		return box<T>(origin[0], origin[1], origin[0]+size[0], origin[1]+size[1]);
-	}
+    /** set the size of the box.
+    */
+    void set_size(const T w, const T h)
+    {
+        right = left + w;
+        top = bottom + h;
+    }
+
+    /** set the origin of the box.
+    */
+    void set_origin(const T x, const T y)
+    {
+        this->translate(x - left, y - bottom);
+    }
+
+    /** check whether a given point is inside the box.
+    */
+    bool is_inside(const T x, const T y) const
+    {
+        return (x >= left) && (x <= right) && (y >= bottom) && (y <= top);
+    }
+
+    /** Create a box from size and origin vectors.
+    */
+    template <class P> static box<T> from_origin_and_size(P origin, P size)
+    {
+        return box<T>(origin[0], origin[1], origin[0] + size[0], origin[1] + size[1]);
+    }
 };
-
 }
 
-template < class stream_type, class data_type > stream_type& operator<<( stream_type& stream, const replay::box< data_type >& x )
+template <class stream_type, class data_type>
+stream_type& operator<<(stream_type& stream, const replay::box<data_type>& x)
 {
-	return ( stream << x.left << x.bottom << x.right << x.top );
+    return (stream << x.left << x.bottom << x.right << x.top);
 }
 
-
-template < class stream_type, class data_type > stream_type& operator>>( stream_type& stream, replay::box< data_type >& x )
+template <class stream_type, class data_type> stream_type& operator>>(stream_type& stream, replay::box<data_type>& x)
 {
-	return ( stream >> x.left >> x.bottom >> x.right >> x.top );
+    return (stream >> x.left >> x.bottom >> x.right >> x.top);
 }
 
 #endif // replay_box_hpp

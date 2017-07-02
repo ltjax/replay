@@ -27,49 +27,46 @@ Copyright (c) 2010 Marius Elvert
 #ifndef replay_box_packer_hpp
 #define replay_box_packer_hpp
 
-#include <stdexcept>
 #include <boost/utility.hpp>
 #include <replay/box.hpp>
 #include <replay/couple.hpp>
+#include <stdexcept>
 
 namespace replay
 {
 
 /** A box packer for 2-dimensions.
-	This algorithm can be used to position a set of axis-aligned rectangles in the plane,
-	so that they do not overlap and that all rectangles together need only a small bounding box.
-	It can be used to generate texture atlases.
-	This uses a first fit packing algorithm.
+    This algorithm can be used to position a set of axis-aligned rectangles in the plane,
+    so that they do not overlap and that all rectangles together need only a small bounding box.
+    It can be used to generate texture atlases.
+    This uses a first fit packing algorithm.
 */
-class box_packer :
-	public boost::noncopyable
+class box_packer : public boost::noncopyable
 {
 public:
-	/** Exception class that is thrown when a rect cannot be packed.
-		\see pixbuf_packer::pack
-	*/
-	class pack_overflow : public std::exception {};
+    /** Exception class that is thrown when a rect cannot be packed.
+        \see pixbuf_packer::pack
+    */
+    class pack_overflow : public std::exception
+    {
+    };
 
+    box_packer(int width, int height, int padding = 0);
+    ~box_packer();
 
-	box_packer(int width, int height, int padding=0);
-	~box_packer();
+    const box<int>& pack(int width, int height);
 
+    bool pack(int width, int height, box<int>* rect);
 
-	const box< int >&		pack(int width, int height);
-	
-	bool					pack(int width, int height, box<int>* rect);
-
-	int						get_width() const;
-	int						get_height() const;
-	int						get_padding() const;
+    int get_width() const;
+    int get_height() const;
+    int get_padding() const;
 
 private:
-	class node;
-	node*					root;
-	int						padding;
-
+    class node;
+    node* root;
+    int padding;
 };
-
 }
 
 #endif // replay_box_packer_hpp

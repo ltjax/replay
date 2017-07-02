@@ -27,126 +27,142 @@ Copyright (c) 2010 Marius Elvert
 #ifndef replay_byte_color_hpp
 #define replay_byte_color_hpp
 
-#include <memory>
 #include <boost/cstdint.hpp>
+#include <memory>
 #include <replay/vector4.hpp>
 
-namespace replay {
+namespace replay
+{
 
 /** Represents a 32-bit color as a 4 byte array in RGBA.
-	\ingroup Imaging
+    \ingroup Imaging
 */
 class byte_color4
 {
 public:
-	/** 8-bit unsigned integer.
-	*/
-	typedef boost::uint8_t	byte;
-	
-	/** Initialized to a specific grey-value. Alpha is fixed at 255.
-	*/
-							byte_color4(byte greyvalue=0);
-							
-	/** Initialize the color from a 32-bit unsigned integer.
-	*/
-	explicit				byte_color4(boost::uint32_t rgba);
-	
-	/** Construct the color from the components.
-	*/
-							byte_color4(byte r, byte g, byte b, byte a=255);
+    /** 8-bit unsigned integer.
+    */
+    typedef boost::uint8_t byte;
 
-	/** Set the color via components.
-	*/
-	void					set(byte r, byte g, byte b, byte a=255);
-	
-	/** Invert all channels.
-	*/
-	void					negate();
+    /** Initialized to a specific grey-value. Alpha is fixed at 255.
+    */
+    byte_color4(byte greyvalue = 0);
 
+    /** Initialize the color from a 32-bit unsigned integer.
+    */
+    explicit byte_color4(boost::uint32_t rgba);
 
-	/** Get a pointer to the raw data.
-	*/
-	byte*					ptr() { return data; }
-	
-	/** Get a pointer to the raw data.
-	*/
-	const byte*				ptr() const { return data; }
+    /** Construct the color from the components.
+    */
+    byte_color4(byte r, byte g, byte b, byte a = 255);
 
-	
-	/** Access a color element.
-	*/
-	byte					operator[](std::size_t i) const { return data[i]; }
+    /** Set the color via components.
+    */
+    void set(byte r, byte g, byte b, byte a = 255);
 
-	/** Access a color element.
-	*/
-	byte&					operator[](std::size_t i) { return data[i]; }
+    /** Invert all channels.
+    */
+    void negate();
 
-	/** In-place add a color.
-		Clamps all channels.
-	*/
-	byte_color4&			operator+=(byte_color4 const& rhs);
+    /** Get a pointer to the raw data.
+    */
+    byte* ptr()
+    {
+        return data;
+    }
 
-	/** In-place subtract a color.
-		Clamps all channels.
-	*/
-	byte_color4&			operator-=(byte_color4 const& rhs);
+    /** Get a pointer to the raw data.
+    */
+    const byte* ptr() const
+    {
+        return data;
+    }
+
+    /** Access a color element.
+    */
+    byte operator[](std::size_t i) const
+    {
+        return data[i];
+    }
+
+    /** Access a color element.
+    */
+    byte& operator[](std::size_t i)
+    {
+        return data[i];
+    }
+
+    /** In-place add a color.
+        Clamps all channels.
+    */
+    byte_color4& operator+=(byte_color4 const& rhs);
+
+    /** In-place subtract a color.
+        Clamps all channels.
+    */
+    byte_color4& operator-=(byte_color4 const& rhs);
 
 private:
-	byte					data[4];
-
+    byte data[4];
 };
 
 /** Add two colors, while clamping all channels.
 */
-inline byte_color4			operator+(byte_color4 lhs, byte_color4 const& rhs) {return (lhs += rhs);}
+inline byte_color4 operator+(byte_color4 lhs, byte_color4 const& rhs)
+{
+    return (lhs += rhs);
+}
 
 /** Add two colors, while clamping all channels.
 */
-inline byte_color4			operator-(byte_color4 lhs, byte_color4 const& rhs) {return (lhs -= rhs);}
+inline byte_color4 operator-(byte_color4 lhs, byte_color4 const& rhs)
+{
+    return (lhs -= rhs);
+}
 
 /** Create a color from a 4D vector.
 */
-byte_color4					from_float(vector4f const& rhs);
+byte_color4 from_float(vector4f const& rhs);
 
 /** Create a 4D vector from this color.
 */
-vector4f					to_float(byte_color4 rhs);
+vector4f to_float(byte_color4 rhs);
 
 /** Linear interpolation of byte_color4 objects.
 */
-byte_color4					lerp(byte_color4 lhs, byte_color4 rhs, byte_color4::byte x);
+byte_color4 lerp(byte_color4 lhs, byte_color4 rhs, byte_color4::byte x);
 
 /** sample color palette.
 */
-namespace palette {
-	/** White. */
-	const byte_color4 white( 255, 255, 255 );
-	/** Black. */
-	const byte_color4 black(   0,   0,   0 );
-	/** Dark grey. */
-	const byte_color4 darkgrey(  96,  96,  96 );
-	/** Light grey. */
-	const byte_color4 lightgrey( 192, 192, 192 );
-	/** Medium grey. */
-	const byte_color4 grey( 128, 128, 128 );
-	/** Red. */
-	const byte_color4 red( 255,   0,   0 );
-	/** Green. */
-	const byte_color4 green(   0, 255,   0 );
-	/** Yellow. */
-	const byte_color4 yellow( 255, 255,   0 );
-	/** Blue. */
-	const byte_color4 blue(   0,   0, 255 );
-	/** Light cyan. */
-	const byte_color4 lightcyan( 196, 255, 255 );
-	/** Medium blue. */
-	const byte_color4 mediumblue(   0, 128, 255 );
-	/** Dark blue. */
-	const byte_color4 darkblue(   0,   0, 128 );
-	/** White with 50% alpha. */
-	const byte_color4 halfalpha( 255, 255, 255, 128 );
+namespace palette
+{
+/** White. */
+const byte_color4 white(255, 255, 255);
+/** Black. */
+const byte_color4 black(0, 0, 0);
+/** Dark grey. */
+const byte_color4 darkgrey(96, 96, 96);
+/** Light grey. */
+const byte_color4 lightgrey(192, 192, 192);
+/** Medium grey. */
+const byte_color4 grey(128, 128, 128);
+/** Red. */
+const byte_color4 red(255, 0, 0);
+/** Green. */
+const byte_color4 green(0, 255, 0);
+/** Yellow. */
+const byte_color4 yellow(255, 255, 0);
+/** Blue. */
+const byte_color4 blue(0, 0, 255);
+/** Light cyan. */
+const byte_color4 lightcyan(196, 255, 255);
+/** Medium blue. */
+const byte_color4 mediumblue(0, 128, 255);
+/** Dark blue. */
+const byte_color4 darkblue(0, 0, 128);
+/** White with 50% alpha. */
+const byte_color4 halfalpha(255, 255, 255, 128);
 }
-
 }
 
 #endif

@@ -27,87 +27,86 @@ Copyright (c) 2010 Marius Elvert
 #ifndef replay_pixbuf_hpp
 #define replay_pixbuf_hpp
 
-#include <string>
-#include <boost/utility.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/utility.hpp>
+#include <string>
 
-namespace replay {
+namespace replay
+{
 
 /** Pixel based image.
-	\note The image data is stored row-wise without padding, beginning with the bottom-most. This is different from, e.g., the Windows API, where images are stored with the top-most row first.
-	\ingroup Imaging
+    \note The image data is stored row-wise without padding, beginning with the bottom-most. This is different from,
+   e.g., the Windows API, where images are stored with the top-most row first.
+    \ingroup Imaging
 */
-class pixbuf :
-	public boost::noncopyable
+class pixbuf : public boost::noncopyable
 {
-	
+
 public:
-	/** A shared (reference-counted) pointer to a pixbuf.
-	*/
-	typedef boost::shared_ptr<pixbuf>	shared_pixbuf;
+    /** A shared (reference-counted) pointer to a pixbuf.
+    */
+    typedef boost::shared_ptr<pixbuf> shared_pixbuf;
 
-	/** Color-Format.
-	*/
-	enum color_format {
-		greyscale, /**< Greyscale (8-bit). */
-		rgb, /**< Red, Green, Blue (24-bit). */
-		rgba /**< Red, Green, Blue and Alpha (32-bit). */
-	};
+    /** Color-Format.
+    */
+    enum color_format
+    {
+        greyscale, /**< Greyscale (8-bit). */
+        rgb,       /**< Red, Green, Blue (24-bit). */
+        rgba       /**< Red, Green, Blue and Alpha (32-bit). */
+    };
 
-	/** 8-bit unsigned int.
-	*/
-	typedef unsigned char		byte;
+    /** 8-bit unsigned int.
+    */
+    typedef unsigned char byte;
 
+    ~pixbuf();
 
-								~pixbuf();
+    unsigned int get_width() const;
+    unsigned int get_height() const;
+    unsigned int get_channels() const;
+    const unsigned char* get_data() const;
+    unsigned char* get_data();
 
-	unsigned int				get_width() const;
-	unsigned int				get_height() const;
-	unsigned int				get_channels() const;
-	const unsigned char*		get_data() const;
-	unsigned char*				get_data();
+    const unsigned char* get_pixel(unsigned int i) const;
 
-	const unsigned char*		get_pixel( unsigned int i ) const;
+    unsigned char* get_pixel(unsigned int x, unsigned int y);
+    const unsigned char* get_pixel(unsigned int x, unsigned int y) const;
 
-	unsigned char*				get_pixel( unsigned int x, unsigned int y );
-	const unsigned char*		get_pixel( unsigned int x, unsigned int y ) const;
+    bool blit(unsigned int dx,
+              unsigned int dy,
+              unsigned int w,
+              unsigned int h,
+              unsigned int sx,
+              unsigned int sy,
+              const pixbuf& source);
 
-	bool						blit( unsigned int dx, unsigned int dy,
-									  unsigned int w, unsigned int h,
-									  unsigned int sx, unsigned int sy,
-									  const pixbuf& source ); 
+    bool blit(unsigned int dx, unsigned int dy, const pixbuf& source);
 
-	bool						blit( unsigned int dx, unsigned int dy,
-									  const pixbuf& source );
+    void fill(const byte r, const byte g, const byte b, const byte a = 255);
+    void fill(const byte grey);
 
-	void						fill( const byte r, const byte g, const byte b, const byte a = 255 );
-	void						fill( const byte grey );
+    void flip();
 
-	void						flip();
+    void set_pixel(const unsigned int x, const unsigned int y, const byte r, const byte g, const byte b, const byte a);
 
-	void						set_pixel( const unsigned int x, const unsigned int y,
-									const byte r, const byte g, const byte b, const byte a );
+    void set_pixel(const unsigned int x, const unsigned int y, const byte grey);
 
-	void						set_pixel( const unsigned int x, const unsigned int y,
-									const byte grey );
+    void convert_to_rgba();
 
-	void						convert_to_rgba();
-	
-	static
-	shared_pixbuf				create(unsigned int x, unsigned int y, color_format format);
-	shared_pixbuf				get_sub_image(unsigned int x, unsigned int y, unsigned int w, unsigned int h);
+    static shared_pixbuf create(unsigned int x, unsigned int y, color_format format);
+    shared_pixbuf get_sub_image(unsigned int x, unsigned int y, unsigned int w, unsigned int h);
 
 private:
-	class internal_t;
-	std::auto_ptr<internal_t>	data;
+    class internal_t;
+    std::auto_ptr<internal_t> data;
 
-	pixbuf();
+    pixbuf();
 };
 
 /** A shared (reference-counted) pointer to a pixbuf.
 */
 typedef pixbuf::shared_pixbuf shared_pixbuf;
-
 }
 
 #endif // replay_pixbuf_hpp
