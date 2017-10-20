@@ -27,86 +27,76 @@ Copyright (c) 2010 Marius Elvert
 #include <replay/plane3.hpp>
 #include <replay/vector_math.hpp>
 
-replay::plane3&
-replay::plane3::set( const vector3f& normal, const float d )
+replay::plane3& replay::plane3::set(const vector3f& normal, const float d)
 {
-	this->normal = normal;
-	this->d = d;
-	return *this;
+    this->normal = normal;
+    this->d = d;
+    return *this;
 }
 
-replay::plane3&
-replay::plane3::set( const float a, const float b, const float c, const float d )
+replay::plane3& replay::plane3::set(const float a, const float b, const float c, const float d)
 {
-	this->normal.reset( a, b, c );
-	this->d = d;
-	return *this;
+    this->normal.reset(a, b, c);
+    this->d = d;
+    return *this;
 }
 
-replay::plane3&
-replay::plane3::set( const replay::plane3& plane )
+replay::plane3& replay::plane3::set(const replay::plane3& plane)
 {
-	return ( *this = plane );
+    return (*this = plane);
 }
 
-void
-replay::plane3::flip()
+void replay::plane3::flip()
 {
-	normal.negate();
-	d = -d;
+    normal.negate();
+    d = -d;
 }
 
-void
-replay::plane3::clear()
+void replay::plane3::clear()
 {
-	normal.reset();
-	d = 0.f;
+    normal.reset();
+    d = 0.f;
 }
 
-replay::plane3::plane3( const vector3f& normal, const float d )
-: normal( normal ), d( d )
+replay::plane3::plane3(const vector3f& normal, const float d)
+: normal(normal)
+, d(d)
 {
 }
 
-replay::plane3::plane3( const float a, const float b, const float c, const float d )
-: normal( a, b, c ), d( d )
+replay::plane3::plane3(const float a, const float b, const float c, const float d)
+: normal(a, b, c)
+, d(d)
 {
 }
 
-void
-replay::plane3::scale( const float factor )
+void replay::plane3::scale(const float factor)
 {
-	this->normal *= factor;
-	this->d *= factor;
+    this->normal *= factor;
+    this->d *= factor;
 }
 
-replay::plane3
-replay::plane3::get_flipped( const plane3& from )
+replay::plane3 replay::plane3::get_flipped(const plane3& from)
 {
-	return plane3( -from.normal, -from.d );
+    return plane3(-from.normal, -from.d);
 }
 
-replay::plane3
-replay::plane3::construct_from_pointnormal( const vector3f& normal, const vector3f& point )
+replay::plane3 replay::plane3::construct_from_pointnormal(const vector3f& normal, const vector3f& point)
 {
-	return plane3( normal, -dot( normal, point ) );
+    return plane3(normal, -dot(normal, point));
 }
 
-replay::plane3
-replay::plane3::construct_from_points( const vector3f& p0, const vector3f& p1, const vector3f& p2 )
+replay::plane3 replay::plane3::construct_from_points(const vector3f& p0, const vector3f& p1, const vector3f& p2)
 {
-	return construct_from_pointnormal( cross( p1-p0, p2-p0 ), p0 );
+    return construct_from_pointnormal(cross(p1 - p0, p2 - p0), p0);
 }
 
-void
-replay::plane3::hnf( const float epsilon )
+void replay::plane3::hnf(const float epsilon)
 {
-	const float m = magnitude( this->normal );
+    const float m = magnitude(this->normal);
 
-    if ( m < epsilon )
-		throw invalid_plane();
+    if (m < epsilon)
+        throw invalid_plane();
 
-	this->scale( 1.0f / m );
+    this->scale(1.0f / m);
 }
-
-

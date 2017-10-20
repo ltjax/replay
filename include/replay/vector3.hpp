@@ -27,218 +27,222 @@ Copyright (c) 2010 Marius Elvert
 #ifndef replay_vector3_hpp
 #define replay_vector3_hpp
 
+#include <boost/utility.hpp>
 #include <iosfwd>
 #include <replay/common.hpp>
-#include <boost/utility.hpp>
 #include <replay/vector2.hpp>
 
-namespace replay {
+namespace replay
+{
 
 /** 3-dimensional vector.
-	\note The element type is supposed to be a mathematical group.
-	\ingroup Math
+    \note The element type is supposed to be a mathematical group.
+    \ingroup Math
 */
 template <class type> class vector3
 {
 public:
-	/** Element type.
-	*/
-	typedef type						value_type;
-	
-	/** Get a pointer to the internal array.
-	*/
-	inline
-	type*								ptr() {return data;}
+    /** Element type.
+    */
+    typedef type value_type;
 
-	/** Get a pointer to the internal array.
-	*/
-	inline
-	const type*							ptr() const {return data;}
+    /** Get a pointer to the internal array.
+    */
+    inline type* ptr()
+    {
+        return data;
+    }
 
-	/** Index access operator.
-	*/
-	template <class index_type>	inline
-	value_type&							operator[](const index_type i) {return data[i];}
+    /** Get a pointer to the internal array.
+    */
+    inline const type* ptr() const
+    {
+        return data;
+    }
 
-	/** Index access operator.
-	*/
-	template <class index_type>	inline
-	const value_type					operator[](const index_type i) const {return data[i];}
+    /** Index access operator.
+    */
+    template <class index_type> inline value_type& operator[](const index_type i)
+    {
+        return data[i];
+    }
 
-	// Access
-	vector3<type>&						reset(value_type x, value_type y, value_type z);
-	vector3<type>&						reset(value_type value = value_type(0));
+    /** Index access operator.
+    */
+    template <class index_type> inline const value_type operator[](const index_type i) const
+    {
+        return data[i];
+    }
 
-	// Linear Algebra
-	vector3<type>						operator-() const;									// Negation
-	
-	/** Create a new vector.
-		This constructor will leave all values uninitialized.
-	*/
-	explicit							vector3(uninitialized_tag) {}
+    // Access
+    vector3<type>& reset(value_type x, value_type y, value_type z);
+    vector3<type>& reset(value_type value = value_type(0));
 
-	/** Constructor for user-defined conversions.
-		\see convertible_tag
-	*/
-	template <class source_type>		vector3(const source_type& other, typename convertible_tag<source_type, vector3>::type empty=0)
-	{
-		*this = convert(other);
-	}
-	
-	/** Create a vector with all elements the same value.
-	*/
-	explicit							vector3(value_type value = value_type(0)) {reset(value);}
+    // Linear Algebra
+    vector3<type> operator-() const; // Negation
 
-	/** Create a new vector from seperate values.
-		\param x The first component.
-		\param y The second component.
-		\param z The third component.
-	*/
-										vector3(const vector2<value_type>& xy, value_type z) {reset(xy[0],xy[1],z);}
-	
-	/** Create a new vector from seperate values.
-		\param x The first component.
-		\param y The second component.
-		\param z The third component.
-	*/
-										vector3(value_type x, value_type y, value_type z) {reset(x,y,z);}
+    /** Create a new vector.
+        This constructor will leave all values uninitialized.
+    */
+    explicit vector3(uninitialized_tag)
+    {
+    }
 
-	vector3<type>&						operator+=( const vector3<type>& operand );
-	vector3<type>&						operator-=( const vector3<type>& operand );
-	vector3<type>&						operator*=( const type& operand );
-	vector3<type>&						operator/=( const type& operand );
+    /** Constructor for user-defined conversions.
+        \see convertible_tag
+    */
+    template <class source_type>
+    vector3(const source_type& other, typename convertible_tag<source_type, vector3>::type empty = 0)
+    {
+        *this = convert(other);
+    }
 
-	bool								operator==( const vector3< type >& operand ) const;
-	bool								operator!=( const vector3< type >& operand ) const;
-	
-	/** In-place negate.
-		Negates each element of this vector.
-	*/
-	vector3<type>&						negate();
+    /** Create a vector with all elements the same value.
+    */
+    explicit vector3(value_type value = value_type(0))
+    {
+        reset(value);
+    }
 
-	value_type							squared() const;
-	value_type							sum() const;
+    /** Create a new vector from seperate values.
+        \param x The first component.
+        \param y The second component.
+        \param z The third component.
+    */
+    vector3(const vector2<value_type>& xy, value_type z)
+    {
+        reset(xy[0], xy[1], z);
+    }
 
+    /** Create a new vector from seperate values.
+        \param x The first component.
+        \param y The second component.
+        \param z The third component.
+    */
+    vector3(value_type x, value_type y, value_type z)
+    {
+        reset(x, y, z);
+    }
 
-	/** Static element wise type cast.
-		This can be used on all indexable array-like types.
-	*/
-	template <class array_type> inline static
-	vector3<type>						cast(const array_type& src)
-	{
-		return vector3<type>( static_cast<type>(src[0]), static_cast<type>(src[1]), static_cast<type>(src[2]) );
-	}
+    vector3<type>& operator+=(const vector3<type>& operand);
+    vector3<type>& operator-=(const vector3<type>& operand);
+    vector3<type>& operator*=(const type& operand);
+    vector3<type>& operator/=(const type& operand);
+
+    bool operator==(const vector3<type>& operand) const;
+    bool operator!=(const vector3<type>& operand) const;
+
+    /** In-place negate.
+        Negates each element of this vector.
+    */
+    vector3<type>& negate();
+
+    value_type squared() const;
+    value_type sum() const;
+
+    /** Static element wise type cast.
+        This can be used on all indexable array-like types.
+    */
+    template <class array_type> inline static vector3<type> cast(const array_type& src)
+    {
+        return vector3<type>(static_cast<type>(src[0]), static_cast<type>(src[1]), static_cast<type>(src[2]));
+    }
 
 private:
-	/** the actual data.
-	*/
-	type								data[3];
+    /** the actual data.
+    */
+    type data[3];
 };
 
 /** Cross product.
-	Also referred to as vector-product, this operator returns a vector that
-	is perpendicular to both input vectors.
-	The length of this vector is equal to the area of the parallelogram spanned
-	by the two input vectors.
-	\relates vector3
-	\ingroup Math
+    Also referred to as vector-product, this operator returns a vector that
+    is perpendicular to both input vectors.
+    The length of this vector is equal to the area of the parallelogram spanned
+    by the two input vectors.
+    \relates vector3
+    \ingroup Math
 */
-template <class type> inline 
-vector3<type> cross( const vector3<type>& a, const vector3<type>& b );
-	
+template <class type> inline vector3<type> cross(const vector3<type>& a, const vector3<type>& b);
+
 /** Dot product of two 3D vectors.
-	\relates vector3
-	\ingroup Math
+    \relates vector3
+    \ingroup Math
 */
-template <class type> inline 
-type dot( const vector3<type>& a, const vector3<type>& b );
+template <class type> inline type dot(const vector3<type>& a, const vector3<type>& b);
 
 /** Component wise product of two 3D vectors.
-	\relates vector3
-	\ingroup Math
+    \relates vector3
+    \ingroup Math
 */
-template <class type> inline 
-vector3<type> comp( const vector3<type>& a, const vector3<type>& b );
+template <class type> inline vector3<type> comp(const vector3<type>& a, const vector3<type>& b);
 
 /** Addition.
-	\relates vector3
-	\ingroup Math
+    \relates vector3
+    \ingroup Math
 */
-template <class type> inline
-vector3<type> operator+(vector3<type> lhs, const vector3<type>& rhs)
+template <class type> inline vector3<type> operator+(vector3<type> lhs, const vector3<type>& rhs)
 {
-	return lhs += rhs;
+    return lhs += rhs;
 }
 
 /** Subtraction.
-	\relates vector3
-	\ingroup Math
+    \relates vector3
+    \ingroup Math
 */
-template <class type> inline
-vector3<type> operator-(vector3<type> lhs, const vector3<type>& rhs)
+template <class type> inline vector3<type> operator-(vector3<type> lhs, const vector3<type>& rhs)
 {
-	return lhs -= rhs;
+    return lhs -= rhs;
 }
 
 /** Scalar product.
-	\relates vector3
-	\ingroup Math
+    \relates vector3
+    \ingroup Math
 */
-template <class type> inline
-vector3<type> operator*(vector3<type> lhs, const type rhs)
+template <class type> inline vector3<type> operator*(vector3<type> lhs, const type rhs)
 {
-	return lhs *= rhs;
+    return lhs *= rhs;
 }
 
 /** Scalar product.
-	\relates vector3
-	\ingroup Math
+    \relates vector3
+    \ingroup Math
 */
-template <class type> inline
-vector3<type> operator*(const type lhs, vector3<type> rhs)
+template <class type> inline vector3<type> operator*(const type lhs, vector3<type> rhs)
 {
-	return rhs *= lhs;
+    return rhs *= lhs;
 }
 
 /** Scalar division.
-	\relates vector3
-	\ingroup Math
+    \relates vector3
+    \ingroup Math
 */
-template <class type> inline
-vector3<type> operator/(vector3<type> lhs, const type& rhs)
+template <class type> inline vector3<type> operator/(vector3<type> lhs, const type& rhs)
 {
-	return lhs /= rhs;
+    return lhs /= rhs;
 }
 
 /** Scalar division.
-	\relates vector3
-	\ingroup Math
+    \relates vector3
+    \ingroup Math
 */
-template <class type> inline
-vector3<type> operator/(const type& lhs, const vector3<type>& rhs)
+template <class type> inline vector3<type> operator/(const type& lhs, const vector3<type>& rhs)
 {
-	return vector3<type>(lhs/rhs[0],lhs/rhs[1],lhs/rhs[2]);
+    return vector3<type>(lhs / rhs[0], lhs / rhs[1], lhs / rhs[2]);
 }
-
 
 /** A convenience typedef for a 3d floating-point vector.
-	\relates vector3
-	\ingroup Math
+    \relates vector3
+    \ingroup Math
 */
-typedef vector3<float>					vector3f;
+typedef vector3<float> vector3f;
 
 /** A convenience typedef for a 2d double-precision floating-point vector.
-	\relates vector3
-	\ingroup Math
+    \relates vector3
+    \ingroup Math
 */
-typedef vector3<double>					vector3d;
-
+typedef vector3<double> vector3d;
 }
 
 #include "vector3.inl"
 
 #endif // replay_vector3_hpp
-
-
-
-

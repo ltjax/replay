@@ -27,51 +27,56 @@ Copyright (c) 2012 Marius Elvert
 #ifndef replay_pixbuf_io_hpp
 #define replay_pixbuf_io_hpp
 
-#include <string>
-#include <boost/filesystem/path.hpp>
 #include "pixbuf.hpp"
+#include <boost/filesystem/path.hpp>
+#include <string>
 
-namespace replay {
+namespace replay
+{
 
 /** Loading and saving functions for raster images.
 */
 namespace pixbuf_io
 {
-	/** Exception that is thrown on read errors.
-		\ingroup Imaging
-	*/
-	class read_error :
-		public std::runtime_error
-	{
-	public:
-		/** Initialize with an error string.
-		*/
-		explicit read_error(const std::string& str) : std::runtime_error(str) {}
-	};
+/** Exception that is thrown on read errors.
+    \ingroup Imaging
+*/
+class read_error : public std::runtime_error
+{
+public:
+    /** Initialize with an error string.
+    */
+    explicit read_error(const std::string& str)
+    : std::runtime_error(str)
+    {
+    }
+};
 
-	/** Exception that is thrown on write errors.
-		\ingroup Imaging
-	*/
-	class					write_error : public std::exception {};
+/** Exception that is thrown on write errors.
+    \ingroup Imaging
+*/
+class write_error : public std::exception
+{
+};
 
-	/** Exception that is thrown when trying to load unsupported image formats.
-		\ingroup Imaging
-	*/
-	class					unrecognized_format : public std::exception {};
+/** Exception that is thrown when trying to load unsupported image formats.
+    \ingroup Imaging
+*/
+class unrecognized_format : public std::exception
+{
+};
 
-	shared_pixbuf			load_from_file(std::istream& file);
-	shared_pixbuf			load_from_file(const boost::filesystem::path& filename);
-	void					save_to_file(const boost::filesystem::path& filename, const pixbuf& source);
+shared_pixbuf load_from_file(std::istream& file);
+shared_pixbuf load_from_file(const boost::filesystem::path& filename);
+void save_to_file(const boost::filesystem::path& filename, const pixbuf& source);
 
-	shared_pixbuf			load_from_tga_file(std::istream& file);
-	void					save_to_tga_file(std::ostream& file, const pixbuf& source);
+shared_pixbuf load_from_tga_file(std::istream& file);
+void save_to_tga_file(std::ostream& file, const pixbuf& source);
 
-#ifdef REPLAY_USE_LIBPNG
-	shared_pixbuf			load_from_png_file( std::istream& file );
-	void					save_to_png_file( std::ostream& file, const pixbuf& source, int level = 1 );
+#ifdef REPLAY_USE_STBIMAGE_WRITE
+void save_to_png_file(std::ostream& file, const pixbuf& source);
 #endif
 }
-
 }
 
 #endif // replay_pixbuf_io_hpp

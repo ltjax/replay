@@ -29,170 +29,192 @@ Copyright (c) 2010 Marius Elvert
 
 #include <algorithm>
 #include <replay/couple.hpp>
-#include <replay/vector3.hpp>
 #include <replay/plane3.hpp>
+#include <replay/vector3.hpp>
 
-namespace replay {
+namespace replay
+{
 
 /** An iso-box in \f$\mathbb{R}^3\f$.
-	Represents the intersection of intervals on the 3 principal axes.
-	\ingroup Math
+    Represents the intersection of intervals on the 3 principal axes.
+    \ingroup Math
 */
-class aabb :
-	public couple<vector3f>
+class aabb : public couple<vector3f>
 {
-	typedef couple<vector3f>		base_class;
+    typedef couple<vector3f> base_class;
 
 public:
-	/** Classification relative to a plane.
-		\see classify
-	*/
-	enum classify_result
-	{
-		negative, /**< All points have a negative distance to the plane. */
-		positive, /**< All points have a positive distance to the plane. */
-		spanning  /**< The points have mixed signs in their distances to the plane, so the box intersects the plane. */
-	};
-									aabb();
-	explicit						aabb(float size);
-	explicit						aabb(const vector3f& point);
-									aabb(const vector3f& min, const vector3f& max);
-	
-	/** Constructor for user-defined conversions.
-		\see convertible_tag
-	*/
-	template <class source_type>	aabb(const source_type& other, typename convertible_tag<source_type, aabb>::type empty=0)
-	{
-		*this = convert(other);
-	}
+    /** Classification relative to a plane.
+        \see classify
+    */
+    enum classify_result
+    {
+        negative, /**< All points have a negative distance to the plane. */
+        positive, /**< All points have a positive distance to the plane. */
+        spanning  /**< The points have mixed signs in their distances to the plane, so the box intersects the plane. */
+    };
+    aabb();
+    explicit aabb(float size);
+    explicit aabb(const vector3f& point);
+    aabb(const vector3f& min, const vector3f& max);
 
-	aabb&							clear();
-	aabb&							move(const vector3f& delta);
+    /** Constructor for user-defined conversions.
+        \see convertible_tag
+    */
+    template <class source_type>
+    aabb(const source_type& other, typename convertible_tag<source_type, aabb>::type empty = 0)
+    {
+        *this = convert(other);
+    }
 
-	/** Check if this bounding box is empty, i.e. does not contain any points.
-	*/
-	bool							empty() const;
+    aabb& clear();
+    aabb& move(const vector3f& delta);
 
-	/** Enlarge the box to contain the given point.
-		\param point The point to be inserted.
-	*/
-	aabb&							insert(const vector3f& point)
-	{
-		for (unsigned int i=0; i<3; ++i)
-		{
-			if (point[i] < min(i))
-				min(i) = point[i];
-			if (point[i] > max(i))
-				max(i) = point[i];
-		}
-		
-		return *this;
-	}
+    /** Check if this bounding box is empty, i.e. does not contain any points.
+    */
+    bool empty() const;
 
-	aabb&							insert( const vector3f* points, unsigned int count );
-	aabb&							insert( const vector3f* points, const unsigned short* indices, unsigned int count );
-	aabb&							insert( const vector3f* points, const unsigned int* indices, unsigned int count );
-	aabb&							insert(const aabb& rhs);
-	aabb const						inserted(aabb rhs) const;
+    /** Enlarge the box to contain the given point.
+        \param point The point to be inserted.
+    */
+    aabb& insert(const vector3f& point)
+    {
+        for (unsigned int i = 0; i < 3; ++i)
+        {
+            if (point[i] < min(i))
+                min(i) = point[i];
+            if (point[i] > max(i))
+                max(i) = point[i];
+        }
 
-	vector3f&						compute_arvo_vector( const vector3f& point, vector3f& result ) const;
-	
-	/** Compute the shortest vector from the point to the box.
-	*/
-	inline vector3f					compute_arvo_vector( const vector3f& point ) const
-									{ vector3f temp; return compute_arvo_vector( point, temp ); }
+        return *this;
+    }
 
-	vector3f&						compute_center( vector3f& result ) const;
-	
-	/** Compute the center of the aabb.
-	*/
-	inline vector3f					compute_center() const
-									{ vector3f temp; return compute_center( temp ); }
+    aabb& insert(const vector3f* points, unsigned int count);
+    aabb& insert(const vector3f* points, const unsigned short* indices, unsigned int count);
+    aabb& insert(const vector3f* points, const unsigned int* indices, unsigned int count);
+    aabb& insert(const aabb& rhs);
+    aabb const inserted(aabb rhs) const;
 
-	vector3f&						corner(std::size_t i, vector3f& result) const;
-	
-	/** Compute a corner of the aabb.
-	*/
-	inline vector3f					corner(std::size_t i) const;
+    vector3f& compute_arvo_vector(const vector3f& point, vector3f& result) const;
 
-	aabb&							compute_subinterval( unsigned int index, const vector3f& pivot, aabb& result ) const;
+    /** Compute the shortest vector from the point to the box.
+    */
+    inline vector3f compute_arvo_vector(const vector3f& point) const
+    {
+        vector3f temp;
+        return compute_arvo_vector(point, temp);
+    }
 
-	float							square_distance( const vector3f& other ) const;
-	float							distance( const vector3f& other ) const;
+    vector3f& compute_center(vector3f& result) const;
 
-	bool							contains( const vector3f& point ) const;
+    /** Compute the center of the aabb.
+    */
+    inline vector3f compute_center() const
+    {
+        vector3f temp;
+        return compute_center(temp);
+    }
 
-	fcouple							project( const vector3f& x ) const;
-	classify_result					classify(const plane3& x) const;
+    vector3f& corner(std::size_t i, vector3f& result) const;
 
-	aabb&							expand(const vector3f& x);
-	aabb const						expanded(const vector3f& x) const;
+    /** Compute a corner of the aabb.
+    */
+    inline vector3f corner(std::size_t i) const;
 
-	/** Get the minimum in all three dimensions.
-	*/
-	vector3f&						min() { return get0(); }
+    aabb& compute_subinterval(unsigned int index, const vector3f& pivot, aabb& result) const;
 
-	/** Get the minimum in all three dimensions.
-	*/
-	const vector3f&					min() const { return get0(); }
+    float square_distance(const vector3f& other) const;
+    float distance(const vector3f& other) const;
 
-	/** Get the minimum element in the given dimension.
-	*/
-	template < class IndexType >
-	float&							min(IndexType i) {return get0()[i];}
+    bool contains(const vector3f& point) const;
 
-	/** Get the minimum element in the given dimension.
-	*/
-	template < class IndexType >
-	float							min(IndexType i) const {return get0()[i];}
+    fcouple project(const vector3f& x) const;
+    classify_result classify(const plane3& x) const;
 
-	/** Get the maximum in all three dimensions.
-	*/
-	vector3f&						max() { return get1(); }
+    aabb& expand(const vector3f& x);
+    aabb const expanded(const vector3f& x) const;
 
-	/** Get the maximum in all three dimensions.
-	*/
-	const vector3f&					max() const { return get1(); }
+    /** Get the minimum in all three dimensions.
+    */
+    vector3f& min()
+    {
+        return get0();
+    }
 
-	/** Get the maximum element in the given dimension.
-	*/
-	template <class IndexType>
-	float&							max(IndexType i) {return get1()[i];}
+    /** Get the minimum in all three dimensions.
+    */
+    const vector3f& min() const
+    {
+        return get0();
+    }
 
-	/** Get the maximum element in the given dimension.
-	*/
-	template <class IndexType>
-	float							max(IndexType i) const {return get1()[i];}
-	
-	/** Intersect this box with another.
-	*/
-	aabb&							intersect(const replay::aabb& rhs);
+    /** Get the minimum element in the given dimension.
+    */
+    template <class IndexType> float& min(IndexType i)
+    {
+        return get0()[i];
+    }
 
-	/** Create a box that is the intersection of this and another.
-	*/
-	aabb const						intersected(replay::aabb rhs) const;
+    /** Get the minimum element in the given dimension.
+    */
+    template <class IndexType> float min(IndexType i) const
+    {
+        return get0()[i];
+    }
+
+    /** Get the maximum in all three dimensions.
+    */
+    vector3f& max()
+    {
+        return get1();
+    }
+
+    /** Get the maximum in all three dimensions.
+    */
+    const vector3f& max() const
+    {
+        return get1();
+    }
+
+    /** Get the maximum element in the given dimension.
+    */
+    template <class IndexType> float& max(IndexType i)
+    {
+        return get1()[i];
+    }
+
+    /** Get the maximum element in the given dimension.
+    */
+    template <class IndexType> float max(IndexType i) const
+    {
+        return get1()[i];
+    }
+
+    /** Intersect this box with another.
+    */
+    aabb& intersect(const replay::aabb& rhs);
+
+    /** Create a box that is the intersection of this and another.
+    */
+    aabb const intersected(replay::aabb rhs) const;
 };
-
 }
 
-inline
-replay::aabb const replay::aabb::inserted(replay::aabb rhs) const
+inline replay::aabb const replay::aabb::inserted(replay::aabb rhs) const
 {
-	return rhs.insert(*this);
+    return rhs.insert(*this);
 }
 
-inline
-replay::aabb const
-replay::aabb::intersected(replay::aabb rhs) const
+inline replay::aabb const replay::aabb::intersected(replay::aabb rhs) const
 {
-	return rhs.intersect(*this);
+    return rhs.intersect(*this);
 }
 
-inline
-replay::vector3f replay::aabb::corner(std::size_t i) const
+inline replay::vector3f replay::aabb::corner(std::size_t i) const
 {
-	vector3f temp((replay::uninitialized_tag()));
-	return corner(i, temp);
+    vector3f temp((replay::uninitialized_tag()));
+    return corner(i, temp);
 }
 
 #endif

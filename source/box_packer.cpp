@@ -24,97 +24,98 @@ Copyright (c) 2010 Marius Elvert
 
 */
 
-#include <replay/box_packer.hpp>
 #include <boost/noncopyable.hpp>
+#include <replay/box_packer.hpp>
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 
-class replay::box_packer::node :
-	public boost::noncopyable
+class replay::box_packer::node : public boost::noncopyable
 {
 public:
-	node(replay::box<int> const& rect=replay::box<int>())
-	: child(0), rectangle(rect), in_use(false)
-	{
-	}
+    node(replay::box<int> const& rect = replay::box<int>())
+    : child(0)
+    , rectangle(rect)
+    , in_use(false)
+    {
+    }
 
-	~node()
-	{
-		delete[] child;
-	}
+    ~node()
+    {
+        delete[] child;
+    }
 
-	replay::box<int> const&		get_rectangle() const throw() {return rectangle;}
-	node const*					insert(replay::couple<int> const& size, int padding);
+    replay::box<int> const& get_rectangle() const throw()
+    {
+        return rectangle;
+    }
+    node const* insert(replay::couple<int> const& size, int padding);
 
 private:
-	node*				child;
-	replay::box<int>	rectangle;
-	bool				in_use;
+    node* child;
+    replay::box<int> rectangle;
+    bool in_use;
 };
 
-const replay::box_packer::node*
-replay::box_packer::node::insert(const couple<int>& size, int padding)
+const replay::box_packer::node* replay::box_packer::node::insert(const couple<int>& size, int padding)
 {
-	// Try to recurse down
-	if (child != 0)	
-	{
-		const node* result = child[0].insert( size, padding );
+    // Try to recurse down
+    if (child != 0)
+    {
+        const node* result = child[0].insert(size, padding);
 
-		return (result!=0) ? result : child[1].insert(size, padding);
-	}
+        return (result != 0) ? result : child[1].insert(size, padding);
+    }
 
-	if (in_use)
-		return 0;
+    if (in_use)
+        return 0;
 
-	const int dw = rectangle.get_width() - size[0];
-	const int dh = rectangle.get_height() - size[1];
+    const int dw = rectangle.get_width() - size[0];
+    const int dh = rectangle.get_height() - size[1];
 
-	if ( ( dw < 0 ) || ( dh < 0 ) )
-		return 0;
+    if ((dw < 0) || (dh < 0))
+        return 0;
 
-	// perfect fit?
-	if ( ( dw == 0 ) &&	( dh == 0 ) )
-	{
-		this->in_use = true;
-		return this;
-	}
+    // perfect fit?
+    if ((dw == 0) && (dh == 0))
+    {
+        this->in_use = true;
+        return this;
+    }
 
-	child = new node[ 2 ];
+    child = new node[2];
 
-	// split
-	if ( dw > dh )
-	{
-		// divide width
-		child[0].rectangle.set(rectangle.left, rectangle.bottom,
-			rectangle.left+size[0], rectangle.top);
+    // split
+    if (dw > dh)
+    {
+        // divide width
+        child[0].rectangle.set(rectangle.left, rectangle.bottom, rectangle.left + size[0], rectangle.top);
 
-		child[1].rectangle.set(rectangle.left+size[0]+(padding<<1), rectangle.bottom,
-			rectangle.right, rectangle.top);
-	}
-	else
-	{
-		// devide height
-		child[0].rectangle.set(rectangle.left, rectangle.bottom,
-			rectangle.right, rectangle.bottom+size[1]);
+        child[1].rectangle.set(rectangle.left + size[0] + (padding << 1), rectangle.bottom, rectangle.right,
+                               rectangle.top);
+    }
+    else
+    {
+        // devide height
+        child[0].rectangle.set(rectangle.left, rectangle.bottom, rectangle.right, rectangle.bottom + size[1]);
 
-		child[1].rectangle.set(rectangle.left, rectangle.bottom+size[1]+(padding<<1),
-			rectangle.right, rectangle.top);
-	}
+        child[1].rectangle.set(rectangle.left, rectangle.bottom + size[1] + (padding << 1), rectangle.right,
+                               rectangle.top);
+    }
 
-	// first child is constructed to fit, so insert it there
-	return child[0].insert( size, padding );
+    // first child is constructed to fit, so insert it there
+    return child[0].insert(size, padding);
 }
 
-#endif 
-
+#endif
 
 /** Create a new box packer.
-	\param width The width of the area to pack in
-	\param height The height of the area to pack in
-	\param padding Space to be left between rectangles
+    \param width The width of the area to pack in
+    \param height The height of the area to pack in
+    \param padding Space to be left between rectangles
 */
-replay::box_packer::box_packer( int width, int height, int padding )
-: root( new node( box< int >( padding, padding, width-padding, height-padding ) ) ), padding( padding )
+replay::box_packer::box_packer(int width, int height, int padding)
+: root(new node(box<int>(padding, padding, width - padding, height - padding)))
+, padding(padding)
 {
 }
 
@@ -122,73 +123,62 @@ replay::box_packer::box_packer( int width, int height, int padding )
 */
 replay::box_packer::~box_packer()
 {
-	delete root;
-}
-
-
-/** Pack an item of the given size.
-	If there is no more space left to pack the given item, the function
-	will throw an box_packer::pack_overflow exception.
-	\param width The width of the item to pack
-	\param height The height of the item to pack
-*/
-const replay::box< int >&
-replay::box_packer::pack( int width, int height )
-{
-	const node* result = root->insert( replay::make_couple( width, height ), this->padding );
-
-	if ( result == 0 )
-		throw pack_overflow();
-	
-	return result->get_rectangle();
+    delete root;
 }
 
 /** Pack an item of the given size.
-	This is the exception free variant: if there is no more space left to pack the given item, the function
-	will return false.
-	\param width The width of the item to pack.
-	\param height The height of the item to pack.
-	\param rect The result rect where the item was placed.
+    If there is no more space left to pack the given item, the function
+    will throw an box_packer::pack_overflow exception.
+    \param width The width of the item to pack
+    \param height The height of the item to pack
 */
-bool
-replay::box_packer::pack( int width, int height, replay::box< int >* rect )
+const replay::box<int>& replay::box_packer::pack(int width, int height)
 {
-	const node* result = root->insert( replay::make_couple( width, height ), this->padding );
+    const node* result = root->insert(replay::make_couple(width, height), this->padding);
 
-	if ( result == 0 )
-		return false;
+    if (result == 0)
+        throw pack_overflow();
 
-	if ( rect != 0 )
-		*rect = result->get_rectangle();
+    return result->get_rectangle();
+}
 
-	return true;
+/** Pack an item of the given size.
+    This is the exception free variant: if there is no more space left to pack the given item, the function
+    will return false.
+    \param width The width of the item to pack.
+    \param height The height of the item to pack.
+    \param rect The result rect where the item was placed.
+*/
+bool replay::box_packer::pack(int width, int height, replay::box<int>* rect)
+{
+    const node* result = root->insert(replay::make_couple(width, height), this->padding);
+
+    if (result == 0)
+        return false;
+
+    if (rect != 0)
+        *rect = result->get_rectangle();
+
+    return true;
 }
 
 /** get the width (without padding).
 */
-int
-replay::box_packer::get_width() const
+int replay::box_packer::get_width() const
 {
-	return root->get_rectangle().get_width() + 2*padding;
+    return root->get_rectangle().get_width() + 2 * padding;
 }
-
 
 /** get the height (without padding).
 */
-int
-replay::box_packer::get_height() const
+int replay::box_packer::get_height() const
 {
-	return root->get_rectangle().get_height() + 2*padding;
+    return root->get_rectangle().get_height() + 2 * padding;
 }
-
 
 /** get the padding between boxes.
 */
-int
-replay::box_packer::get_padding() const
+int replay::box_packer::get_padding() const
 {
-	return padding;
+    return padding;
 }
-
-
-

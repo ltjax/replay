@@ -27,37 +27,36 @@ Copyright (c) 2010 Marius Elvert
 #ifndef replay_common_hpp
 #define replay_common_hpp
 
-namespace replay {
+namespace replay
+{
 
 /** Tag type to use 'uninitializing constructors'.
-	Types that support this will typically expose an explicit unary constructor
-	taking an uninitialized_tag and leave all contents uninitialized.
-	Using these constructors is for optimization-reasons only and violates the RAII principle.
-	Use with caution!
+    Types that support this will typically expose an explicit unary constructor
+    taking an uninitialized_tag and leave all contents uninitialized.
+    Using these constructors is for optimization-reasons only and violates the RAII principle.
+    Use with caution!
 */
 class uninitialized_tag
 {
 };
 
 /** Base class to enable conversion.
-	\see convertible_tag
+    \see convertible_tag
 */
 struct conversion_enabled
 {
-	typedef void*		type;
+    typedef void* type;
 };
 
 /** Use the SFINAE idiom to selectively enable conversion-constructors.
-	Several types have a conversion-constructor that can be enabled
-	by specializing convertible_tag for the source and target type as being
-	derived from conversion_enabled.
-	\see conversion_enabled
+    Several types have a conversion-constructor that can be enabled
+    by specializing convertible_tag for the source and target type as being
+    derived from conversion_enabled.
+    \see conversion_enabled
 */
-template <class source_type, class target_type>
-struct convertible_tag
+template <class source_type, class target_type> struct convertible_tag
 {
 };
-
 }
 
 #endif
