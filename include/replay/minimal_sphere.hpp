@@ -28,6 +28,7 @@ Copyright (c) 2010 Marius Elvert
 #define replay_minimal_sphere_hpp
 
 #include <list>
+#include <replay/vector_math.hpp>
 
 namespace replay {
 
