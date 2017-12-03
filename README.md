@@ -1,3 +1,7 @@
+# Replay #
+
+[![Build Status](https://travis-ci.org/ltjax/replay.svg?branch=master)](https://travis-ci.org/ltjax/replay)
+
 ## Overview ##
 
 **Replay** is a lightweight game development utility library. It contains data structures for 3D maths, such as vectors, quaternions and matrices. It also contains common algorithms that operate on these data structures and other utility data structures that are useful in game development.
