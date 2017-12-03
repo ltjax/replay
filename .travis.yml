@@ -11,5 +11,5 @@ script:
   - docker exec build apt dist-upgrade -y > /dev/null
   - docker exec build apt install git build-essential cmake libboost-all-dev libpng-dev -y > /dev/null
   - docker exec build git clone https://github.com/ltjax/replay.git /source
-  - docker exec build cmake -DCMAKE_BUILD_TYPE=Release -B/build -H/source
+  - docker exec build cmake -DCMAKE_BUILD_TYPE=Release -DREPLAY_USE_STBIMAGE=OFF -DREPLAY_ENABLE_UNIT_TESTS=OFF -B/build -H/source
   - docker exec build cmake --build /build
