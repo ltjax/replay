@@ -192,7 +192,7 @@ std::tuple<replay::vector3f, float> replay::to_axis_angle(const quaternion& obj)
     else
         factor = 1.f / factor;
 
-    return { replay::vector3f(obj.x * factor, obj.y * factor, obj.z * factor), angle };
+    return std::make_tuple(replay::vector3f(obj.x * factor, obj.y * factor, obj.z * factor), angle);
 }
 
 const replay::vector3f replay::quaternion::get_transformed_x() const
