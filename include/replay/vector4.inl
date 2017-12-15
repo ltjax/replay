@@ -72,6 +72,16 @@ template <class type> inline replay::vector4<type>& replay::vector4<type>::opera
     return *this;
 }
 
+template <class type> inline bool replay::vector4<type>::operator==(const vector4<type>& operand) const
+{
+    return data[0] == operand.data[0] && data[1] == operand.data[1] && data[2] == operand.data[2] && data[3] == operand.data[3];
+}
+
+template <class type> inline bool replay::vector4<type>::operator!=(const vector4<type>& operand) const
+{
+    return data[0] != operand.data[0] || data[1] != operand.data[1] || data[2] != operand.data[2] || data[3] != operand.data[3];
+}
+
 template <class type> inline replay::vector4<type>& replay::vector4<type>::reset(const value_type value)
 {
     data[0] = value;

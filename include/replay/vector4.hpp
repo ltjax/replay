@@ -102,6 +102,9 @@ public:
     vector4<type>& operator/=(const type value);
     vector4<type> operator-() const;
 
+    bool operator==(const vector4<type>& operand) const;
+    bool operator!=(const vector4<type>& operand) const;
+
     /** In-place negate.
         Negates each component of this vector.
     */
