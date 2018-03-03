@@ -27,10 +27,10 @@ Copyright (c) 2010 Marius Elvert
 #ifndef replay_box_packer_hpp
 #define replay_box_packer_hpp
 
-#include <boost/noncopyable.hpp>
 #include <replay/box.hpp>
 #include <replay/couple.hpp>
 #include <stdexcept>
+#include <memory>
 
 namespace replay
 {
@@ -41,7 +41,7 @@ namespace replay
     It can be used to generate texture atlases.
     This uses a first fit packing algorithm.
 */
-class box_packer : public boost::noncopyable
+class box_packer
 {
 public:
     /** Exception class that is thrown when a rect cannot be packed.
@@ -51,8 +51,14 @@ public:
     {
     };
 
+    box_packer();
     box_packer(int width, int height, int padding = 0);
+    box_packer(box_packer const&) = delete;
+    box_packer(box_packer&& rhs);
     ~box_packer();
+
+    box_packer& operator=(box_packer&& rhs);
+    box_packer& operator=(box_packer const&) = delete;
 
     const box<int>& pack(int width, int height);
 
@@ -62,9 +68,11 @@ public:
     int get_height() const;
     int get_padding() const;
 
+    void enlarge(int width, int height);
+
 private:
     class node;
-    node* root;
+    std::unique_ptr<node> root;
     int padding;
 };
 }
