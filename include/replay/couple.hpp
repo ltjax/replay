@@ -27,7 +27,7 @@ Copyright (c) 2010 Marius Elvert
 #ifndef replay_couple_hpp
 #define replay_couple_hpp
 
-#include <cstdint>
+#include <cstddef>
 
 /**Replay namespace*/
 
