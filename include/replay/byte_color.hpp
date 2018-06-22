@@ -120,6 +120,23 @@ inline byte_color4 operator-(byte_color4 lhs, byte_color4 const& rhs)
     return (lhs -= rhs);
 }
 
+/** Check if two colors are unequal.
+ */
+inline bool operator!=(byte_color4 lhs, byte_color4 rhs)
+{
+    for (int i = 0; i < 4; ++i)
+        if (lhs[i] != rhs[i])
+            return true;
+    return false;
+}
+
+/** Check if two colors are equal.
+ */
+inline bool operator==(byte_color4 lhs, byte_color4 rhs)
+{
+    return !(lhs != rhs);
+}
+
 /** Create a color from a 4D vector.
  */
 byte_color4 from_float(vector4f const& rhs);
