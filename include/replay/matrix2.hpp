@@ -2,7 +2,7 @@
 replay
 Software Library
 
-Copyright (c) 2010 Marius Elvert
+Copyright (c) 2010
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -119,11 +119,11 @@ public:
 
     /** Get a matrix column by its index.
     */
-    const vector2f column(std::size_t i) const;
+    vector2f column(std::size_t i) const;
 
     /** Get a matrix row by its index.
     */
-    const vector2f row(std::size_t i) const;
+    vector2f row(std::size_t i) const;
 
     /** Inplace multiplication by a scalar.
     */
@@ -131,23 +131,23 @@ public:
 
     /** Right-multiplay a scalar by this matrix.
     */
-    const matrix2 operator*(float rhs) const;
+    matrix2 operator*(float rhs) const;
 
     /** Right-multiply a (column) vector by this matrix.
     */
-    const vector2f operator*(const vector2f& v) const;
+    vector2f operator*(vector2f const& v) const;
 
     /** Multiply two matrices.
     */
-    const matrix2 operator*(const matrix2& m) const;
+    matrix2 operator*(matrix2 const& m) const;
 
     /** Multiply-assign a matrix.
     */
-    matrix2& operator*=(const matrix2& m);
+    matrix2& operator*=(matrix2 const& m);
 
     /** Get a pointer to the data.
     */
-    const float* ptr() const
+    float const* ptr() const
     {
         return data;
     }
@@ -186,7 +186,7 @@ inline const matrix2 operator*(float lhs, matrix2 const& rhs)
 
 /** Get the transpose of this matrix.
 */
-inline const matrix2 transpose(const matrix2& rhs)
+inline matrix2 transpose(matrix2 const& rhs)
 {
     return matrix2(rhs[0], rhs[1], rhs[2], rhs[3]);
 }
@@ -194,18 +194,18 @@ inline const matrix2 transpose(const matrix2& rhs)
 /** Left-multiply a (row) vector by this matrix.
     This is equivalent to right-multiply with the transpose matrix.
 */
-inline const vector2f operator*(const vector2f& lhs, const matrix2& rhs)
+inline vector2f operator*(vector2f const& lhs, const matrix2& rhs)
 {
     return vector2f(lhs[0] * rhs[0] + lhs[1] * rhs[1], lhs[0] * rhs[2] + lhs[1] * rhs[3]);
 }
 
-inline const vector2f matrix2::column(std::size_t i) const
+inline vector2f matrix2::column(std::size_t i) const
 {
     i *= 2;
     return vector2f(data[i], data[i + 1]);
 }
 
-inline const vector2f matrix2::row(std::size_t i) const
+inline vector2f matrix2::row(std::size_t i) const
 {
     return vector2f(data[i], data[i + 2]);
 }

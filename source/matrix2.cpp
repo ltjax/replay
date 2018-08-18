@@ -79,12 +79,12 @@ replay::matrix2 replay::matrix2::make_scale(const vector2f& scale)
     return matrix2(scale[0], 0.f, 0.f, scale[1]);
 }
 
-const replay::vector2f replay::matrix2::operator*(const vector2f& v) const
+replay::vector2f replay::matrix2::operator*(vector2f const& v) const
 {
     return vector2f(data[0] * v[0] + data[2] * v[1], data[1] * v[0] + data[3] * v[1]);
 }
 
-const replay::matrix2 replay::matrix2::operator*(const matrix2& other) const
+replay::matrix2 replay::matrix2::operator*(matrix2 const& other) const
 {
     matrix2 result((uninitialized_tag()));
     return multiply(*this, other, result);
@@ -108,14 +108,20 @@ replay::matrix2& replay::matrix2::operator*=(float rhs)
     return *this;
 }
 
-replay::matrix2& replay::matrix2::operator*=(const matrix2& Matrix)
+replay::matrix2 replay::matrix2::operator*(float rhs) const
+{
+    replay::matrix2 result;
+    return result *= rhs;
+}
+
+replay::matrix2& replay::matrix2::operator*=(matrix2 const& Matrix)
 {
     return ((*this) = ((*this) * Matrix));
 }
 
 double replay::matrix2::determinant() const
 {
-    return static_cast<double>(data[0]) * data[3] - data[1] * data[2];
+    return static_cast<double>(data[0]) * data[3] - static_cast<double>(data[1]) * data[2];
 }
 
 bool replay::matrix2::invert(double epsilon)
