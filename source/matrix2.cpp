@@ -110,7 +110,7 @@ replay::matrix2& replay::matrix2::operator*=(float rhs)
 
 replay::matrix2 replay::matrix2::operator*(float rhs) const
 {
-    replay::matrix2 result;
+    replay::matrix2 result(*this);
     return result *= rhs;
 }
 
