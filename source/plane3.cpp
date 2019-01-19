@@ -100,3 +100,13 @@ void replay::plane3::hnf(const float epsilon)
 
     this->scale(1.0f / m);
 }
+
+bool replay::operator==(plane3 const& lhs, plane3 const& rhs)
+{
+    return lhs.normal == rhs.normal && lhs.d == rhs.d;
+}
+
+bool replay::operator!=(plane3 const& lhs, plane3 const& rhs)
+{
+    return !(lhs == rhs);
+}

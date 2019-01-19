@@ -112,6 +112,9 @@ public:
     */
     void hnf(const float epsilon = math::default_epsilon);
 };
+
+bool operator==(plane3 const& lhs, plane3 const& rhs);
+bool operator!=(plane3 const& lhs, plane3 const& rhs);
 }
 
 #endif // replay_plane3_hpp
