@@ -54,7 +54,7 @@ public:
         spanning  /**< The points have mixed signs in their distances to the plane, so the box intersects the plane. */
     };
     aabb();
-    explicit aabb(float size);
+    explicit aabb(float half_extends);
     explicit aabb(const vector3f& point);
     aabb(const vector3f& min, const vector3f& max);
 

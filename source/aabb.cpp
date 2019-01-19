@@ -39,8 +39,8 @@ replay::aabb::aabb()
 
 /** Create a new box that extends in all directions from the origin.
 */
-replay::aabb::aabb(const float size)
-: base_class(vector3f(-size), vector3f(size))
+replay::aabb::aabb(float half_extends)
+: base_class(vector3f(-half_extends), vector3f(half_extends))
 {
 }
 
