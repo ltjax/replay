@@ -107,3 +107,15 @@ replay::byte_color4 replay::from_float(vector4f const& rhs)
 
     return result;
 }
+
+std::string replay::to_rgb_hex(replay::byte_color4 Color)
+{
+    std::string result = "#";
+    constexpr const char* digits = "0123456789ABCDEF";
+    for (int i = 0; i < 3; ++i)
+    {
+        result.push_back(digits[Color[i] >> 4]);
+        result.push_back(digits[Color[i] & 0xf]);
+    }
+    return result;
+}

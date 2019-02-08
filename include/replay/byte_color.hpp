@@ -149,6 +149,10 @@ vector4f to_float(byte_color4 rhs);
  */
 byte_color4 lerp(byte_color4 lhs, byte_color4 rhs, byte_color4::byte x);
 
+/** Format the RGB part as a hex color, like #FFFFFF for white.
+*/
+std::string to_rgb_hex(byte_color4 rhs);
+
 /** sample color palette.
  */
 namespace palette
