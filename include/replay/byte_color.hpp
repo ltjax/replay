@@ -29,6 +29,7 @@ Copyright (c) 2010 Marius Elvert
 
 #include <cstdint>
 #include <memory>
+#include <string>
 #include <replay/vector4.hpp>
 
 namespace replay
