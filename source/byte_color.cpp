@@ -87,6 +87,17 @@ replay::byte_color4 replay::lerp(byte_color4 lhs, byte_color4 rhs, byte_color4::
     return result;
 }
 
+replay::byte_color4 replay::lerp(byte_color4 lhs, byte_color4 rhs, int x)
+{
+    auto alpha = static_cast<byte_color4::byte>(std::min(std::max(x, 0), 255));
+    return lerp(lhs, rhs, alpha);
+}
+
+replay::byte_color4 replay::lerp(byte_color4 lhs, byte_color4 rhs, float x)
+{
+    return lerp(lhs, rhs, static_cast<int>(255 * x));
+}
+
 replay::vector4f replay::to_float(byte_color4 rhs)
 {
     vector4f result((uninitialized_tag()));

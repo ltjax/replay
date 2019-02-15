@@ -146,9 +146,17 @@ byte_color4 from_float(vector4f const& rhs);
  */
 vector4f to_float(byte_color4 rhs);
 
-/** Linear interpolation of byte_color4 objects.
+/** Linear interpolation of byte_color4 objects using a byte from 0 to 255.
  */
 byte_color4 lerp(byte_color4 lhs, byte_color4 rhs, byte_color4::byte x);
+
+/** Linear interpolation of byte_color4 objects using an int from 0 to 255.
+ */
+byte_color4 lerp(byte_color4 lhs, byte_color4 rhs, int x);
+
+/** Linear interpolation of byte_color4 objects using a float from 0.0f to 1.0f.
+ */
+byte_color4 lerp(byte_color4 lhs, byte_color4 rhs, float x);
 
 /** Format the RGB part as a hex color, like #FFFFFF for white.
 */
