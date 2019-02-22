@@ -298,6 +298,13 @@ public:
         linear_component3::set(x);
         this->interval.set(min, max);
     }
+
+    /** Check wether the attached interval is empty.
+    */
+    bool empty() const
+    {
+        return interval[0] > interval[1];
+    }
 };
 }
 #endif // replay_lines3_hpp
