@@ -22,12 +22,12 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${replay_BINARY_DIR}/build)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${replay_BINARY_DIR}/build)
 
 # Replay is typically included in a host project that already has boost
-if(NOT Boost_FOUND)
+if(NOT Boost_FOUND AND NOT DEFINED REPLAY_INJECTED_BOOST_TARGETS)
   if(WIN32)
     find_package(Boost REQUIRED)
   else()
     set(Boost_USE_MULTITHREADED OFF)
-    
+      
     if(REPLAY_ENABLE_UNIT_TESTS)
         find_package(Boost 1.42 REQUIRED COMPONENTS unit_test_framework)
     else()

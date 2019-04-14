@@ -53,11 +53,16 @@ add_library(replay STATIC ${HEADER_FILES} ${SOURCE_FILES})
 target_include_directories(${TARGET_NAME}
   PUBLIC ${replay_SOURCE_DIR}/include)
 
-target_include_directories(${TARGET_NAME} SYSTEM
-  PUBLIC ${Boost_INCLUDE_DIR})
+if (DEFINED REPLAY_INJECTED_BOOST_TARGETS)
+  target_link_libraries(${TARGET_NAME}
+    PUBLIC ${REPLAY_INJECTED_BOOST_TARGETS})
+else()
+  target_include_directories(${TARGET_NAME} SYSTEM
+    PUBLIC ${Boost_INCLUDE_DIR})
   
-target_link_libraries(${TARGET_NAME}
-  ${Boost_LIBRARIES})
+  target_link_libraries(${TARGET_NAME}
+    ${Boost_LIBRARIES})
+endif()
 
 # Conditionally use stbimage
 if(REPLAY_USE_STBIMAGE)
