@@ -2,7 +2,7 @@
 replay
 Software Library
 
-Copyright (c) 2010 Marius Elvert
+Copyright (c) 2010-2019 Marius Elvert
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -137,6 +137,11 @@ inline bool operator==(byte_color4 lhs, byte_color4 rhs)
 {
     return !(lhs != rhs);
 }
+
+/** Compute the square perceptual difference of the RGB parts of the given colors.
+    \see https://en.wikipedia.org/wiki/Color_difference
+*/
+int square_perceptual_difference(replay::byte_color4 lhs, replay::byte_color4 rhs);
 
 /** Decode a 24-bit rgb unsigned integer color, e.g. decode 0xFF0000 as red.
 */

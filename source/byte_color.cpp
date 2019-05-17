@@ -133,10 +133,19 @@ std::string replay::to_rgb_hex_string(replay::byte_color4 Color)
 
 replay::byte_color4 replay::from_rgb_uint(std::uint32_t rgb)
 {
-    return from_rgba_uint((rgb >> 8U) & 0xFFFFFFU);
+    return from_rgba_uint((rgb << 8U) | 0xFFU);
 }
 
 replay::byte_color4 replay::from_rgba_uint(std::uint32_t rgba)
 {
     return replay::byte_color4{rgba};
+}
+
+int replay::square_perceptual_difference(replay::byte_color4 lhs, replay::byte_color4 rhs)
+{
+    // https://en.wikipedia.org/wiki/Color_difference
+    auto r = lhs[0] - rhs[0];
+    auto g = lhs[1] - rhs[1];
+    auto b = lhs[2] - rhs[2];
+    return 2 * r * r + 4 * g * g + 3 * b * b;
 }
