@@ -138,6 +138,14 @@ inline bool operator==(byte_color4 lhs, byte_color4 rhs)
     return !(lhs != rhs);
 }
 
+/** Decode a 24-bit rgb unsigned integer color, e.g. decode 0xFF0000 as red.
+*/
+byte_color4 from_rgb_uint(std::uint32_t rgb);
+
+/** Decode a 32-bit rgba unsigned integer color, e.g. decode 0xFF0000FF as red.
+*/
+byte_color4 from_rgba_uint(std::uint32_t rgba);
+
 /** Create a color from a 4D vector.
  */
 byte_color4 from_float(vector4f const& rhs);
@@ -160,7 +168,7 @@ byte_color4 lerp(byte_color4 lhs, byte_color4 rhs, float x);
 
 /** Format the RGB part as a hex color, like #FFFFFF for white.
 */
-std::string to_rgb_hex(byte_color4 rhs);
+std::string to_rgb_hex_string(byte_color4 rhs);
 
 /** sample color palette.
  */

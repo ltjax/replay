@@ -119,7 +119,7 @@ replay::byte_color4 replay::from_float(vector4f const& rhs)
     return result;
 }
 
-std::string replay::to_rgb_hex(replay::byte_color4 Color)
+std::string replay::to_rgb_hex_string(replay::byte_color4 Color)
 {
     std::string result = "#";
     constexpr const char* digits = "0123456789ABCDEF";
@@ -129,4 +129,14 @@ std::string replay::to_rgb_hex(replay::byte_color4 Color)
         result.push_back(digits[Color[i] & 0xf]);
     }
     return result;
+}
+
+replay::byte_color4 replay::from_rgb_uint(std::uint32_t rgb)
+{
+    return from_rgba_uint((rgb >> 8U) & 0xFFFFFFU);
+}
+
+replay::byte_color4 replay::from_rgba_uint(std::uint32_t rgba)
+{
+    return replay::byte_color4{rgba};
 }
