@@ -1,15 +1,54 @@
+matrix:
+  include:
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+      env:
+        - MATRIX_EVAL="update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 60 --slave /usr/bin/g++ g++ /usr/bin/g++-5"
+
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-6
+      env:
+        - MATRIX_EVAL="update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 60 --slave /usr/bin/g++ g++ /usr/bin/g++-6"
+
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+      env:
+        - MATRIX_EVAL="update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 60 --slave /usr/bin/g++ g++ /usr/bin/g++-7"
+        
 sudo: required
 services:
   - docker
   
 before_install:
-  - docker pull ubuntu:bionic
-  - docker run -itd --name build ubuntu:bionic
-
+  - eval "${MATRIX_EVAL}"
+  - update-alternatives --config gcc
+  
+addons:
+  apt:
+    update: true
+    packages:
+      - git
+      - build-essential
+      - cmake
+      - libboost-all-dev
+      - libpng-dev
+      
 script:
-  - docker exec build apt-get update > /dev/null
-  - docker exec build apt-get dist-upgrade -y > /dev/null
-  - docker exec build apt-get install git build-essential cmake libboost-all-dev libpng-dev -y > /dev/null
-  - docker exec build git clone https://github.com/ltjax/replay.git /source
-  - docker exec build cmake -DCMAKE_BUILD_TYPE=Release -DREPLAY_USE_STBIMAGE=OFF -DREPLAY_ENABLE_UNIT_TESTS=OFF -B/build -H/source
-  - docker exec build cmake --build /build
+  - git clone https://github.com/ltjax/replay.git source
+  - cmake -DCMAKE_BUILD_TYPE=Release -DREPLAY_USE_STBIMAGE=OFF -DREPLAY_ENABLE_UNIT_TESTS=OFF -Bbuild -Hsource
+  - cmake --build build
