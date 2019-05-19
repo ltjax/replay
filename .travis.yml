@@ -49,6 +49,5 @@ addons:
       - libpng-dev
       
 script:
-  - git clone https://github.com/ltjax/replay.git source
-  - cmake -DCMAKE_BUILD_TYPE=Release -DREPLAY_USE_STBIMAGE=OFF -DREPLAY_ENABLE_UNIT_TESTS=OFF -Bbuild -Hsource
-  - cmake --build build
+  - cmake -DCMAKE_BUILD_TYPE=Release -DREPLAY_USE_STBIMAGE=OFF -DREPLAY_ENABLE_UNIT_TESTS=OFF -Bbuild/ .
+  - cmake --build build/
