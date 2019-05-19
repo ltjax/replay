@@ -57,5 +57,6 @@ before_install:
   - sudo update-alternatives --config gcc
       
 script:
-  - cmake -DCMAKE_BUILD_TYPE=Release -DREPLAY_USE_STBIMAGE=OFF -DREPLAY_ENABLE_UNIT_TESTS=OFF -Bbuild/ .
-  - cmake --build build/
+  - mkdir build && cd build
+  - cmake -DCMAKE_BUILD_TYPE=Release -DREPLAY_USE_STBIMAGE=OFF -DREPLAY_ENABLE_UNIT_TESTS=OFF ..
+  - cmake --build .
