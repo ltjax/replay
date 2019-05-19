@@ -35,8 +35,8 @@ services:
   - docker
   
 before_install:
-  - eval "${MATRIX_EVAL}"
-  - update-alternatives --config gcc
+  - eval "sudo ${MATRIX_EVAL}"
+  - sudo update-alternatives --config gcc
   
 addons:
   apt:
