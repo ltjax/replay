@@ -3,30 +3,48 @@ matrix:
     - os: linux
       addons:
         apt:
+          update: true
           sources:
             - ubuntu-toolchain-r-test
           packages:
             - g++-5
+            - git
+            - build-essential
+            - cmake
+            - libboost-all-dev
+            - libpng-dev
       env:
         - MATRIX_EVAL="update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 60 --slave /usr/bin/g++ g++ /usr/bin/g++-5"
 
     - os: linux
       addons:
         apt:
+          update: true
           sources:
             - ubuntu-toolchain-r-test
           packages:
             - g++-6
+            - git
+            - build-essential
+            - cmake
+            - libboost-all-dev
+            - libpng-dev
       env:
         - MATRIX_EVAL="update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 60 --slave /usr/bin/g++ g++ /usr/bin/g++-6"
 
     - os: linux
       addons:
         apt:
+          update: true
           sources:
             - ubuntu-toolchain-r-test
           packages:
             - g++-7
+            - git
+            - build-essential
+            - cmake
+            - libboost-all-dev
+            - libpng-dev
       env:
         - MATRIX_EVAL="update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 60 --slave /usr/bin/g++ g++ /usr/bin/g++-7"
         
@@ -37,16 +55,6 @@ services:
 before_install:
   - eval "sudo ${MATRIX_EVAL}"
   - sudo update-alternatives --config gcc
-  
-addons:
-  apt:
-    update: true
-    packages:
-      - git
-      - build-essential
-      - cmake
-      - libboost-all-dev
-      - libpng-dev
       
 script:
   - cmake -DCMAKE_BUILD_TYPE=Release -DREPLAY_USE_STBIMAGE=OFF -DREPLAY_ENABLE_UNIT_TESTS=OFF -Bbuild/ .
