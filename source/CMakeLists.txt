@@ -53,9 +53,13 @@ add_library(replay STATIC ${HEADER_FILES} ${SOURCE_FILES})
 target_include_directories(${TARGET_NAME}
   PUBLIC ${replay_SOURCE_DIR}/include)
 
-if (DEFINED REPLAY_INJECTED_BOOST_TARGETS)
+if (DEFINED Replay_BOOST_TARGETS)
   target_link_libraries(${TARGET_NAME}
-    PUBLIC ${REPLAY_INJECTED_BOOST_TARGETS})
+    PUBLIC ${Replay_BOOST_TARGETS})
+	
+  # Disable warning for deprecated header inclusion integer_log2.hpp - this can be removed for boost >= 1.70.0
+  target_compile_definitions(${TARGET_NAME}
+    PUBLIC -DBOOST_ALLOW_DEPRECATED_HEADERS)
 else()
   target_include_directories(${TARGET_NAME} SYSTEM
     PUBLIC ${Boost_INCLUDE_DIR})
@@ -65,28 +69,28 @@ else()
 endif()
 
 # Conditionally use stbimage
-if(REPLAY_USE_STBIMAGE)
+if(Replay_USE_STBIMAGE)
   target_compile_definitions(${TARGET_NAME}
-    PUBLIC -DREPLAY_USE_STBIMAGE
+    PUBLIC -DReplay_USE_STBIMAGE
     PRIVATE -DSTBI_NO_STDIO)
   target_include_directories(${TARGET_NAME}
-    PRIVATE ${REPLAY_STBIMAGE_PATH})
+    PRIVATE ${Replay_STBIMAGE_PATH})
 endif()
 
 # Conditionally use stbimage_write
-if(REPLAY_USE_STBIMAGE_WRITE)
+if(Replay_USE_STBIMAGE_WRITE)
   target_compile_definitions(${TARGET_NAME}
-    PUBLIC -DREPLAY_USE_STBIMAGE_WRITE
+    PUBLIC -DReplay_USE_STBIMAGE_WRITE
     PRIVATE -DSTBI_WRITE_NO_STDIO)
   target_include_directories(${TARGET_NAME}
-    PRIVATE ${REPLAY_STBIMAGE_WRITE_PATH})
+    PRIVATE ${Replay_STBIMAGE_WRITE_PATH})
 endif()
 
 if(UNIX)
   set_target_properties(replay PROPERTIES COMPILE_FLAGS -fPIC)
 endif()
 
-if(REPLAY_ENABLE_INSTALL)
+if(Replay_ENABLE_INSTALL)
   install(FILES ${replay_HEADERS} DESTINATION include/replay)
   install(TARGETS replay ARCHIVE DESTINATION lib)
 endif()
