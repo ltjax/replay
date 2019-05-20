@@ -18,6 +18,8 @@ if(NOT DEFINED REPLAY_ENABLE_INSTALL)
   option(REPLAY_ENABLE_INSTALL "Create the install target" ON)
 endif()
 
+set(CMAKE_CXX_STANDARD 14)
+
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${replay_BINARY_DIR}/build)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${replay_BINARY_DIR}/build)
 
@@ -39,15 +41,15 @@ endif()
 link_directories(${Boost_LIBRARY_DIRS})
 
 if(REPLAY_USE_LIBPNG)
-	find_package(PNG REQUIRED)
+  find_package(PNG REQUIRED)
 endif()
 
 if(REPLAY_USE_STBIMAGE AND NOT DEFINED REPLAY_STBIMAGE_PATH)
-	find_path(REPLAY_STBIMAGE_PATH stb_image.h)
+  find_path(REPLAY_STBIMAGE_PATH stb_image.h)
 endif()
 
 add_subdirectory(source)
 
 if(REPLAY_ENABLE_UNIT_TESTS)
-	add_subdirectory(test)
+  add_subdirectory(test)
 endif()
