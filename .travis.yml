@@ -12,8 +12,6 @@ matrix:
             - git
             - build-essential
             - cmake
-            - libboost-all-dev
-            - libpng-dev
             - python3-pip
       env:
         - MATRIX_EVAL="update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 60 --slave /usr/bin/g++ g++ /usr/bin/g++-5"
@@ -29,8 +27,6 @@ matrix:
             - git
             - build-essential
             - cmake
-            - libboost-all-dev
-            - libpng-dev
             - python3-pip
       env:
         - MATRIX_EVAL="update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 60 --slave /usr/bin/g++ g++ /usr/bin/g++-6"
@@ -46,19 +42,16 @@ matrix:
             - git
             - build-essential
             - cmake
-            - libboost-all-dev
-            - libpng-dev
             - python3-pip
       env:
         - MATRIX_EVAL="update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 60 --slave /usr/bin/g++ g++ /usr/bin/g++-7"
         
 sudo: required
-services:
-  - docker
   
 before_install:
   - eval "sudo ${MATRIX_EVAL}"
   - sudo update-alternatives --config gcc
+  - sudo pip3 install --upgrade setuptools
   - pip3 install conan
   - conan config install /conan_config
       
