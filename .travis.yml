@@ -53,7 +53,7 @@ before_install:
   - sudo update-alternatives --config gcc
   - sudo pip3 install --upgrade setuptools
   - sudo pip3 install conan
-  - conan config install /conan_config
+  - conan config install conan_config/
       
 script:
   - mkdir build && cd build
