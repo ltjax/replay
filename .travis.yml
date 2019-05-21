@@ -1,3 +1,4 @@
+language: cpp
 matrix:
   include:
     - os: linux
@@ -13,6 +14,7 @@ matrix:
             - cmake
             - libboost-all-dev
             - libpng-dev
+            - python3-pip
       env:
         - MATRIX_EVAL="update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 60 --slave /usr/bin/g++ g++ /usr/bin/g++-5"
 
@@ -29,6 +31,7 @@ matrix:
             - cmake
             - libboost-all-dev
             - libpng-dev
+            - python3-pip
       env:
         - MATRIX_EVAL="update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 60 --slave /usr/bin/g++ g++ /usr/bin/g++-6"
 
@@ -45,6 +48,7 @@ matrix:
             - cmake
             - libboost-all-dev
             - libpng-dev
+            - python3-pip
       env:
         - MATRIX_EVAL="update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 60 --slave /usr/bin/g++ g++ /usr/bin/g++-7"
         
@@ -55,8 +59,11 @@ services:
 before_install:
   - eval "sudo ${MATRIX_EVAL}"
   - sudo update-alternatives --config gcc
+  - pip3 install conan
+  - conan config install /conan_config
       
 script:
   - mkdir build && cd build
-  - cmake -DCMAKE_BUILD_TYPE=Release -DREPLAY_USE_STBIMAGE=OFF -DREPLAY_ENABLE_UNIT_TESTS=OFF ..
+  - conan install ..
+  - cmake -DCMAKE_BUILD_TYPE=Release -DReplay_USE_CONAN=ON -DReplay_ENABLE_UNIT_TESTS=OFF ..
   - cmake --build .
