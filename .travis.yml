@@ -14,7 +14,7 @@ matrix:
             - cmake
             - python3-pip
       env:
-        - MATRIX_EVAL="update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 60 --slave /usr/bin/g++ g++ /usr/bin/g++-5"
+        - MATRIX_EVAL="update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 60 --slave /usr/bin/g++ g++ /usr/bin/g++-5" CONAN_USER_HOME=/tmp/conan
 
     - os: linux
       addons:
@@ -29,7 +29,7 @@ matrix:
             - cmake
             - python3-pip
       env:
-        - MATRIX_EVAL="update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 60 --slave /usr/bin/g++ g++ /usr/bin/g++-6"
+        - MATRIX_EVAL="update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 60 --slave /usr/bin/g++ g++ /usr/bin/g++-6" CONAN_USER_HOME=/tmp/conan
 
     - os: linux
       addons:
@@ -44,19 +44,23 @@ matrix:
             - cmake
             - python3-pip
       env:
-        - MATRIX_EVAL="update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 60 --slave /usr/bin/g++ g++ /usr/bin/g++-7"
+        - MATRIX_EVAL="update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 60 --slave /usr/bin/g++ g++ /usr/bin/g++-7" CONAN_USER_HOME=/tmp/conan
         
 sudo: required
-  
+
+cache:
+  directories:
+  - $CONAN_USER_HOME
+
 before_install:
   - eval "sudo ${MATRIX_EVAL}"
   - sudo update-alternatives --config gcc
   - sudo pip3 install --upgrade setuptools
   - sudo pip3 install conan
   - conan config install conan_config/
-      
+
 script:
   - mkdir build && cd build
-  - conan install ..
+  - conan install .. -s compiler.libcxx=libstdc++
   - cmake -DCMAKE_BUILD_TYPE=Release -DReplay_USE_CONAN=ON -DReplay_ENABLE_UNIT_TESTS=OFF ..
   - cmake --build .
