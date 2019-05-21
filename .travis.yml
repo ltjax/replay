@@ -52,7 +52,7 @@ before_install:
   - eval "sudo ${MATRIX_EVAL}"
   - sudo update-alternatives --config gcc
   - sudo pip3 install --upgrade setuptools
-  - pip3 install conan
+  - sudo pip3 install conan
   - conan config install /conan_config
       
 script:
