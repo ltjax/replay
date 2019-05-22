@@ -8,21 +8,6 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - g++-5
-            - git
-            - build-essential
-            - cmake
-            - python3-pip
-      env:
-        - MATRIX_EVAL="update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 60 --slave /usr/bin/g++ g++ /usr/bin/g++-5" CONAN_USER_HOME=/tmp/conan
-
-    - os: linux
-      addons:
-        apt:
-          update: true
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
             - g++-6
             - git
             - build-essential
