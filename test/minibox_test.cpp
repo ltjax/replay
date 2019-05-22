@@ -1,8 +1,5 @@
-
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_real.hpp>
-#include <boost/random/variate_generator.hpp>
 #include <boost/test/unit_test.hpp>
+#include <random>
 
 #include <boost/assign.hpp>
 
@@ -125,11 +122,9 @@ BOOST_AUTO_TEST_CASE(random_minibox)
     using namespace replay;
 
     const std::size_t test_count = 32;
-    typedef boost::uniform_real<float> range_type;
-    typedef boost::variate_generator<boost::mt19937&, range_type> variate_type;
-    boost::mt19937 rng;
+    std::mt19937 rng;
 
-    variate_type random_coord(rng, range_type(-10.f, 10.f));
+    auto random_coord = [&] { return std::uniform_real_distribution<float>(-10.f, 10.f)(rng); };
 
     for (std::size_t k = 0; k < test_count; ++k)
     {

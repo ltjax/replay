@@ -1,9 +1,5 @@
 #define BOOST_TEST_MODULE math
 #include <boost/math/constants/constants.hpp>
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_real.hpp>
-#include <boost/random/variate_generator.hpp>
-#include <boost/scoped_array.hpp>
 #include <boost/test/unit_test.hpp>
 #include <replay/math.hpp>
 #include <replay/matrix2.hpp>
@@ -12,6 +8,8 @@
 
 #include <boost/assign/std/list.hpp>
 #include <boost/assign/std/vector.hpp>
+
+#include <random>
 
 namespace
 {
@@ -48,7 +46,7 @@ float distance_to_sphere(const IteratorType point_begin,
     float radius = std::sqrt(square_radius);
     return std::max(0.f, std::sqrt(max_sqr_distance) - radius);
 }
-}
+} // namespace
 
 BOOST_AUTO_TEST_CASE(matrix2_operations)
 {
@@ -104,11 +102,12 @@ BOOST_AUTO_TEST_CASE(vector3_integer_operations)
 BOOST_AUTO_TEST_CASE(quadratic_equation_solver)
 {
     using namespace replay;
+    using range_type = std::uniform_real_distribution<float>;
     // Attempt to solve a few equations of the form (x-b)(x-a)=0 <=> x^2+(-a-b)*x+b*a=0
 
-    boost::mt19937 rng;
-    boost::uniform_real<float> range(-100.f, 300.f);
-    boost::variate_generator<boost::mt19937&, boost::uniform_real<float>> die(rng, range);
+    std::mt19937 rng;
+    range_type range(-100.f, 300.f);
+    auto die = [&] { return range(rng); };
 
     for (std::size_t i = 0; i < 32; ++i)
     {
@@ -191,14 +190,13 @@ BOOST_AUTO_TEST_CASE(minimal_ball)
     using namespace replay;
     using namespace boost::assign;
     typedef vector3f vec3;
-    typedef boost::uniform_real<float> range_type;
-    typedef boost::variate_generator<boost::mt19937&, range_type> variate_type;
+    using range_type = std::uniform_real_distribution<float>;
 
     // setup random number generators
-    boost::mt19937 rng;
-    variate_type random_latitude(rng, range_type(-180.f, 180.f));
-    variate_type random_longitude(rng, range_type(-90.f, 90.f));
-    variate_type random_scale(rng, range_type(0.f, 1.0f));
+    std::mt19937 rng;
+    auto random_latitude = [&] { return range_type(-180.f, 180.f)(rng); };
+    auto random_longitude = [&] { return range_type(-90.f, 90.f)(rng); };
+    auto random_scale = [&] { return range_type(0.f, 1.0f)(rng); };
 
     // setup a simple point set
     std::list<vec3> points;
@@ -226,17 +224,16 @@ BOOST_AUTO_TEST_CASE(minimal_ball)
 BOOST_AUTO_TEST_CASE(minimal_sphere)
 {
     using namespace replay;
-    typedef boost::uniform_real<float> range_type;
-    typedef boost::variate_generator<boost::mt19937&, range_type> variate_type;
+    using range_type = std::uniform_real_distribution<float>;
 
-    boost::mt19937 rng;
+    std::mt19937 rng;
 
-    variate_type random_coord(rng, boost::uniform_real<float>(-100.f, 100.f));
-    variate_type random_radius(rng, range_type(1.f, 3.f));
+    auto random_coord = [&] { return range_type(-100.f, 100.f)(rng); };
+    auto random_radius = [&] { return range_type(1.f, 3.f)(rng); };
 
-    variate_type random_latitude(rng, range_type(-180.f, 180.f));
-    variate_type random_longitude(rng, range_type(-90.f, 90.f));
-    variate_type random_scale(rng, range_type(0.0f, 1.0f));
+    auto random_latitude = [&] { return range_type(-180.f, 180.f)(rng); };
+    auto random_longitude = [&] { return range_type(-90.f, 90.f)(rng); };
+    auto random_scale = [&] { return range_type(0.0f, 1.0f)(rng); };
 
     std::vector<vector3f> p(64);
 
@@ -253,7 +250,7 @@ BOOST_AUTO_TEST_CASE(minimal_sphere)
         for (std::size_t j = boundary_n; j < 64; ++j)
             p[j] = center + polar_to_model(random_latitude(), random_longitude()) * (random_scale() * radius);
 
-        std::random_shuffle(p.begin(), p.end());
+        std::shuffle(p.begin(), p.end(), rng);
 
         vector3f result_center;
         float result_square_radius = 0.f;

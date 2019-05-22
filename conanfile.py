@@ -15,7 +15,7 @@ class ReplayConan(ConanFile):
     generators = "cmake"
     exports_sources = "source/*", "test/*", "include/*", "CMakeLists.txt"
     requires = "boost_filesystem/1.69.0@bincrafters/stable", "boost_iostreams/1.69.0@bincrafters/stable",\
-       "boost_random/1.69.0@bincrafters/stable", "boost_test/1.69.0@bincrafters/stable", "boost_assign/1.69.0@bincrafters/stable" # Only needed for tests right now
+       "boost_test/1.69.0@bincrafters/stable", "boost_assign/1.69.0@bincrafters/stable" # Only needed for tests right now
     
     def _configured_cmake(self):
         cmake = CMake(self)
