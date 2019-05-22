@@ -12,9 +12,7 @@ target_link_libraries(${TARGET_NAME}
 
 if (Replay_USE_CONAN)
   target_link_libraries(${TARGET_NAME}
-    PUBLIC CONAN_PKG::boost_random
 	PUBLIC CONAN_PKG::boost_test
-	PUBLIC CONAN_PKG::boost_assign
   )
 endif()
 

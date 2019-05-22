@@ -6,9 +6,6 @@
 #include <replay/minimal_sphere.hpp>
 #include <replay/vector_math.hpp>
 
-#include <boost/assign/std/list.hpp>
-#include <boost/assign/std/vector.hpp>
-
 #include <random>
 
 namespace
@@ -188,7 +185,6 @@ BOOST_AUTO_TEST_CASE(circumcircle)
 BOOST_AUTO_TEST_CASE(minimal_ball)
 {
     using namespace replay;
-    using namespace boost::assign;
     typedef vector3f vec3;
     using range_type = std::uniform_real_distribution<float>;
 
@@ -199,8 +195,7 @@ BOOST_AUTO_TEST_CASE(minimal_ball)
     auto random_scale = [&] { return range_type(0.f, 1.0f)(rng); };
 
     // setup a simple point set
-    std::list<vec3> points;
-    points += vec3(1.f, 0.f, 0.f), vec3(0.f, 1.f, 0.f), vec3(0.f, 0.f, 1.f), vec3(0.f, -1.f, 0.f);
+    std::list<vec3> points{ vec3(1.f, 0.f, 0.f), vec3(0.f, 1.f, 0.f), vec3(0.f, 0.f, 1.f), vec3(0.f, -1.f, 0.f) };
 
     for (std::size_t i = 0; i < 32; ++i)
     {

@@ -1,8 +1,6 @@
 #include <boost/test/unit_test.hpp>
 #include <random>
 
-#include <boost/assign.hpp>
-
 #include <memory>
 #include <replay/bounding_rectangle.hpp>
 #include <replay/matrix2.hpp>
@@ -101,11 +99,9 @@ template <std::size_t n, class ArrayLike> bool fuzzy_equals_n(const ArrayLike& l
 
 BOOST_AUTO_TEST_CASE(simple_minibox)
 {
-    using namespace boost::assign;
     using namespace replay;
 
-    std::vector<vec2> Points;
-    Points += vec2(0.f, 0.f), vec2(3.f, 0.f), vec2(2.f, 1.f), vec2(1.f, 1.f);
+    std::vector<vec2> Points{ vec2(0.f, 0.f), vec2(3.f, 0.f), vec2(2.f, 1.f), vec2(1.f, 1.f) };
 
     bounding_rectangle_algorithm Box(ptr(Points), Points.size());
     matrix2 M = Box.get_matrix();
