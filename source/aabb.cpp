@@ -40,21 +40,21 @@ replay::aabb::aabb()
 /** Create a new box that extends in all directions from the origin.
 */
 replay::aabb::aabb(float half_extends)
-: base_class(vector3f(-half_extends), vector3f(half_extends))
+: aabb(vector3f(-half_extends), vector3f(half_extends))
 {
 }
 
 /** Create a new box containing a single point.
 */
-replay::aabb::aabb(const vector3f& point)
-: base_class(point, point)
+replay::aabb::aabb(vector3f const& point)
+: aabb(point, point)
 {
 }
 
 /** Create a new box from range.
 */
-replay::aabb::aabb(const vector3f& min, const vector3f& max)
-: base_class(min, max)
+replay::aabb::aabb(vector3f const& min, vector3f const& max)
+: std::array<vector3f, 2>{ min, max }
 {
 }
 
@@ -63,8 +63,8 @@ replay::aabb::aabb(const vector3f& min, const vector3f& max)
 */
 replay::aabb& replay::aabb::clear()
 {
-    (*this)[0].reset(std::numeric_limits<float>::max());
-    (*this)[1].reset(-std::numeric_limits<float>::max());
+    min().reset(std::numeric_limits<float>::max());
+    max().reset(-std::numeric_limits<float>::max());
 
     return *this;
 }
@@ -77,7 +77,7 @@ bool replay::aabb::empty() const
 
 /** Compute the square distance to the box using Arvo's algorithm.
 */
-float replay::aabb::square_distance(const vector3f& other) const
+float replay::aabb::square_distance(vector3f const& other) const
 {
     // Arvo's Algorithm
     float result = 0.f;
@@ -85,15 +85,15 @@ float replay::aabb::square_distance(const vector3f& other) const
 
     for (unsigned int i = 0; i < 3; ++i)
     {
-        if (other[i] < (*this)[0][i])
+        if (other[i] < min(i))
         {
-            temp = other[i] - (*this)[0][i];
+            temp = other[i] - min(i);
             result += temp * temp;
         }
 
-        else if (other[i] > (*this)[1][i])
+        else if (other[i] > max(i))
         {
-            temp = other[i] - (*this)[1][i];
+            temp = other[i] - max(i);
             result += temp * temp;
         }
     }
@@ -102,7 +102,7 @@ float replay::aabb::square_distance(const vector3f& other) const
 
 /** Compute the euclidean distance to the box using Arvo's algorithm.
 */
-float replay::aabb::distance(const vector3f& other) const
+float replay::aabb::distance(vector3f const& other) const
 {
     return std::sqrt(square_distance(other));
 }
@@ -111,28 +111,27 @@ float replay::aabb::distance(const vector3f& other) const
     \param x The vector that the box is supposed to be projected onto.
     \returns a An ordered range of the box projected onto the vector.
 */
-replay::fcouple replay::aabb::project(const vector3f& x) const
+std::array<float, 2> replay::aabb::project(vector3f const& x) const
 {
-    fcouple result;
-    result.set(0.f, 0.f);
+    std::array<float, 2> result{ 0.f, 0.f };
 
     for (unsigned int i = 0; i < 3; ++i)
     {
         unsigned int mask = math::sign(x[i]);
 
-        result[mask] += (*this)[0][i] * x[i];
-        result[mask ^ 1] += (*this)[1][i] * x[i];
+        result[mask] += min(i) * x[i];
+        result[mask ^ 1] += max(i) * x[i];
     }
 
     if (result[0] > result[1])
-        result.swap();
+        std::swap(result[0], result[1]);
 
     return result;
 }
 
 /** Classify the box in respect to a plane.
 */
-replay::aabb::classify_result replay::aabb::classify(const plane3& x) const
+replay::aabb::classify_result replay::aabb::classify(plane3 const& x) const
 {
     unsigned int mask;
     fcouple result;
@@ -143,8 +142,8 @@ replay::aabb::classify_result replay::aabb::classify(const plane3& x) const
     {
         mask = math::sign(x.normal[i]);
 
-        result[mask] += (*this)[0][i] * x.normal[i];
-        result[mask ^ 1] += (*this)[1][i] * x.normal[i];
+        result[mask] += min(i) * x.normal[i];
+        result[mask ^ 1] += max(i) * x.normal[i];
     }
 
     if (result[0] > result[1])
@@ -160,10 +159,10 @@ replay::aabb::classify_result replay::aabb::classify(const plane3& x) const
 
 /** Move the box.
 */
-replay::aabb& replay::aabb::move(const vector3f& delta)
+replay::aabb& replay::aabb::move(vector3f const& delta)
 {
-    get0() += delta;
-    get1() += delta;
+    min() += delta;
+    max() += delta;
     return *this;
 }
 
@@ -173,10 +172,10 @@ replay::aabb& replay::aabb::insert(const aabb& x)
 {
     for (unsigned int i = 0; i < 3; ++i)
     {
-        if (x[0][i] < (*this)[0][i])
-            (*this)[0][i] = x[0][i];
-        if (x[1][i] > (*this)[1][i])
-            (*this)[1][i] = x[1][i];
+        if (x[0][i] < min(i))
+            min(i) = x[0][i];
+        if (x[1][i] > max(i))
+            max(i) = x[1][i];
     }
 
     return *this;
@@ -184,7 +183,7 @@ replay::aabb& replay::aabb::insert(const aabb& x)
 
 /** Enlarge the aabb to contain the array of points.
 */
-replay::aabb& replay::aabb::insert(const vector3f* points, unsigned int count)
+replay::aabb& replay::aabb::insert(vector3f const* points, unsigned int count)
 {
     if (!count)
         return *this;
@@ -200,10 +199,10 @@ replay::aabb& replay::aabb::insert(const vector3f* points, unsigned int count)
         {
             t = points[i][j];
 
-            if (t < (*this)[0][j])
-                (*this)[0][j] = t;
-            else if (t > (*this)[1][j])
-                (*this)[1][j] = t;
+            if (t < min()[j])
+                min()[j] = t;
+            else if (t > max()[j])
+                max()[j] = t;
         }
     }
 
@@ -212,7 +211,7 @@ replay::aabb& replay::aabb::insert(const vector3f* points, unsigned int count)
 
 /** Enlarge the aabb to contain the indexed points from the array.
 */
-replay::aabb& replay::aabb::insert(const vector3f* points, const unsigned int* indices, unsigned int count)
+replay::aabb& replay::aabb::insert(vector3f const* points, const unsigned int* indices, unsigned int count)
 {
     if (!count)
         return *this;
@@ -228,10 +227,10 @@ replay::aabb& replay::aabb::insert(const vector3f* points, const unsigned int* i
         {
             t = points[indices[i]][j];
 
-            if (t < (*this)[0][j])
-                (*this)[0][j] = t;
-            else if (t > (*this)[1][j])
-                (*this)[1][j] = t;
+            if (t < min()[j])
+                min()[j] = t;
+            else if (t > max()[j])
+                max()[j] = t;
         }
     }
 
@@ -240,7 +239,7 @@ replay::aabb& replay::aabb::insert(const vector3f* points, const unsigned int* i
 
 /** Enlarge the aabb to contain the indexed points from the array.
 */
-replay::aabb& replay::aabb::insert(const vector3f* points, const unsigned short* indices, unsigned int count)
+replay::aabb& replay::aabb::insert(vector3f const* points, const unsigned short* indices, unsigned int count)
 {
     if (!count)
         return *this;
@@ -256,10 +255,10 @@ replay::aabb& replay::aabb::insert(const vector3f* points, const unsigned short*
         {
             t = points[indices[i]][j];
 
-            if (t < (*this)[0][j])
-                (*this)[0][j] = t;
-            else if (t > (*this)[1][j])
-                (*this)[1][j] = t;
+            if (t < min()[j])
+                min()[j] = t;
+            else if (t > max()[j])
+                max()[j] = t;
         }
     }
 
@@ -268,16 +267,16 @@ replay::aabb& replay::aabb::insert(const vector3f* points, const unsigned short*
 
 /** the arvo vector is the difference of point and the closest point on the interval to it.
 */
-replay::vector3f& replay::aabb::compute_arvo_vector(const vector3f& point, vector3f& result) const
+replay::vector3f& replay::aabb::compute_arvo_vector(vector3f const& point, vector3f& result) const
 {
     for (unsigned int i = 0; i < 3; ++i)
     {
-        if (point[i] < get0()[i])
-            result[i] = point[i] - get0()[i];
-        else if (point[i] > get1()[i])
-            result[i] = point[i] - get1()[i];
+        if (point[i] < min(i))
+            result[i] = point[i] - min(i);
+        else if (point[i] > max(i))
+            result[i] = point[i] - max(i);
         else
-            result[0];
+            result[i] = 0.f;
     }
 
     return result;
@@ -287,7 +286,7 @@ replay::vector3f& replay::aabb::compute_arvo_vector(const vector3f& point, vecto
 */
 replay::vector3f& replay::aabb::compute_center(vector3f& result) const
 {
-    return (result = (get0() + get1()) * 0.5f);
+    return (result = (min() + max()) * 0.5f);
 }
 
 /** Compute a given corner of the box, whereas the n'th bit in the index corresponds to the n'th axis in space.
@@ -302,12 +301,12 @@ replay::vector3f& replay::aabb::corner(std::size_t index, vector3f& result) cons
 
 /** Compute a sub-aabb for octree-like splits.
 */
-replay::aabb& replay::aabb::compute_subinterval(unsigned int index, const vector3f& pivot, aabb& result) const
+replay::aabb& replay::aabb::compute_subinterval(unsigned int index, vector3f const& pivot, aabb& result) const
 {
     for (unsigned int j = 0; j < 3; ++j)
     {
-        result[0][j] = (((index >> j) & 1) ? pivot : get0())[j];
-        result[1][j] = (((index >> j) & 1) ? get1() : pivot)[j];
+        result[0][j] = (((index >> j) & 1) ? pivot : min())[j];
+        result[1][j] = (((index >> j) & 1) ? max() : pivot)[j];
     }
 
     return result;
@@ -315,10 +314,10 @@ replay::aabb& replay::aabb::compute_subinterval(unsigned int index, const vector
 
 /** Check if a point is inside this box.
 */
-bool replay::aabb::contains(const vector3f& point) const
+bool replay::aabb::contains(vector3f const& point) const
 {
-    return math::in_range(point[0], get0()[0], get1()[0]) && math::in_range(point[1], get0()[1], get1()[1]) &&
-           math::in_range(point[2], get0()[2], get1()[2]);
+    return math::in_range(point[0], min()[0], max()[0]) && math::in_range(point[1], min()[1], max()[1]) &&
+           math::in_range(point[2], min()[2], max()[2]);
 }
 
 /** Create the aabb [min-x,max+x].

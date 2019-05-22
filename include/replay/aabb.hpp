@@ -28,7 +28,7 @@ Copyright (c) 2010-2019 Marius Elvert
 #define replay_aabb_hpp
 
 #include <algorithm>
-#include <replay/couple.hpp>
+#include <array>
 #include <replay/plane3.hpp>
 #include <replay/vector3.hpp>
 
@@ -39,10 +39,8 @@ namespace replay
     Represents the intersection of intervals on the 3 principal axes.
     \ingroup Math
 */
-class aabb : public couple<vector3f>
+class aabb : private std::array<vector3f, 2>
 {
-    typedef couple<vector3f> base_class;
-
 public:
     /** Classification relative to a plane.
         \see classify
@@ -55,8 +53,8 @@ public:
     };
     aabb();
     explicit aabb(float half_extends);
-    explicit aabb(const vector3f& point);
-    aabb(const vector3f& min, const vector3f& max);
+    explicit aabb(vector3f const& point);
+    aabb(vector3f const& min, vector3f const& max);
 
     /** Constructor for user-defined conversions.
         \see convertible_tag
@@ -68,7 +66,7 @@ public:
     }
 
     aabb& clear();
-    aabb& move(const vector3f& delta);
+    aabb& move(vector3f const& delta);
 
     /** Check if this bounding box is empty, i.e. does not contain any points.
     */
@@ -77,7 +75,7 @@ public:
     /** Enlarge the box to contain the given point.
         \param point The point to be inserted.
     */
-    aabb& insert(const vector3f& point)
+    aabb& insert(vector3f const& point)
     {
         for (unsigned int i = 0; i < 3; ++i)
         {
@@ -90,17 +88,17 @@ public:
         return *this;
     }
 
-    aabb& insert(const vector3f* points, unsigned int count);
-    aabb& insert(const vector3f* points, const unsigned short* indices, unsigned int count);
-    aabb& insert(const vector3f* points, const unsigned int* indices, unsigned int count);
+    aabb& insert(vector3f const* points, unsigned int count);
+    aabb& insert(vector3f const* points, const unsigned short* indices, unsigned int count);
+    aabb& insert(vector3f const* points, const unsigned int* indices, unsigned int count);
     aabb& insert(const aabb& rhs);
     aabb const inserted(aabb rhs) const;
 
-    vector3f& compute_arvo_vector(const vector3f& point, vector3f& result) const;
+    vector3f& compute_arvo_vector(vector3f const& point, vector3f& result) const;
 
     /** Compute the shortest vector from the point to the box.
     */
-    inline vector3f compute_arvo_vector(const vector3f& point) const
+    inline vector3f compute_arvo_vector(vector3f const& point) const
     {
         vector3f temp;
         return compute_arvo_vector(point, temp);
@@ -122,73 +120,73 @@ public:
     */
     inline vector3f corner(std::size_t i) const;
 
-    aabb& compute_subinterval(unsigned int index, const vector3f& pivot, aabb& result) const;
+    aabb& compute_subinterval(unsigned int index, vector3f const& pivot, aabb& result) const;
 
-    float square_distance(const vector3f& other) const;
-    float distance(const vector3f& other) const;
+    float square_distance(vector3f const& other) const;
+    float distance(vector3f const& other) const;
 
-    bool contains(const vector3f& point) const;
+    bool contains(vector3f const& point) const;
 
-    fcouple project(const vector3f& x) const;
-    classify_result classify(const plane3& x) const;
+    std::array<float, 2> project(vector3f const& x) const;
+    classify_result classify(plane3 const& x) const;
 
-    aabb& expand(const vector3f& x);
-    aabb const expanded(const vector3f& x) const;
+    aabb& expand(vector3f const& x);
+    aabb const expanded(vector3f const& x) const;
 
     /** Get the minimum in all three dimensions.
     */
     vector3f& min()
     {
-        return get0();
+        return front();
     }
 
     /** Get the minimum in all three dimensions.
     */
-    const vector3f& min() const
+    vector3f const& min() const
     {
-        return get0();
+        return front();
     }
 
     /** Get the minimum element in the given dimension.
     */
     template <class IndexType> float& min(IndexType i)
     {
-        return get0()[i];
+        return front()[i];
     }
 
     /** Get the minimum element in the given dimension.
     */
     template <class IndexType> float min(IndexType i) const
     {
-        return get0()[i];
+        return front()[i];
     }
 
     /** Get the maximum in all three dimensions.
     */
     vector3f& max()
     {
-        return get1();
+        return back();
     }
 
     /** Get the maximum in all three dimensions.
     */
-    const vector3f& max() const
+    vector3f const& max() const
     {
-        return get1();
+        return back();
     }
 
     /** Get the maximum element in the given dimension.
     */
     template <class IndexType> float& max(IndexType i)
     {
-        return get1()[i];
+        return back()[i];
     }
 
     /** Get the maximum element in the given dimension.
     */
     template <class IndexType> float max(IndexType i) const
     {
-        return get1()[i];
+        return back()[i];
     }
 
     /** Intersect this box with another.

@@ -202,7 +202,7 @@ BOOST_AUTO_TEST_CASE(minimal_ball)
         vector3f t = polar_to_model(random_latitude(), random_longitude());
         float l = magnitude(t);
         float s = random_scale();
-        points += t * s;
+        points.push_back(t * s);
     }
 
     // run the solver
