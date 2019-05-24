@@ -69,7 +69,7 @@ public:
     aabb& move(vector3f const& delta);
 
     /** Check if this bounding box is empty, i.e. does not contain any points.
-    */
+     */
     bool empty() const;
 
     /** Enlarge the box to contain the given point.
@@ -97,7 +97,7 @@ public:
     vector3f& compute_arvo_vector(vector3f const& point, vector3f& result) const;
 
     /** Compute the shortest vector from the point to the box.
-    */
+     */
     inline vector3f compute_arvo_vector(vector3f const& point) const
     {
         vector3f temp;
@@ -107,7 +107,7 @@ public:
     vector3f& compute_center(vector3f& result) const;
 
     /** Compute the center of the aabb.
-    */
+     */
     inline vector3f compute_center() const
     {
         vector3f temp;
@@ -117,7 +117,7 @@ public:
     vector3f& corner(std::size_t i, vector3f& result) const;
 
     /** Compute a corner of the aabb.
-    */
+     */
     inline vector3f corner(std::size_t i) const;
 
     aabb& compute_subinterval(unsigned int index, vector3f const& pivot, aabb& result) const;
@@ -134,70 +134,80 @@ public:
     aabb const expanded(vector3f const& x) const;
 
     /** Get the minimum in all three dimensions.
-    */
+     */
     vector3f& min()
     {
         return front();
     }
 
     /** Get the minimum in all three dimensions.
-    */
+     */
     vector3f const& min() const
     {
         return front();
     }
 
     /** Get the minimum element in the given dimension.
-    */
+     */
     template <class IndexType> float& min(IndexType i)
     {
         return front()[i];
     }
 
     /** Get the minimum element in the given dimension.
-    */
+     */
     template <class IndexType> float min(IndexType i) const
     {
         return front()[i];
     }
 
     /** Get the maximum in all three dimensions.
-    */
+     */
     vector3f& max()
     {
         return back();
     }
 
     /** Get the maximum in all three dimensions.
-    */
+     */
     vector3f const& max() const
     {
         return back();
     }
 
     /** Get the maximum element in the given dimension.
-    */
+     */
     template <class IndexType> float& max(IndexType i)
     {
         return back()[i];
     }
 
     /** Get the maximum element in the given dimension.
-    */
+     */
     template <class IndexType> float max(IndexType i) const
     {
         return back()[i];
     }
 
     /** Intersect this box with another.
-    */
+     */
     aabb& intersect(const replay::aabb& rhs);
 
     /** Create a box that is the intersection of this and another.
-    */
+     */
     aabb const intersected(replay::aabb rhs) const;
 };
+
+inline bool operator==(aabb const& lhs, aabb const& rhs)
+{
+    return lhs.min() == rhs.min() && lhs.max() == rhs.max();
 }
+
+inline bool operator!=(aabb const& lhs, aabb const& rhs)
+{
+    return !(lhs == rhs);
+}
+} // namespace replay
 
 inline replay::aabb const replay::aabb::inserted(replay::aabb rhs) const
 {
