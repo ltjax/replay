@@ -71,7 +71,7 @@ endif()
 # Conditionally use stbimage
 if(Replay_USE_STBIMAGE)
   target_compile_definitions(${TARGET_NAME}
-    PUBLIC -DReplay_USE_STBIMAGE
+    PUBLIC -DREPLAY_USE_STBIMAGE
     PRIVATE -DSTBI_NO_STDIO)
   target_include_directories(${TARGET_NAME}
     PRIVATE ${Replay_STBIMAGE_PATH})
@@ -80,7 +80,7 @@ endif()
 # Conditionally use stbimage_write
 if(Replay_USE_STBIMAGE_WRITE)
   target_compile_definitions(${TARGET_NAME}
-    PUBLIC -DReplay_USE_STBIMAGE_WRITE
+    PUBLIC -DREPLAY_USE_STBIMAGE_WRITE
     PRIVATE -DSTBI_WRITE_NO_STDIO)
   target_include_directories(${TARGET_NAME}
     PRIVATE ${Replay_STBIMAGE_WRITE_PATH})
