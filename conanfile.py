@@ -19,7 +19,7 @@ class ReplayConan(ConanFile):
     
     def _configured_cmake(self):
         cmake = CMake(self)
-        cmake.configure(source_folder=".", defs={'Replay_USE_CONAN': 'ON'})
+        cmake.configure(source_folder=".", defs={'Replay_USE_CONAN': 'ON', 'Replay_USE_STBIMAGE': 'OFF', 'Replay_USE_LIBPNG': 'OFF'})
         return cmake
 
     def build(self):
