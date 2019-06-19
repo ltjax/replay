@@ -30,6 +30,7 @@ set(HEADER_FILES
   ${replay_SOURCE_DIR}/include/replay/vector3.inl
   ${replay_SOURCE_DIR}/include/replay/vector4.hpp
   ${replay_SOURCE_DIR}/include/replay/vector4.inl
+  ${replay_SOURCE_DIR}/include/replay/concurrent_queue.hpp
 )
   
 set(SOURCE_FILES
@@ -73,8 +74,13 @@ if(Replay_USE_STBIMAGE)
   target_compile_definitions(${TARGET_NAME}
     PUBLIC -DREPLAY_USE_STBIMAGE
     PRIVATE -DSTBI_NO_STDIO)
-  target_include_directories(${TARGET_NAME}
-    PRIVATE ${Replay_STBIMAGE_PATH})
+  if(Replay_USE_STBIMAGE_FROM_CONAN)
+    target_link_libraries(${TARGET_NAME}
+      PRIVATE CONAN_PKG::stb)
+  else()
+    target_include_directories(${TARGET_NAME}
+      PRIVATE ${Replay_STBIMAGE_PATH})
+  endif()
 endif()
 
 # Conditionally use stbimage_write
@@ -91,6 +97,6 @@ if(UNIX)
 endif()
 
 if(Replay_ENABLE_INSTALL)
-  install(FILES ${replay_HEADERS} DESTINATION include/replay)
+  install(FILES ${HEADER_FILES} DESTINATION include/replay)
   install(TARGETS replay ARCHIVE DESTINATION lib)
 endif()

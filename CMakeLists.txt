@@ -47,7 +47,7 @@ else()
     find_package(PNG REQUIRED)
   endif()
   
-  if(Replay_USE_STBIMAGE AND NOT DEFINED Replay_STBIMAGE_PATH)
+  if(Replay_USE_STBIMAGE AND NOT DEFINED Replay_STBIMAGE_PATH AND NOT Replay_USE_STBIMAGE_FROM_CONAN)
     find_path(Replay_STBIMAGE_PATH stb_image.h)
   endif()
 endif()
