@@ -18,6 +18,49 @@ public:
     using allocator_type = replay::aligned_allocator<mapped_type>;
     using mask_element_type = std::uint64_t;
 
+    class iterator
+    {
+    public:
+        iterator(index_map* parent, size_type index)
+        : parent_(parent)
+        , index_(index)
+        {
+            skip_invalid();
+        }
+
+        iterator& operator++()
+        {
+            ++index_;
+            skip_invalid();
+            return *this;
+        }
+
+        mapped_type& operator*()
+        {
+            return (*parent_)[index_];
+        }
+
+        bool operator==(iterator const& rhs) const
+        {
+            return index_ == rhs.index_;
+        }
+
+        bool operator!=(iterator const& rhs) const
+        {
+            return index_ != rhs.index_;
+        }
+
+    private:
+        void skip_invalid()
+        {
+            while (index_ < parent_->capacity_ && !parent_->element_initialized(index_))
+                ++index_;
+        }
+
+        index_map* parent_;
+        size_type index_;
+    };
+
     enum
     {
         bits_per_mask = sizeof(mask_element_type) * 8 / sizeof(std::uint8_t),
@@ -92,7 +135,7 @@ public:
 
     bool empty() const
     {
-        return true;
+        return size_ == 0;
     }
 
     size_type size() const
@@ -102,16 +145,44 @@ public:
 
     void erase(key_type key)
     {
+        if (key >= capacity_ || !element_initialized(key))
+            return;
+
+        --size_;
+        buffer_[key].~mapped_type();
+        mask_[key / bits_per_mask] &= ~((mask_element_type{ 1 } << (key % bits_per_mask)));
     }
 
     void insert(value_type&& value)
     {
-        store<value_type&&>(std::move(value));
+        auto index = value.first;
+
+        // Make sure the arrays are big enough
+        size_to_include(index);
+
+        if (element_initialized(index))
+            return;
+
+        new (buffer_ + index) mapped_type(std::move(value.second));
+
+        ++size_;
+        mask_[index / bits_per_mask] |= mask_element_type{ 1 } << (index % bits_per_mask);
     }
 
     void insert(value_type const& value)
     {
-        store<value_type const>(value);
+        auto index = value.first;
+
+        // Make sure the arrays are big enough
+        size_to_include(index);
+
+        if (element_initialized(index))
+            return;
+
+        new (buffer_ + index) mapped_type(value.second);
+
+        ++size_;
+        mask_[index / bits_per_mask] |= mask_element_type{ 1 } << (index % bits_per_mask);
     }
 
     mapped_type& operator[](key_type key)
@@ -173,6 +244,16 @@ public:
         capacity_ = new_capacity;
     }
 
+    iterator begin()
+    {
+        return iterator(this, 0);
+    }
+
+    iterator end()
+    {
+        return iterator(this, capacity_);
+    }
+
 private:
     void free_memory()
     {
@@ -200,22 +281,6 @@ private:
     {
         auto constexpr bits_per_mask = sizeof(mask_element_type) * 8 / sizeof(std::uint8_t);
         return (capacity + bits_per_mask - 1) / bits_per_mask;
-    }
-
-    template <class P> void store(P value)
-    {
-        auto index = value.first;
-
-        // Make sure the arrays are big enough
-        size_to_include(index);
-
-        if (element_initialized(index))
-            return;
-
-        buffer_[index] = value.second;
-
-        ++size_;
-        mask_[index / bits_per_mask] |= mask_element_type{ 1 } << (index % bits_per_mask);
     }
 
     void size_to_include(size_type key)
