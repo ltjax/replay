@@ -20,19 +20,19 @@ template <typename T> typename aligned_allocator<T>::pointer aligned_allocator<T
     size_type const object_size = sizeof(ptrdiff_t) + sizeof(T) * n;
     size_type const buffer_size = object_size + alignment;
 
-    void* const block = std::malloc(buffer_size);
+    auto const block = reinterpret_cast<char*>(std::malloc(buffer_size));
     if (block == nullptr)
     {
         throw std::bad_alloc{};
     }
 
-    void* storage = reinterpret_cast<char*>(block) + sizeof(ptrdiff_t);
+    void* storage = (block) + sizeof(ptrdiff_t);
     size_t shift = buffer_size;
 
-    void* const body = std::align(alignment, object_size, storage, shift);
-    char* const offset = reinterpret_cast<char*>(body) - sizeof(ptrdiff_t);
+    char* const body = reinterpret_cast<char*>(std::align(alignment, object_size, storage, shift));
+    char* const offset = body - sizeof(ptrdiff_t);
 
-    *reinterpret_cast<ptrdiff_t*>(offset) = sizeof(ptrdiff_t) + shift;
+    *reinterpret_cast<ptrdiff_t*>(offset) = body - block;
 
     return reinterpret_cast<pointer>(body);
 } // aligned_allocator<T>::allocate 

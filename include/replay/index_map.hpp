@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <replay/aligned_allocator.hpp>
+#include <stdexcept>
 #include <utility>
 
 namespace replay
@@ -25,6 +26,15 @@ public:
     index_map()
     {
     }
+
+    index_map(index_map const& rhs) = delete;
+
+    ~index_map()
+    {
+        free_memory();
+    }
+
+    index_map& operator=(index_map const& rhs) = delete;
 
     bool empty() const
     {
@@ -52,13 +62,27 @@ public:
 
     mapped_type& operator[](key_type key)
     {
+        return const_cast<mapped_type&>(const_cast<index_map<T> const&>(*this)[key]);
+    }
+
+    mapped_type const& operator[](key_type key) const
+    {
         return buffer_[key];
     }
 
-    mapped_type const& operator[](key_type key) const;
+    mapped_type& at(key_type key)
+    {
+        return const_cast<mapped_type&>(const_cast<index_map<T> const&>(*this).at(key));
+    }
 
-    mapped_type& at(key_type key);
-    mapped_type const& at(key_type key) const;
+    mapped_type const& at(key_type key) const
+    {
+        if (key >= capacity_)
+            throw std::out_of_range("Key past end of container");
+        if (!element_initialized(key))
+            throw std::out_of_range("Element not inserted");
+        return (*this)[key];
+    }
 
     void reserve(size_type new_capacity)
     {
@@ -88,11 +112,7 @@ public:
         std::copy(mask_, mask_ + current_mask_size, new_mask);
         std::fill(new_mask + current_mask_size, new_mask + new_mask_size, mask_element_type{ 0 });
 
-        if (buffer_)
-        {
-            allocator.deallocate(buffer_, capacity_);
-            delete[] mask_;
-        }
+        free_memory();
 
         buffer_ = new_buffer;
         mask_ = new_mask;
@@ -100,7 +120,16 @@ public:
     }
 
 private:
-    bool element_initialized(size_type index)
+    void free_memory()
+    {
+        if (buffer_ != nullptr)
+        {
+            allocator_type().deallocate(buffer_, capacity_);
+            delete[] mask_;
+        }
+    }
+
+    bool element_initialized(size_type index) const
     {
         return mask_[index / bits_per_mask] & (mask_element_type{ 1 } << (index % bits_per_mask));
     }
@@ -111,8 +140,7 @@ private:
         return (capacity + bits_per_mask - 1) / bits_per_mask;
     }
 
-    template <class P>
-    void store(P value)
+    template <class P> void store(P value)
     {
         auto index = value.first;
 
@@ -125,6 +153,7 @@ private:
         buffer_[index] = value.second;
 
         ++size_;
+        mask_[index / bits_per_mask] |= mask_element_type{ 1 } << (index % bits_per_mask);
     }
 
     void size_to_include(size_type key)
