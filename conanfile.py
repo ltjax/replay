@@ -15,8 +15,8 @@ class ReplayConan(ConanFile):
     default_options = {"shared": False, "use_stb": True, "use_libpng": False}
     generators = "cmake"
     exports_sources = "source/*", "test/*", "include/*", "CMakeLists.txt"
-    requires = "boost_filesystem/1.69.0@bincrafters/stable", "boost_iostreams/1.69.0@bincrafters/stable",\
-       "boost_test/1.69.0@bincrafters/stable" # Only needed for tests right now
+    requires = "boost_filesystem/1.69.0@bincrafters/stable", "boost_iostreams/1.69.0@bincrafters/stable",
+    build_requires = "Catch2/2.7.2@catchorg/stable",
     
     def _configured_cmake(self):
         cmake = CMake(self)

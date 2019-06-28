@@ -1,11 +1,9 @@
-#define BOOST_TEST_MODULE math
-#include <boost/math/constants/constants.hpp>
-#include <boost/test/unit_test.hpp>
+#include <catch2/catch.hpp>
 #include <replay/math.hpp>
 #include <replay/matrix2.hpp>
 #include <replay/minimal_sphere.hpp>
 #include <replay/vector_math.hpp>
-
+#include <boost/math/constants/constants.hpp>
 #include <random>
 
 namespace
@@ -45,27 +43,33 @@ float distance_to_sphere(const IteratorType point_begin,
 }
 } // namespace
 
-BOOST_AUTO_TEST_CASE(matrix2_operations)
+TEST_CASE("matrix2_operations")
 {
     using namespace replay;
     matrix2 Rotation = matrix2::make_rotation(boost::math::constants::pi<float>() * 0.25f); // 45deg rotation
     matrix2 Inv = Rotation;
-    BOOST_REQUIRE(Inv.invert());
+    REQUIRE(Inv.invert());
 
     using math::fuzzy_equals;
     using math::fuzzy_zero;
     matrix2 I = Rotation * Inv;
     // This should be identity
-    BOOST_REQUIRE(fuzzy_equals(I[0], 1.f) && fuzzy_zero(I[1]) && fuzzy_zero(I[2]) && fuzzy_equals(I[3], 1.f));
+    REQUIRE(fuzzy_equals(I[0], 1.f));
+    REQUIRE(fuzzy_zero(I[1]));
+    REQUIRE(fuzzy_zero(I[2]));
+    REQUIRE(fuzzy_equals(I[3], 1.f));
 
     I = Inv * Rotation;
     // This should be identity
-    BOOST_REQUIRE(fuzzy_equals(I[0], 1.f) && fuzzy_zero(I[1]) && fuzzy_zero(I[2]) && fuzzy_equals(I[3], 1.f));
+    REQUIRE(fuzzy_equals(I[0], 1.f));
+    REQUIRE(fuzzy_zero(I[1]));
+    REQUIRE(fuzzy_zero(I[2]));
+    REQUIRE(fuzzy_equals(I[3], 1.f));
 }
 
 // This test verifies integer arithmetic with a vector3.
 // Hopefully, floating-point math will behave correct if this does.
-BOOST_AUTO_TEST_CASE(vector3_integer_operations)
+TEST_CASE("vector3_integer_operations")
 {
     using namespace replay;
     typedef vector3<int> vec3;
@@ -74,29 +78,29 @@ BOOST_AUTO_TEST_CASE(vector3_integer_operations)
     const vec3 b(7777, 0, -111);
     const vec3 c(a - b);
 
-    BOOST_REQUIRE_EQUAL(c - a, -b);
+    REQUIRE(c - a == -b);
 
     const vec3 all_one(1, 1, 1);
 
-    BOOST_REQUIRE_EQUAL(all_one.sum(), 3);
-    BOOST_REQUIRE_EQUAL(all_one.squared(), 3);
+    REQUIRE(all_one.sum() == 3);
+    REQUIRE(all_one.squared() == 3);
 
     int checksum = dot(a, all_one);
-    BOOST_REQUIRE_EQUAL(checksum, a.sum());
+    REQUIRE(checksum == a.sum());
 
     checksum = dot(b, all_one);
-    BOOST_REQUIRE_EQUAL(checksum, b.sum());
+    REQUIRE(checksum == b.sum());
 
-    BOOST_REQUIRE_EQUAL(a.sum() - b.sum(), c.sum());
+    REQUIRE(a.sum() - b.sum() == c.sum());
 
-    BOOST_REQUIRE_EQUAL((a * 42).sum(), a.sum() * 42);
+    REQUIRE((a * 42).sum()== a.sum() * 42);
 
     const vec3 all_two(2, 2, 2);
-    BOOST_REQUIRE_EQUAL(all_one * 2, all_two);
-    BOOST_REQUIRE_EQUAL(all_one + all_one, all_two);
+    REQUIRE(all_one * 2== all_two);
+    REQUIRE(all_one + all_one== all_two);
 }
 
-BOOST_AUTO_TEST_CASE(quadratic_equation_solver)
+TEST_CASE("quadratic_equation_solver")
 {
     using namespace replay;
     using range_type = std::uniform_real_distribution<float>;
@@ -122,28 +126,28 @@ BOOST_AUTO_TEST_CASE(quadratic_equation_solver)
         if (a > b)
             std::swap(a, b);
 
-        BOOST_REQUIRE_CLOSE(r[0], a, 0.01f);
-        BOOST_REQUIRE_CLOSE(r[1], b, 0.01f);
+        REQUIRE(r[0] == Approx(a).margin(0.01f));
+        REQUIRE(r[1] == Approx(b).margin(0.01f));
     }
 }
 
-BOOST_AUTO_TEST_CASE(matrix4_determinant_simple)
+TEST_CASE("matrix4_determinant_simple")
 {
     using namespace replay;
     matrix4 M(0.f, 0.f, 3.f, 0.f, 4.f, 0.f, 0.f, 0.f, 0.f, 2.f, 0.f, 0.f, 0.f, 0.f, 0.f, 1.f);
 
     float d = M.determinant();
 
-    BOOST_REQUIRE_CLOSE(d, 24.f, 0.0001f);
+    REQUIRE(d == Approx(24.f).margin(0.0001f));
 
     matrix4 N(2.f, 1.f, 0.f, 0.f, 1.f, 2.f, 1.f, 0.f, 0.f, 1.f, 2.f, 1.f, 0.f, 0.f, 1.f, 2.f);
 
     float e = N.determinant();
 
-    BOOST_REQUIRE_CLOSE(e, 5.f, 0.0001f);
+    REQUIRE(e == Approx(5.f).margin(0.0001f));
 }
 
-BOOST_AUTO_TEST_CASE(circumcircle)
+TEST_CASE("circumcircle")
 {
     using namespace replay;
 
@@ -171,18 +175,18 @@ BOOST_AUTO_TEST_CASE(circumcircle)
     vector3f result_center;
 
     equisphere<float, 3> s(1e-16f);
-    BOOST_REQUIRE(s.push(a.ptr()));
-    BOOST_REQUIRE(s.push(b.ptr()));
-    BOOST_REQUIRE(s.push(c.ptr()));
+    REQUIRE(s.push(a.ptr()));
+    REQUIRE(s.push(b.ptr()));
+    REQUIRE(s.push(c.ptr()));
 
     vector3f equisphere_center(vector3f::cast(s.get_center()));
     vector3f center_delta = center - equisphere_center;
-    BOOST_REQUIRE_SMALL(center_delta.squared(), 0.001f);
-    BOOST_REQUIRE_CLOSE(std::sqrt(s.get_squared_radius()), radius, 0.001f);
+    REQUIRE(center_delta.squared() < 0.001f);
+    REQUIRE(std::sqrt(s.get_squared_radius()) == Approx(radius).margin(0.001f));
 }
 
 // Simple test case directly testing the minimal ball solver in 3D
-BOOST_AUTO_TEST_CASE(minimal_ball)
+TEST_CASE("minimal_ball")
 {
     using namespace replay;
     typedef vector3f vec3;
@@ -209,14 +213,14 @@ BOOST_AUTO_TEST_CASE(minimal_ball)
     replay::minimal_ball<float, replay::vector3f, 3> ball(points, 1e-15f);
 
     // check correctness
-    BOOST_REQUIRE_CLOSE(ball.square_radius(), 1.f, 0.001f);
-    BOOST_REQUIRE_SMALL(ball.center().squared(), 0.001f);
-    BOOST_REQUIRE_LT(distance_to_sphere(points.begin(), points.end(), ball.center(), ball.square_radius()), 0.001f);
+    REQUIRE(ball.square_radius() == Approx(1.f).margin(0.001f));
+    REQUIRE(ball.center().squared() < 0.001f);
+    REQUIRE(distance_to_sphere(points.begin(), points.end(), ball.center(), ball.square_radius()) < 0.001f);
 }
 
 // Slightly more sophisticated test for the minimal ball routines using
 // the wrapper from vector_math.hpp and an std::vector
-BOOST_AUTO_TEST_CASE(minimal_sphere)
+TEST_CASE("minimal_sphere")
 {
     using namespace replay;
     using range_type = std::uniform_real_distribution<float>;
@@ -254,7 +258,7 @@ BOOST_AUTO_TEST_CASE(minimal_sphere)
         float square_radius = radius * radius;
 
         // The generated boundary doesn't necessarily define the minimal ball, but it's an upper bound
-        BOOST_REQUIRE_LE(result_square_radius, square_radius);
-        BOOST_REQUIRE_LT(distance_to_sphere(p.begin(), p.end(), result_center, result_square_radius), 0.001f);
+        REQUIRE(result_square_radius <= square_radius);
+        REQUIRE(distance_to_sphere(p.begin(), p.end(), result_center, result_square_radius) < 0.001f);
     }
 }

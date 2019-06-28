@@ -1,4 +1,4 @@
-#include <boost/test/unit_test.hpp>
+#include <catch2/catch.hpp>
 #include <random>
 
 #include <memory>
@@ -97,7 +97,7 @@ template <std::size_t n, class ArrayLike> bool fuzzy_equals_n(const ArrayLike& l
     return true;
 }
 
-BOOST_AUTO_TEST_CASE(simple_minibox)
+TEST_CASE("simple minibox")
 {
     using namespace replay;
 
@@ -108,12 +108,12 @@ BOOST_AUTO_TEST_CASE(simple_minibox)
     vec2 Min = Box.get_min();
     vec2 Max = Box.get_max();
 
-    BOOST_REQUIRE(fuzzy_equals_n<4>(M, matrix2(1.f, 0.f, 0.f, 1.f)));
-    BOOST_REQUIRE(fuzzy_equals_n<2>(Min, vec2(0.f, 0.f)));
-    BOOST_REQUIRE(fuzzy_equals_n<2>(Max, vec2(3.f, 1.f)));
+    REQUIRE(fuzzy_equals_n<4>(M, matrix2(1.f, 0.f, 0.f, 1.f)));
+    REQUIRE(fuzzy_equals_n<2>(Min, vec2(0.f, 0.f)));
+    REQUIRE(fuzzy_equals_n<2>(Max, vec2(3.f, 1.f)));
 }
 
-BOOST_AUTO_TEST_CASE(random_minibox)
+TEST_CASE("random minibox")
 {
     using namespace replay;
 
@@ -130,7 +130,7 @@ BOOST_AUTO_TEST_CASE(random_minibox)
             Points.push_back(vector2f(random_coord(), random_coord()));
 
         std::size_t n = math::gift_wrap(ptr(Points), Points.size());
-        BOOST_REQUIRE_GE(n, 3U);
+        REQUIRE(n >= 3U);
 
         Points.resize(n);
 
@@ -145,6 +145,6 @@ BOOST_AUTO_TEST_CASE(random_minibox)
         float CorrectSize = dot(Max - Min, vector2f(1.f));
 
         // Allow 5percent error
-        BOOST_REQUIRE_CLOSE(Size, CorrectSize, 0.5f);
+        REQUIRE(Size == Approx(CorrectSize).epsilon(0.05f));
     }
 }
