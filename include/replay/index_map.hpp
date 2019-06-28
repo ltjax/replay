@@ -27,14 +27,68 @@ public:
     {
     }
 
-    index_map(index_map const& rhs) = delete;
+    index_map(index_map const& rhs)
+    {
+        if (!rhs.capacity_)
+            return;
+
+        // Allocate new buffers
+        auto allocator = allocator_type();
+        auto new_buffer = allocator.allocate(rhs.capacity_);
+
+        // Move all initialized elements to their new location
+        for (size_type i = 0; i < rhs.capacity_; ++i)
+        {
+            if (!rhs.element_initialized(i))
+                continue;
+
+            new (new_buffer + i) mapped_type(rhs.buffer_[i]);
+        }
+
+        // Create and initialize a new mask
+        auto const mask_size = mask_size_for(rhs.capacity_);
+        auto const new_mask = new mask_element_type[mask_size];
+        std::copy(rhs.mask_, rhs.mask_ + mask_size, new_mask);
+
+        capacity_ = rhs.capacity_;
+        buffer_ = new_buffer;
+        mask_ = new_mask;
+    }
+
+    index_map(index_map&& rhs)
+    : size_(rhs.size_)
+    , capacity_(rhs.capacity_)
+    , buffer_(rhs.buffer_)
+    , mask_(rhs.mask_)
+    {
+        rhs.null_out();
+    }
 
     ~index_map()
     {
         free_memory();
     }
 
-    index_map& operator=(index_map const& rhs) = delete;
+    index_map& operator=(index_map const& rhs)
+    {
+        *this = index_map(rhs); // copy-construct and move
+        return *this;
+    }
+
+    index_map& operator=(index_map&& rhs)
+    {
+        if (&rhs == this)
+            return *this;
+
+        free_memory();
+        size_ = rhs.size_;
+        capacity_ = rhs.capacity_;
+        buffer_ = rhs.buffer_;
+        mask_ = rhs.mask_;
+
+        rhs.null_out();
+        return *this;
+    }
 
     bool empty() const
     {
@@ -127,6 +181,14 @@ private:
             allocator_type().deallocate(buffer_, capacity_);
             delete[] mask_;
         }
+    }
+
+    void null_out()
+    {
+        size_ = 0;
+        capacity_ = 0;
+        buffer_ = 0;
+        mask_ = 0;
     }
 
     bool element_initialized(size_type index) const
