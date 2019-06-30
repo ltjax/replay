@@ -21,28 +21,83 @@ public:
     class iterator
     {
     public:
+        using value_type = index_map::mapped_type;
+        using reference = value_type&;
+        using pointer = value_type*;
+        using difference_type = std::ptrdiff_t;
+        using iterator_category = std::bidirectional_iterator_tag ;
+
         iterator(index_map* parent, size_type index)
         : parent_(parent)
         , index_(index)
         {
-            skip_invalid();
+            skip_invalid_forward();
         }
+
+        iterator(iterator const&) = default;
+        iterator& operator=(iterator const&) = default;
 
         iterator& operator++()
         {
             ++index_;
-            skip_invalid();
+            skip_invalid_forward();
             return *this;
         }
 
-        mapped_type& operator*()
+        iterator operator++(int) const
+        {
+            auto result = *this;
+            ++(*this);
+            return result;
+        }
+
+        iterator& operator--()
+        {
+            --index_;
+            skip_invalid_backward();
+            return *this;
+        }
+
+        iterator operator--(int) const
+        {
+            auto result = *this;
+            --(*this);
+            return result;
+        }
+
+        reference operator*()
         {
             return (*parent_)[index_];
+        }
+
+        pointer operator->()
+        {
+            return &((*parent_)[index_]);
         }
 
         bool operator==(iterator const& rhs) const
         {
             return index_ == rhs.index_;
+        }
+
+        bool operator<(iterator const& rhs) const
+        {
+            return index_ < rhs.index_;
+        }
+
+        bool operator>(iterator const& rhs) const
+        {
+            return index > rhs.index_;
+        }
+
+        bool operator<=(iterator const& rhs) const
+        {
+            return index_ <= rhs.index_;
+        }
+
+        bool operator>=(iterator const& rhs) const
+        {
+            return index >= rhs.index_;
         }
 
         bool operator!=(iterator const& rhs) const
@@ -51,10 +106,16 @@ public:
         }
 
     private:
-        void skip_invalid()
+        void skip_invalid_forward()
         {
             while (index_ < parent_->capacity_ && !parent_->element_initialized(index_))
                 ++index_;
+        }
+
+        void skip_invalid_backward()
+        {
+            while (index >= 1 && !parent_->element_initialized(index_))
+                --index_;
         }
 
         index_map* parent_;
@@ -252,6 +313,11 @@ public:
     iterator end()
     {
         return iterator(this, capacity_);
+    }
+
+    size_type capacity() const
+    {
+        return capacity_;
     }
 
 private:
