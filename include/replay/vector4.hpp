@@ -258,6 +258,13 @@ typedef vector4<double> vector4d;
     \ingroup Math
 */
 template <class T> using v4 = vector4<T>;
+
+template <class T>
+inline v3<T> perspective_divide(v4<T> v)
+{
+    return { v[0] / v[3], v[1] / v[3], v[2] / v[3] };
+}
+
 }
 
 #include "vector4.inl"
