@@ -57,3 +57,9 @@ add_subdirectory(source)
 if(Replay_ENABLE_UNIT_TESTS)
   add_subdirectory(test)
 endif()
+
+if (CMAKE_VERSION VERSION_GREATER 3.7.8)
+  target_sources(replay INTERFACE
+    ${CMAKE_CURRENT_SOURCE_DIR}/replay.natvis
+  )
+endif()
