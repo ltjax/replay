@@ -252,6 +252,12 @@ typedef vector4<float> vector4f;
     \ingroup Math
 */
 typedef vector4<double> vector4d;
+
+/** Shorthandle for all 4d vectors
+    \relates vector4
+    \ingroup Math
+*/
+template <class T> using v4 = vector4<T>;
 }
 
 #include "vector4.inl"

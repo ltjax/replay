@@ -236,11 +236,17 @@ template <class type> inline vector3<type> operator/(const type& lhs, const vect
 */
 typedef vector3<float> vector3f;
 
-/** A convenience typedef for a 2d double-precision floating-point vector.
+/** A convenience typedef for a 3d double-precision floating-point vector.
     \relates vector3
     \ingroup Math
 */
 typedef vector3<double> vector3d;
+
+/** Shorthandle for all 3d vectors
+    \relates vector2
+    \ingroup Math
+*/
+template <class T> using v3 = vector3<T>;
 }
 
 #include "vector3.inl"

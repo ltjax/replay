@@ -235,17 +235,23 @@ template <class type> inline vector2<type> max(const vector2<type>& lhs, const v
     return vector2<type>(std::max(lhs[0], rhs[0]), std::max(lhs[1], rhs[1]));
 }
 
-/** Shorthandle for a 2D \c float vector.
+/** Shorthandle for a 2d \c float vector.
     \relates vector2
     \ingroup Math
 */
 typedef vector2<float> vector2f;
 
-/** Shorthandle for a 2D \c int vector.
+/** Shorthandle for a 2d \c int vector.
     \relates vector2
     \ingroup Math
 */
 typedef vector2<int> vector2i;
+
+/** Shorthandle for all 2d vectors
+    \relates vector2
+    \ingroup Math
+*/
+template <class T> using v2 = vector2<T>;
 }
 
 #include "vector2.inl"
