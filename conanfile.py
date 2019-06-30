@@ -1,10 +1,10 @@
-from conans import ConanFile, CMake, tools
+from conans import ConanFile, CMake
 from conans.errors import ConanInvalidConfiguration
 
 
 class ReplayConan(ConanFile):
     name = "replay"
-    version = "1.0"
+    version = "1.1"
     license = "MIT"
     author = "Marius Elvert marius.elvert@googlemail.com"
     url = "https://github.com/ltjax/replay"
@@ -14,7 +14,7 @@ class ReplayConan(ConanFile):
     options = {"shared": [True, False], "use_stb": [True, False], "use_libpng": [True, False]}
     default_options = {"shared": False, "use_stb": True, "use_libpng": False}
     generators = "cmake"
-    exports_sources = "source/*", "test/*", "include/*", "CMakeLists.txt"
+    exports_sources = "source/*", "test/*", "include/*", "CMakeLists.txt", "replay.natvis"
     requires = "boost_filesystem/1.69.0@bincrafters/stable", "boost_iostreams/1.69.0@bincrafters/stable",
     build_requires = "Catch2/2.7.2@catchorg/stable",
     
