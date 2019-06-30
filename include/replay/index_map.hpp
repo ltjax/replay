@@ -18,47 +18,49 @@ public:
     using allocator_type = replay::aligned_allocator<mapped_type>;
     using mask_element_type = std::uint64_t;
 
-    class iterator
+    template <bool Const> class base_iterator
     {
     public:
-        using value_type = index_map::mapped_type;
+        using value_type = std::conditional_t<Const, std::add_const_t<index_map::mapped_type>, index_map::mapped_type>;
         using reference = value_type&;
         using pointer = value_type*;
         using difference_type = std::ptrdiff_t;
-        using iterator_category = std::bidirectional_iterator_tag ;
+        using iterator_category = std::bidirectional_iterator_tag;
 
-        iterator(index_map* parent, size_type index)
+        using container_type = std::conditional_t<Const, std::add_const_t<index_map>, index_map>;
+
+        base_iterator(container_type* parent, size_type index)
         : parent_(parent)
         , index_(index)
         {
             skip_invalid_forward();
         }
 
-        iterator(iterator const&) = default;
-        iterator& operator=(iterator const&) = default;
+        base_iterator(base_iterator const&) = default;
+        base_iterator& operator=(base_iterator const&) = default;
 
-        iterator& operator++()
+        base_iterator& operator++()
         {
             ++index_;
             skip_invalid_forward();
             return *this;
         }
 
-        iterator operator++(int) const
+        base_iterator operator++(int) const
         {
             auto result = *this;
             ++(*this);
             return result;
         }
 
-        iterator& operator--()
+        base_iterator& operator--()
         {
             --index_;
             skip_invalid_backward();
             return *this;
         }
 
-        iterator operator--(int) const
+        base_iterator operator--(int) const
         {
             auto result = *this;
             --(*this);
@@ -75,32 +77,32 @@ public:
             return &((*parent_)[index_]);
         }
 
-        bool operator==(iterator const& rhs) const
+        template <bool OtherConst> bool operator==(base_iterator<OtherConst> const& rhs) const
         {
             return index_ == rhs.index_;
         }
 
-        bool operator<(iterator const& rhs) const
+        template <bool OtherConst> bool operator<(base_iterator<OtherConst> const& rhs) const
         {
             return index_ < rhs.index_;
         }
 
-        bool operator>(iterator const& rhs) const
+        template <bool OtherConst> bool operator>(base_iterator<OtherConst> const& rhs) const
         {
             return index > rhs.index_;
         }
 
-        bool operator<=(iterator const& rhs) const
+        template <bool OtherConst> bool operator<=(base_iterator<OtherConst> const& rhs) const
         {
             return index_ <= rhs.index_;
         }
 
-        bool operator>=(iterator const& rhs) const
+        template <bool OtherConst> bool operator>=(base_iterator<OtherConst> const& rhs) const
         {
             return index >= rhs.index_;
         }
 
-        bool operator!=(iterator const& rhs) const
+        template <bool OtherConst> bool operator!=(base_iterator<OtherConst> const& rhs) const
         {
             return index_ != rhs.index_;
         }
@@ -118,9 +120,12 @@ public:
                 --index_;
         }
 
-        index_map* parent_;
+        container_type* parent_;
         size_type index_;
     };
+
+    using iterator = typename base_iterator<false>;
+    using const_iterator = typename base_iterator<true>;
 
     enum
     {
@@ -313,6 +318,16 @@ public:
     iterator end()
     {
         return iterator(this, capacity_);
+    }
+
+    const_iterator begin() const
+    {
+        return const_iterator(this, 0);
+    }
+
+    const_iterator end() const
+    {
+        return const_iterator(this, capacity_);
     }
 
     size_type capacity() const

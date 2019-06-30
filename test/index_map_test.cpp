@@ -20,6 +20,14 @@ index_map<sample_payload> single_element_sample()
     return map;
 }
 
+index_map<sample_payload> multi_element_sample()
+{
+    index_map<sample_payload> map;
+    for (auto const& each : { 3, 7, 11, 13 })
+        map.insert(std::make_pair(each, sample_payload{ static_cast<std::uint8_t>(each + 1), each * 2.0 }));
+    return map;
+}
+
 bool has_sample_element(index_map<sample_payload> const& map)
 {
     auto& x = map.at(3);
@@ -171,10 +179,17 @@ TEST_CASE("Trying to erase a non-existant element does nothing")
 
 TEST_CASE("Can iterate a map")
 {
-    index_map<sample_payload> map;
-    for (auto const& each : { 3, 7, 11, 13 })
-        map.insert(std::make_pair(each, sample_payload{ static_cast<std::uint8_t>(each + 1), each * 2.0 }));
+    auto map = multi_element_sample();
+    std::vector<double> result;
+    for (auto const& each : map)
+        result.push_back(each.value);
 
+    REQUIRE(result == std::vector<double>{ 6.0, 14.0, 22.0, 26.0 });
+}
+
+TEST_CASE("can iterate a const map")
+{
+    auto const map = multi_element_sample();
     std::vector<double> result;
     for (auto const& each : map)
         result.push_back(each.value);
