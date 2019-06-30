@@ -497,7 +497,7 @@ vector2f normalized(const vector2f& vector);
     \note The element type needs to be streamable.
     \ingroup Math
 */
-template <class type> std::ostream& operator<<(std::ostream& lhs, const replay::vector2<type>& rhs)
+template <class type> inline std::ostream& operator<<(std::ostream& lhs, const replay::vector2<type>& rhs)
 {
     return lhs << '(' << rhs[0] << ' ' << rhs[1] << ')';
 }
@@ -508,7 +508,7 @@ template <class type> std::ostream& operator<<(std::ostream& lhs, const replay::
     \relates vector3
     \ingroup Math
 */
-template <class type> std::ostream& operator<<(std::ostream& lhs, const replay::vector3<type>& rhs)
+template <class type> inline std::ostream& operator<<(std::ostream& lhs, const replay::vector3<type>& rhs)
 {
     return lhs << '(' << rhs[0] << ' ' << rhs[1] << ' ' << rhs[2] << ')';
 }
@@ -519,10 +519,11 @@ template <class type> std::ostream& operator<<(std::ostream& lhs, const replay::
     \relates vector4
     \ingroup Math
 */
-template <class type> std::ostream& operator<<(std::ostream& lhs, const replay::vector4<type>& rhs)
+template <class type> inline std::ostream& operator<<(std::ostream& lhs, const replay::vector4<type>& rhs)
 {
     return lhs << '(' << rhs[0] << ' ' << rhs[1] << ' ' << rhs[2] << ' ' << rhs[3] << ')';
 }
+
 }
 
 #endif // replay_vector_math_hpp
