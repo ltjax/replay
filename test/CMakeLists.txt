@@ -4,6 +4,7 @@ set(TARGET_NAME replay_test)
 add_executable(${TARGET_NAME}
   test_main.cpp
   math_test.cpp 
+  index_map_test.cpp 
   minibox_test.cpp
 )
 
@@ -16,9 +17,3 @@ if (Replay_USE_CONAN)
 	PUBLIC CONAN_PKG::Catch2
   )
 endif()
-
-add_custom_command(
-  TARGET ${TARGET_NAME}
-  POST_BUILD
-  COMMAND ${TARGET_NAME}
-)
