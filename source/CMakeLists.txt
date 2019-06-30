@@ -31,6 +31,7 @@ set(HEADER_FILES
   ${replay_SOURCE_DIR}/include/replay/vector4.hpp
   ${replay_SOURCE_DIR}/include/replay/vector4.inl
   ${replay_SOURCE_DIR}/include/replay/concurrent_queue.hpp
+  ${replay_SOURCE_DIR}/include/replay/planar_direction.hpp
 )
   
 set(SOURCE_FILES
@@ -43,6 +44,7 @@ set(SOURCE_FILES
   matrix4.cpp
   pixbuf.cpp
   pixbuf_io.cpp
+  planar_direction.cpp
   plane3.cpp
   quaternion.cpp
   vector_math.cpp
