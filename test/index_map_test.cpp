@@ -196,3 +196,16 @@ TEST_CASE("can iterate a const map")
 
     REQUIRE(result == std::vector<double>{ 6.0, 14.0, 22.0, 26.0 });
 }
+
+TEST_CASE("contains returns true for existing element")
+{
+    auto map = single_element_sample();
+    REQUIRE(map.contains(SAMPLE_INDEX));
+}
+
+TEST_CASE("contains returns false for non-existing element")
+{
+    auto map = single_element_sample();
+    REQUIRE(!map.contains(SAMPLE_INDEX - 1));
+    REQUIRE(!map.contains(100));
+}

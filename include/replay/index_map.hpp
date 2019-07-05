@@ -67,12 +67,12 @@ public:
             return result;
         }
 
-        reference operator*()
+        reference operator*() const
         {
             return (*parent_)[index_];
         }
 
-        pointer operator->()
+        pointer operator->() const
         {
             return &((*parent_)[index_]);
         }
@@ -164,7 +164,7 @@ public:
         mask_ = new_mask;
     }
 
-    index_map(index_map&& rhs)
+    index_map(index_map&& rhs) noexcept
     : size_(rhs.size_)
     , capacity_(rhs.capacity_)
     , buffer_(rhs.buffer_)
@@ -184,7 +184,7 @@ public:
         return *this;
     }
 
-    index_map& operator=(index_map&& rhs)
+    index_map& operator=(index_map&& rhs) noexcept
     {
         if (&rhs == this)
             return *this;
@@ -221,34 +221,27 @@ public:
 
     void insert(value_type&& value)
     {
-        auto index = value.first;
-
-        // Make sure the arrays are big enough
-        size_to_include(index);
-
-        if (element_initialized(index))
-            return;
-
-        new (buffer_ + index) mapped_type(std::move(value.second));
-
-        ++size_;
-        mask_[index / bits_per_mask] |= mask_element_type{ 1 } << (index % bits_per_mask);
+        insert(value.first, std::move(value.second));
     }
 
     void insert(value_type const& value)
     {
-        auto index = value.first;
+        insert(value.first, value.second);
+    }
 
+    template <class T>
+    void insert(key_type const& key, T&& value)
+    {
         // Make sure the arrays are big enough
-        size_to_include(index);
+        size_to_include(key);
 
-        if (element_initialized(index))
+        if (element_initialized(key))
             return;
 
-        new (buffer_ + index) mapped_type(value.second);
+        new (buffer_ + key) mapped_type(std::forward<T>(value));
 
         ++size_;
-        mask_[index / bits_per_mask] |= mask_element_type{ 1 } << (index % bits_per_mask);
+        mask_[key / bits_per_mask] |= mask_element_type{ 1 } << (key % bits_per_mask);
     }
 
     mapped_type& operator[](key_type key)
@@ -268,11 +261,14 @@ public:
 
     mapped_type const& at(key_type key) const
     {
-        if (key >= capacity_)
-            throw std::out_of_range("Key past end of container");
-        if (!element_initialized(key))
+        if (!contains(key))
             throw std::out_of_range("Element not inserted");
         return (*this)[key];
+    }
+
+    bool contains(key_type key) const
+    {
+        return key < capacity_ && element_initialized(key);
     }
 
     void reserve(size_type new_capacity)
