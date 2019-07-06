@@ -20,7 +20,7 @@ replay::vector3f polar_to_model(float latitude, float longitude)
     float ch = std::cos(longitude);
     float sh = std::sin(longitude);
 
-    return replay::vector3f(cw * ch, sw * ch, sh);
+    return {cw * ch, sw * ch, sh};
 }
 
 template <class IteratorType>
@@ -114,7 +114,6 @@ TEST_CASE("quadratic_equation_solver")
     {
         float a = die();
         float b = die();
-        float c = die();
 
         if (replay::math::fuzzy_equals(a, b))
             continue;
@@ -172,8 +171,6 @@ TEST_CASE("circumcircle")
     c += center;
 
     // Reconstruct it
-    vector3f result_center;
-
     equisphere<float, 3> s(1e-16f);
     REQUIRE(s.push(a.ptr()));
     REQUIRE(s.push(b.ptr()));
@@ -204,7 +201,6 @@ TEST_CASE("minimal_ball")
     for (std::size_t i = 0; i < 32; ++i)
     {
         vector3f t = polar_to_model(random_latitude(), random_longitude());
-        float l = magnitude(t);
         float s = random_scale();
         points.push_back(t * s);
     }
@@ -258,7 +254,7 @@ TEST_CASE("minimal_sphere")
         float square_radius = radius * radius;
 
         // The generated boundary doesn't necessarily define the minimal ball, but it's an upper bound
-        REQUIRE(result_square_radius <= square_radius);
+        REQUIRE(result_square_radius <= Approx(square_radius).margin(0.0001));
         REQUIRE(distance_to_sphere(p.begin(), p.end(), result_center, result_square_radius) < 0.001f);
     }
 }
