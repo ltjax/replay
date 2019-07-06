@@ -46,7 +46,7 @@ public:
             return *this;
         }
 
-        base_iterator operator++(int) const
+        base_iterator const operator++(int) const
         {
             auto result = *this;
             ++(*this);
@@ -60,7 +60,7 @@ public:
             return *this;
         }
 
-        base_iterator operator--(int) const
+        base_iterator const operator--(int) const
         {
             auto result = *this;
             --(*this);
@@ -89,7 +89,7 @@ public:
 
         template <bool OtherConst> bool operator>(base_iterator<OtherConst> const& rhs) const
         {
-            return index > rhs.index_;
+            return index_ > rhs.index_;
         }
 
         template <bool OtherConst> bool operator<=(base_iterator<OtherConst> const& rhs) const
@@ -99,7 +99,7 @@ public:
 
         template <bool OtherConst> bool operator>=(base_iterator<OtherConst> const& rhs) const
         {
-            return index >= rhs.index_;
+            return index_ >= rhs.index_;
         }
 
         template <bool OtherConst> bool operator!=(base_iterator<OtherConst> const& rhs) const
@@ -116,7 +116,7 @@ public:
 
         void skip_invalid_backward()
         {
-            while (index >= 1 && !parent_->element_initialized(index_))
+            while (index_ >= 1 && !parent_->element_initialized(index_))
                 --index_;
         }
 
@@ -124,17 +124,15 @@ public:
         size_type index_;
     };
 
-    using iterator = typename base_iterator<false>;
-    using const_iterator = typename base_iterator<true>;
+    using iterator = base_iterator<false>;
+    using const_iterator = base_iterator<true>;
 
     enum
     {
         bits_per_mask = sizeof(mask_element_type) * 8 / sizeof(std::uint8_t),
     };
 
-    index_map()
-    {
-    }
+    index_map() = default;
 
     index_map(index_map const& rhs)
     {
@@ -229,8 +227,8 @@ public:
         insert(value.first, value.second);
     }
 
-    template <class T>
-    void insert(key_type const& key, T&& value)
+    template <class InitializerType>
+    void insert(key_type const& key, InitializerType&& value)
     {
         // Make sure the arrays are big enough
         size_to_include(key);
@@ -238,7 +236,7 @@ public:
         if (element_initialized(key))
             return;
 
-        new (buffer_ + key) mapped_type(std::forward<T>(value));
+        new (buffer_ + key) mapped_type(std::forward<InitializerType>(value));
 
         ++size_;
         mask_[key / bits_per_mask] |= mask_element_type{ 1 } << (key % bits_per_mask);
