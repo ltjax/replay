@@ -160,6 +160,7 @@ public:
         std::copy(rhs.mask_, rhs.mask_ + mask_size, new_mask);
 
         capacity_ = rhs.capacity_;
+        smallest_key_bound_ = rhs.smallest_key_bound_;
         buffer_ = new_buffer;
         mask_ = new_mask;
     }
@@ -167,6 +168,7 @@ public:
     index_map(index_map&& rhs) noexcept
     : size_(rhs.size_)
     , capacity_(rhs.capacity_)
+    , smallest_key_bound_(rhs.smallest_key_bound_)
     , buffer_(rhs.buffer_)
     , mask_(rhs.mask_)
     {
@@ -192,6 +194,7 @@ public:
         free_memory();
         size_ = rhs.size_;
         capacity_ = rhs.capacity_;
+        smallest_key_bound_ = rhs.smallest_key_bound_;
         buffer_ = rhs.buffer_;
         mask_ = rhs.mask_;
 
@@ -217,6 +220,14 @@ public:
         --size_;
         buffer_[key].~mapped_type();
         mask_[key / bits_per_mask] &= ~((mask_element_type{ 1 } << (key % bits_per_mask)));
+
+        if ((key + 1) == smallest_key_bound_)
+        {
+            --smallest_key_bound_;
+
+            while (smallest_key_bound_ > 0 && !element_initialized(smallest_key_bound_ - 1))
+                --smallest_key_bound_;
+        }
     }
 
     void insert(value_type&& value)
@@ -229,8 +240,7 @@ public:
         insert(value.first, value.second);
     }
 
-    template <class T>
-    void insert(key_type const& key, T&& value)
+    template <class T> void insert(key_type const& key, T&& value)
     {
         // Make sure the arrays are big enough
         size_to_include(key);
@@ -242,6 +252,11 @@ public:
 
         ++size_;
         mask_[key / bits_per_mask] |= mask_element_type{ 1 } << (key % bits_per_mask);
+
+        if (key >= smallest_key_bound_)
+        {
+            smallest_key_bound_ = key + 1;
+        }
     }
 
     mapped_type& operator[](key_type key)
@@ -313,7 +328,7 @@ public:
 
     iterator end()
     {
-        return iterator(this, capacity_);
+        return iterator(this, smallest_key_bound_);
     }
 
     const_iterator begin() const
@@ -323,12 +338,19 @@ public:
 
     const_iterator end() const
     {
-        return const_iterator(this, capacity_);
+        return const_iterator(this, smallest_key_bound_);
     }
 
     size_type capacity() const
     {
         return capacity_;
+    }
+
+    /** The smallest number so that all keys are smaller than this.
+    */
+    size_type smallest_key_bound() const
+    {
+        return smallest_key_bound_;
     }
 
 private:
@@ -345,6 +367,7 @@ private:
     {
         size_ = 0;
         capacity_ = 0;
+        smallest_key_bound_ = 0;
         buffer_ = 0;
         mask_ = 0;
     }
@@ -374,6 +397,7 @@ private:
 
     size_type size_ = 0;
     size_type capacity_ = 0;
+    size_type smallest_key_bound_ = 0;
 
     mapped_type* buffer_ = nullptr;
     mask_element_type* mask_ = nullptr;

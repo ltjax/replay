@@ -209,3 +209,19 @@ TEST_CASE("contains returns false for non-existing element")
     REQUIRE(!map.contains(SAMPLE_INDEX - 1));
     REQUIRE(!map.contains(100));
 }
+
+TEST_CASE("can correctly tell smallest key bound after single insert")
+{
+    index_map<char> map;
+    map.insert(11, 'z');
+    REQUIRE(map.smallest_key_bound() == 12);
+}
+
+TEST_CASE("can correctly tell smallest key bound after a removal")
+{
+    index_map<double> map;
+    map.insert(7, 'f');
+    map.insert(1, 'g');
+    map.erase(7);
+    REQUIRE(map.smallest_key_bound() == 2);
+}
