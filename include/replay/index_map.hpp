@@ -77,6 +77,11 @@ public:
             return &((*parent_)[index_]);
         }
 
+        size_type key() const
+        {
+            return index_;
+        }
+
         template <bool OtherConst> bool operator==(base_iterator<OtherConst> const& rhs) const
         {
             return index_ == rhs.index_;
