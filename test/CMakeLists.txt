@@ -7,6 +7,7 @@ add_executable(${TARGET_NAME}
   index_map_test.cpp 
   minibox_test.cpp
   planar_direction_test.cpp
+  rle_vector_test.cpp
 )
 
 target_link_libraries(${TARGET_NAME}

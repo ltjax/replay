@@ -32,6 +32,7 @@ set(HEADER_FILES
   ${replay_SOURCE_DIR}/include/replay/vector4.inl
   ${replay_SOURCE_DIR}/include/replay/concurrent_queue.hpp
   ${replay_SOURCE_DIR}/include/replay/planar_direction.hpp
+  ${replay_SOURCE_DIR}/include/replay/rle_vector.hpp
   ${replay_SOURCE_DIR}/include/replay/aligned_allocator.hpp
   ${replay_SOURCE_DIR}/include/replay/index_map.hpp
 )
