@@ -7,7 +7,6 @@ set(HEADER_FILES
   ${replay_SOURCE_DIR}/include/replay/box.hpp
   ${replay_SOURCE_DIR}/include/replay/box_packer.hpp
   ${replay_SOURCE_DIR}/include/replay/bstream.hpp
-  ${replay_SOURCE_DIR}/include/replay/buffer.hpp
   ${replay_SOURCE_DIR}/include/replay/byte_rgba.hpp
   ${replay_SOURCE_DIR}/include/replay/common.hpp
   ${replay_SOURCE_DIR}/include/replay/couple.hpp
