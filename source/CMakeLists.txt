@@ -8,7 +8,7 @@ set(HEADER_FILES
   ${replay_SOURCE_DIR}/include/replay/box_packer.hpp
   ${replay_SOURCE_DIR}/include/replay/bstream.hpp
   ${replay_SOURCE_DIR}/include/replay/buffer.hpp
-  ${replay_SOURCE_DIR}/include/replay/byte_color.hpp
+  ${replay_SOURCE_DIR}/include/replay/byte_rgba.hpp
   ${replay_SOURCE_DIR}/include/replay/common.hpp
   ${replay_SOURCE_DIR}/include/replay/couple.hpp
   ${replay_SOURCE_DIR}/include/replay/lines3.hpp
@@ -40,7 +40,7 @@ set(HEADER_FILES
 set(SOURCE_FILES
   aabb.cpp
   box_packer.cpp
-  byte_color.cpp
+  byte_rgba.cpp
   math.cpp
   matrix2.cpp
   matrix3.cpp
