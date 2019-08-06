@@ -26,7 +26,7 @@ Copyright (c) 2010-2019 Marius Elvert
 
 /** Set vector elements from individual values.
 */
-template <class type> inline replay::vector2<type>& replay::vector2<type>::reset(const value_type x, const value_type y)
+template <class type> inline constexpr replay::vector2<type>& replay::vector2<type>::reset(const value_type x, const value_type y)
 {
     data[0] = x;
     data[1] = y;
@@ -36,7 +36,7 @@ template <class type> inline replay::vector2<type>& replay::vector2<type>::reset
 /** Vector reset.
     Sets all elements to a given value, which defaults to 0.
 */
-template <class type> inline replay::vector2<type>& replay::vector2<type>::reset(const value_type value)
+template <class type> inline constexpr replay::vector2<type>& replay::vector2<type>::reset(const value_type value)
 {
     data[0] = value;
     data[1] = value;
@@ -52,7 +52,7 @@ template <class type> inline replay::vector2<type> replay::vector2<type>::operat
 
 /** Vector add-assign.
 */
-template <class type> inline replay::vector2<type>& replay::vector2<type>::operator+=(const vector2<type>& rhs)
+template <class type> inline replay::vector2<type>& replay::vector2<type>::operator+=(vector2<type> const& rhs)
 {
     data[0] += rhs.data[0];
     data[1] += rhs.data[1];
@@ -62,7 +62,7 @@ template <class type> inline replay::vector2<type>& replay::vector2<type>::opera
 
 /** Vector subtract-assign.
 */
-template <class type> inline replay::vector2<type>& replay::vector2<type>::operator-=(const vector2<type>& rhs)
+template <class type> inline replay::vector2<type>& replay::vector2<type>::operator-=(vector2<type> const& rhs)
 {
     data[0] -= rhs.data[0];
     data[1] -= rhs.data[1];
@@ -92,14 +92,14 @@ template <class type> inline replay::vector2<type>& replay::vector2<type>::opera
 
 /** Vector element wise compare.
 */
-template <class type> inline bool replay::vector2<type>::operator==(const vector2<type>& rhs) const
+template <class type> inline bool replay::vector2<type>::operator==(vector2<type> const& rhs) const
 {
     return data[0] == rhs.data[0] && data[1] == rhs.data[1];
 }
 
 /** Vector element wise compare.
 */
-template <class type> inline bool replay::vector2<type>::operator!=(const vector2<type>& rhs) const
+template <class type> inline bool replay::vector2<type>::operator!=(vector2<type> const& rhs) const
 {
     return data[0] != rhs.data[0] || data[1] != rhs.data[1];
 }

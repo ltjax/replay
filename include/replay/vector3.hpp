@@ -75,8 +75,8 @@ public:
     }
 
     // Access
-    vector3<type>& reset(value_type x, value_type y, value_type z);
-    vector3<type>& reset(value_type value = value_type(0));
+    constexpr vector3<type>& reset(value_type x, value_type y, value_type z);
+    constexpr vector3<type>& reset(value_type value = value_type(0));
 
     // Linear Algebra
     vector3<type> operator-() const; // Negation
@@ -99,7 +99,7 @@ public:
 
     /** Create a vector with all elements the same value.
     */
-    explicit vector3(value_type value = value_type(0))
+    constexpr explicit vector3(value_type value = value_type(0))
     {
         reset(value);
     }
@@ -109,7 +109,7 @@ public:
         \param y The second component.
         \param z The third component.
     */
-    vector3(const vector2<value_type>& xy, value_type z)
+    constexpr vector3(vector2<value_type> const& xy, value_type z)
     {
         reset(xy[0], xy[1], z);
     }
@@ -119,18 +119,18 @@ public:
         \param y The second component.
         \param z The third component.
     */
-    vector3(value_type x, value_type y, value_type z)
+    constexpr vector3(value_type x, value_type y, value_type z)
     {
         reset(x, y, z);
     }
 
-    vector3<type>& operator+=(const vector3<type>& operand);
-    vector3<type>& operator-=(const vector3<type>& operand);
+    vector3<type>& operator+=(vector3<type> const& operand);
+    vector3<type>& operator-=(vector3<type> const& operand);
     vector3<type>& operator*=(const type& operand);
     vector3<type>& operator/=(const type& operand);
 
-    bool operator==(const vector3<type>& operand) const;
-    bool operator!=(const vector3<type>& operand) const;
+    bool operator==(vector3<type> const& operand) const;
+    bool operator!=(vector3<type> const& operand) const;
 
     /** In-place negate.
         Negates each element of this vector.
@@ -162,25 +162,25 @@ private:
     \relates vector3
     \ingroup Math
 */
-template <class type> inline vector3<type> cross(const vector3<type>& a, const vector3<type>& b);
+template <class type> inline vector3<type> cross(vector3<type> const& lhs, vector3<type> const& rhs);
 
 /** Dot product of two 3D vectors.
     \relates vector3
     \ingroup Math
 */
-template <class type> inline type dot(const vector3<type>& a, const vector3<type>& b);
+template <class type> inline type dot(vector3<type> const& lhs, vector3<type> const& rhs);
 
 /** Component wise product of two 3D vectors.
     \relates vector3
     \ingroup Math
 */
-template <class type> inline vector3<type> comp(const vector3<type>& a, const vector3<type>& b);
+template <class type> inline vector3<type> comp(vector3<type> const& lhs, vector3<type> const& rhs);
 
 /** Addition.
     \relates vector3
     \ingroup Math
 */
-template <class type> inline vector3<type> operator+(vector3<type> lhs, const vector3<type>& rhs)
+template <class type> inline vector3<type> operator+(vector3<type> lhs, vector3<type> const& rhs)
 {
     return lhs += rhs;
 }
@@ -189,7 +189,7 @@ template <class type> inline vector3<type> operator+(vector3<type> lhs, const ve
     \relates vector3
     \ingroup Math
 */
-template <class type> inline vector3<type> operator-(vector3<type> lhs, const vector3<type>& rhs)
+template <class type> inline vector3<type> operator-(vector3<type> lhs, vector3<type> const& rhs)
 {
     return lhs -= rhs;
 }
@@ -198,7 +198,7 @@ template <class type> inline vector3<type> operator-(vector3<type> lhs, const ve
     \relates vector3
     \ingroup Math
 */
-template <class type> inline vector3<type> operator*(vector3<type> lhs, const type rhs)
+template <class type> inline vector3<type> operator*(vector3<type> lhs, type rhs)
 {
     return lhs *= rhs;
 }
@@ -207,7 +207,7 @@ template <class type> inline vector3<type> operator*(vector3<type> lhs, const ty
     \relates vector3
     \ingroup Math
 */
-template <class type> inline vector3<type> operator*(const type lhs, vector3<type> rhs)
+template <class type> inline vector3<type> operator*(type lhs, vector3<type> rhs)
 {
     return rhs *= lhs;
 }
@@ -216,7 +216,7 @@ template <class type> inline vector3<type> operator*(const type lhs, vector3<typ
     \relates vector3
     \ingroup Math
 */
-template <class type> inline vector3<type> operator/(vector3<type> lhs, const type& rhs)
+template <class type> inline vector3<type> operator/(vector3<type> lhs, type rhs)
 {
     return lhs /= rhs;
 }
@@ -225,7 +225,7 @@ template <class type> inline vector3<type> operator/(vector3<type> lhs, const ty
     \relates vector3
     \ingroup Math
 */
-template <class type> inline vector3<type> operator/(const type& lhs, const vector3<type>& rhs)
+template <class type> inline vector3<type> operator/(type lhs, vector3<type> const& rhs)
 {
     return vector3<type>(lhs / rhs[0], lhs / rhs[1], lhs / rhs[2]);
 }

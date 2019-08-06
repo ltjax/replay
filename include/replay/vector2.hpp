@@ -46,34 +46,34 @@ public:
 
     /** Get a pointer to the internal array.
     */
-    inline type* ptr()
+    constexpr type* ptr()
     {
         return data;
     }
 
     /** Get a pointer to the internal array.
     */
-    inline const type* ptr() const
+    constexpr const type* ptr() const
     {
         return data;
     }
 
     /** Index access operator.
     */
-    template <class index_type> inline value_type& operator[](const index_type i)
+    template <class index_type> constexpr value_type& operator[](const index_type i)
     {
         return data[i];
     }
 
     /** Index access operator.
     */
-    template <class index_type> inline const value_type operator[](const index_type i) const
+    template <class index_type> constexpr const value_type operator[](const index_type i) const
     {
         return data[i];
     }
 
-    vector2<type>& reset(value_type value = value_type(0));
-    vector2<type>& reset(value_type x, value_type y);
+    constexpr vector2<type>& reset(value_type value = value_type(0));
+    constexpr vector2<type>& reset(value_type x, value_type y);
 
     /** Non-initializing constructor.
         Leaves all values uninitialized
@@ -93,27 +93,27 @@ public:
 
     /** Initialize vector by setting all elements to a single value.
     */
-    explicit vector2(value_type value = type(0))
+    constexpr explicit vector2(value_type value = type(0))
     {
         reset(value);
     }
 
     /** Initialize vector from given individual values.
     */
-    vector2(value_type x, value_type y)
+    constexpr vector2(value_type x, value_type y)
     {
         reset(x, y);
     }
 
     vector2<type> operator-() const;
 
-    vector2<type>& operator+=(const vector2<type>& operand);
-    vector2<type>& operator-=(const vector2<type>& operand);
-    vector2<type>& operator*=(value_type value);
-    vector2<type>& operator/=(value_type value);
+    vector2<type>& operator+=(vector2<type> const& rhs);
+    vector2<type>& operator-=(vector2<type> const& rhs);
+    vector2<type>& operator*=(value_type rhs);
+    vector2<type>& operator/=(value_type rhs);
 
-    bool operator==(const vector2<type>& operand) const;
-    bool operator!=(const vector2<type>& operand) const;
+    bool operator==(vector2<type> const& rhs) const;
+    bool operator!=(vector2<type> const& rhs) const;
 
     vector2<type>& negate();
 
@@ -138,7 +138,7 @@ private:
     \relates vector2
     \ingroup Math
 */
-template <class type> inline vector2<type> const left(const vector2<type>& rhs)
+template <class type> inline vector2<type> const left(vector2<type> const& rhs)
 {
     return vector2<type>(-rhs[1], rhs[0]);
 }
@@ -147,7 +147,7 @@ template <class type> inline vector2<type> const left(const vector2<type>& rhs)
     \relates vector2
     \ingroup Math
 */
-template <class type> inline vector2<type> const right(const vector2<type>& rhs)
+template <class type> inline vector2<type> const right(vector2<type> const& rhs)
 {
     return vector2<type>(rhs[1], -rhs[0]);
 }
@@ -156,7 +156,7 @@ template <class type> inline vector2<type> const right(const vector2<type>& rhs)
     \relates vector2
     \ingroup Math
 */
-template <class type> inline type dot(const vector2<type>& lhs, const vector2<type>& rhs)
+template <class type> inline type dot(vector2<type> const& lhs, vector2<type> const& rhs)
 {
     return lhs[0] * rhs[0] + lhs[1] * rhs[1];
 }
@@ -165,7 +165,7 @@ template <class type> inline type dot(const vector2<type>& lhs, const vector2<ty
     \relates vector2
     \ingroup Math
 */
-template <class type> inline vector2<type> comp(const vector2<type>& lhs, const vector2<type>& rhs)
+template <class type> inline vector2<type> comp(vector2<type> const& lhs, vector2<type> const& rhs)
 {
     return vector2<type>(lhs[0] * rhs[0], lhs[1] * rhs[1]);
 }
@@ -174,7 +174,7 @@ template <class type> inline vector2<type> comp(const vector2<type>& lhs, const 
     \relates vector2
     \ingroup Math
 */
-template <class type> inline vector2<type> operator+(vector2<type> lhs, const vector2<type>& rhs)
+template <class type> inline vector2<type> operator+(vector2<type> lhs, vector2<type> const& rhs)
 {
     return lhs += rhs;
 }
@@ -183,7 +183,7 @@ template <class type> inline vector2<type> operator+(vector2<type> lhs, const ve
     \relates vector2
     \ingroup Math
 */
-template <class type> inline vector2<type> operator-(vector2<type> lhs, const vector2<type>& rhs)
+template <class type> inline vector2<type> operator-(vector2<type> lhs, vector2<type> const& rhs)
 {
     return lhs -= rhs;
 }
@@ -221,7 +221,7 @@ template <class type> inline vector2<type> operator/(vector2<type> lhs, const ty
 \relates vector2
 \ingroup Math
 */
-template <class type> inline vector2<type> min(const vector2<type>& lhs, const vector2<type>& rhs)
+template <class type> inline vector2<type> min(vector2<type> const& lhs, vector2<type> const& rhs)
 {
     return vector2<type>(std::min(lhs[0], rhs[0]), std::min(lhs[1], rhs[1]));
 }
@@ -230,7 +230,7 @@ template <class type> inline vector2<type> min(const vector2<type>& lhs, const v
 \relates vector2
 \ingroup Math
 */
-template <class type> inline vector2<type> max(const vector2<type>& lhs, const vector2<type>& rhs)
+template <class type> inline vector2<type> max(vector2<type> const& lhs, vector2<type> const& rhs)
 {
     return vector2<type>(std::max(lhs[0], rhs[0]), std::max(lhs[1], rhs[1]));
 }
