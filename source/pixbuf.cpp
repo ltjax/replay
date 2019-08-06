@@ -300,7 +300,7 @@ std::shared_ptr<replay::pixbuf> replay::pixbuf::create(unsigned int x, unsigned 
     default: // greyscale
         result->data->create(x, y, 1);
         break;
-    };
+    }
 
     return result;
 }

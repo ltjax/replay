@@ -330,6 +330,6 @@ public:
         swap(*this, rhs);
     }
 };
-};
+}
 
 #endif

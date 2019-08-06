@@ -188,8 +188,6 @@ replay::aabb& replay::aabb::insert(vector3f const* points, unsigned int count)
     if (!count)
         return *this;
 
-    float t = 0.f;
-
     // insert first point explicitly to assert max_i >= min_i
     insert(points[0]);
 
@@ -197,12 +195,12 @@ replay::aabb& replay::aabb::insert(vector3f const* points, unsigned int count)
     {
         for (unsigned int j = 0; j < 3; ++j)
         {
-            t = points[i][j];
+            auto t = points[i][j];
 
-            if (t < min()[j])
-                min()[j] = t;
-            else if (t > max()[j])
-                max()[j] = t;
+            if (t < min(j))
+                min(j) = t;
+            else if (t > max(j))
+                max(j) = t;
         }
     }
 

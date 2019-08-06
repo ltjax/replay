@@ -255,7 +255,7 @@ replay::shared_pixbuf tga_header::load(replay::input_binary_stream& file)
 
     default:
         throw pixbuf_io::unrecognized_format();
-    };
+    }
 
     if (image_descriptor & (1 << 5))
         result->flip();
@@ -383,9 +383,9 @@ replay::shared_pixbuf replay::pixbuf_io::load_from_file(const boost::filesystem:
         return load_from_png_file(file);
     }
 #endif
-#endif
 
     throw pixbuf_io::unrecognized_format();
+#endif
 }
 
 /** Load an image.
