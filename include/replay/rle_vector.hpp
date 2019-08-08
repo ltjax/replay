@@ -78,6 +78,12 @@ public:
         size_ = 0;
     }
 
+    rle_vector(size_type count, T value)
+    : values_(1, std::make_pair(value, count))
+    , size_(count)
+    {
+    }
+
     rle_vector(std::initializer_list<std::pair<T, std::size_t>> list)
     : values_(list)
     , size_(0)
