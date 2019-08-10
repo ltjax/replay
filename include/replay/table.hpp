@@ -432,6 +432,6 @@ public:
         return data;
     }
 };
-};
+}
 
 #endif

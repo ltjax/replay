@@ -88,14 +88,6 @@ public:
     */
     static matrix2 make_scale(const vector2f& scale);
 
-    /** Concaternate the given matrix with a rotational transformation.
-    */
-    static matrix2& rotate(matrix2& m, const float angle);
-
-    /** Concaternate the given matrix with a scale transformation.
-    */
-    static matrix2& scale(matrix2& m, const vector2f& scale);
-
     /** Get a matrix element by two indices.
     */
     float& operator()(std::size_t row, std::size_t column)

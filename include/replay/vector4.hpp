@@ -46,47 +46,47 @@ public:
 
     /** Get a pointer to the internal array.
     */
-    inline type* ptr()
+    constexpr type* ptr()
     {
         return data;
     }
 
     /** Get a pointer to the internal array.
     */
-    inline const type* ptr() const
+    constexpr const type* ptr() const
     {
         return data;
     }
 
     /** Index access operator.
     */
-    template <class index_type> inline value_type& operator[](const index_type i)
+    template <class index_type> constexpr value_type& operator[](const index_type i)
     {
         return data[i];
     }
 
     /** Index access operator.
     */
-    template <class index_type> inline const value_type operator[](const index_type i) const
+    template <class index_type> constexpr const value_type operator[](const index_type i) const
     {
         return data[i];
     }
 
     /** Set all elements to a single value. Default to zero.
     */
-    vector4<type>& reset(value_type value = value_type(0));
+    constexpr vector4<type>& reset(value_type value = value_type(0));
 
     /** Assemble a 4D vector by concatenating a 3D vector and a 4th element.
     */
-    vector4<type>& reset(const vector3<type>& xyz, value_type w);
+    constexpr vector4<type>& reset(vector3<type> const& xyz, value_type w);
 
     /** Assemble a 4D vector by concatenating two 2D vectors.
     */
-    vector4<type>& reset(const vector2<type>& xy, const vector2<type>& zw);
+    constexpr vector4<type>& reset(vector2<type> const& xy, vector2<type> const& zw);
 
     /** Assemble a 4D vector by concatenating a 2D vector and 2 more values.
     */
-    vector4<type>& reset(const vector2<type>& xy, value_type z, value_type w);
+    constexpr vector4<type>& reset(vector2<type> const& xy, value_type z, value_type w);
 
     /** Set the elements of the vector individually.
         \param x The first component.
@@ -94,16 +94,16 @@ public:
         \param z The third component.
         \param w The fourth component.
     */
-    vector4<type>& reset(value_type x, value_type y, value_type z, value_type w);
+    constexpr vector4<type>& reset(value_type x, value_type y, value_type z, value_type w);
 
-    vector4<type>& operator+=(const vector4<type>& rhs);
-    vector4<type>& operator-=(const vector4<type>& rhs);
-    vector4<type>& operator*=(const type value);
-    vector4<type>& operator/=(const type value);
+    vector4<type>& operator+=(vector4<type> const& rhs);
+    vector4<type>& operator-=(vector4<type> const& rhs);
+    vector4<type>& operator*=(type value);
+    vector4<type>& operator/=(type value);
     vector4<type> operator-() const;
 
-    bool operator==(const vector4<type>& operand) const;
-    bool operator!=(const vector4<type>& operand) const;
+    bool operator==(vector4<type> const& operand) const;
+    bool operator!=(vector4<type> const& operand) const;
 
     /** In-place negate.
         Negates each component of this vector.
@@ -132,21 +132,21 @@ public:
     /** Single-value constructor.
         Sets all elements to the given value. Defaults to zero.
     */
-    explicit vector4(value_type value = value_type(0))
+    constexpr explicit vector4(value_type value = value_type(0))
     {
         reset(value);
     }
 
     /** Assemble a 4D vector by concatenating a 3D vector and a 4th element.
     */
-    vector4(const vector3<type>& xyz, value_type w)
+    constexpr vector4(vector3<type> const& xyz, value_type w)
     {
         reset(xyz, w);
     }
 
     /** Assemble a 4D vector by concatenating two 2D vectors.
     */
-    vector4(const vector2<type>& xy, const vector2<type>& zw)
+    constexpr vector4(vector2<type> const& xy, vector2<type> const& zw)
     {
         reset(xy, zw);
     }
@@ -164,7 +164,7 @@ public:
 
     /** Assemble a 4D vector by concatenating a 2D vector and 2 more values.
     */
-    vector4(const vector2<type>& xy, value_type z, value_type w)
+    vector4(vector2<type> const& xy, value_type z, value_type w)
     {
         reset(xy, z, w);
     }
@@ -188,13 +188,13 @@ private:
     \relates vector4
     \ingroup Math
 */
-template <class type> inline type dot(const vector4<type>& lhs, const vector4<type>& rhs);
+template <class type> inline type dot(vector4<type> const& lhs, vector4<type> const& rhs);
 
 /** Component wise multiplication of two 4D vectors.
     \relates vector4
     \ingroup Math
 */
-template <class type> inline vector4<type> comp(const vector4<type>& lhs, const vector4<type>& rhs);
+template <class type> inline vector4<type> comp(vector4<type> const& lhs, vector4<type> const& rhs);
 
 /** Scalar product.
     \relates vector4
@@ -209,7 +209,7 @@ template <class type> vector4<type> operator*(const type lhs, vector4<type> rhs)
     \relates vector4
     \ingroup Math
 */
-template <class type> vector4<type> operator+(vector4<type> lhs, const vector4<type>& rhs)
+template <class type> vector4<type> operator+(vector4<type> lhs, vector4<type> const& rhs)
 {
     return lhs += rhs;
 }
@@ -218,7 +218,7 @@ template <class type> vector4<type> operator+(vector4<type> lhs, const vector4<t
     \relates vector4
     \ingroup Math
 */
-template <class type> vector4<type> operator-(vector4<type> lhs, const vector4<type>& rhs)
+template <class type> vector4<type> operator-(vector4<type> lhs, vector4<type> const& rhs)
 {
     return lhs -= rhs;
 }
