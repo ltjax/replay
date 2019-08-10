@@ -117,6 +117,21 @@ public:
         return values_.empty();
     }
 
+    bool operator==(rle_vector const& rhs) const
+    {
+        return size_ == rhs.size_ && values_ == rhs.values_;
+    }
+
+    bool operator!=(rle_vector const& rhs) const
+    {
+        return !(*this == rhs);
+    }
+
+    typename backing_container::value_type const* data() const
+    {
+        return values_.data();
+    }
+
 private:
     backing_container values_;
     size_type size_;
