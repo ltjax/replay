@@ -79,9 +79,17 @@ TEST_CASE("iterator has in-place addition")
 
 TEST_CASE("iterator has out-of-place addition")
 {
-    using namespace replay;
     rle_vector<float> v{ { 56.78f, 11 }, { 123.45f, 4 } };
     auto b = v.begin() + std::size_t(6);
     REQUIRE(*b == 56.78f);
     REQUIRE(b.repetition_count( )== 5);
 }
+
+TEST_CASE("can use suffix increment")
+{
+    rle_vector<std::uint64_t> v{ { 0xffaaffaaffaaffaaUL, 1 }, { 0x2277227722772277UL, 3 } };
+    auto i = v.begin();
+    REQUIRE(*i++ == 0xffaaffaaffaaffaaUL);
+    REQUIRE(*i == 0x2277227722772277UL);
+}
+

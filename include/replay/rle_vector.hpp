@@ -51,7 +51,7 @@ public:
             return *this;
         }
 
-        iterator const operator++(int) const
+        iterator const operator++(int)
         {
             auto result = *this;
             ++(*this);
