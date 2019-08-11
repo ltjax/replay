@@ -59,3 +59,29 @@ TEST_CASE("move retains backing memory")
     REQUIRE(v.empty());
     REQUIRE(x.data() == Before);
 }
+
+TEST_CASE("iterator can report repetitions")
+{
+    rle_vector<float> v(11, 77.7f);
+    auto i = v.begin();
+    ++i; ++i;
+    REQUIRE(i.repetition_count() == 9);
+}
+
+TEST_CASE("iterator has in-place addition")
+{
+    rle_vector<float> v{{56.7f, 6}, {123.4f, 7}};
+    auto i = v.begin();
+    i += 10;
+    REQUIRE(*i == 123.4f);
+    REQUIRE(i.repetition_count() == 3);
+}
+
+TEST_CASE("iterator has out-of-place addition")
+{
+    using namespace replay;
+    rle_vector<float> v{ { 56.78f, 11 }, { 123.45f, 4 } };
+    auto b = v.begin() + std::size_t(6);
+    REQUIRE(*b == 56.78f);
+    REQUIRE(b.repetition_count( )== 5);
+}

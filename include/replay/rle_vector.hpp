@@ -58,6 +58,18 @@ public:
             return result;
         }
 
+        iterator& operator+=(size_type rhs)
+        {
+            auto new_index = index_ + rhs;
+            while (new_index >= backing_->second)
+            {
+                new_index -= backing_->second;
+                ++backing_;
+            }
+            index_ = new_index;
+            return *this;
+        }
+
         reference operator*() const
         {
             return backing_->first;
@@ -68,6 +80,16 @@ public:
             return &backing_->first;
         }
 
+        size_type repetition_count() const
+        {
+            return backing_->second - index_;
+        }
+
+        iterator operator+(size_type rhs) const
+        {
+            auto result = *this;
+            return result += rhs;
+        }
     private:
         backing_iterator backing_;
         size_type index_;
