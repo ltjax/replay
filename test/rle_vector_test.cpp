@@ -53,7 +53,7 @@ TEST_CASE("equally constructed rle_vectors compare as equal")
 
 TEST_CASE("move retains backing memory")
 {
-    rle_vector<float> v{{9.f, 2}, {8.f, 1}, {7.f, 2}, {6.f, 1}};
+    rle_vector<float> v{ { 9.f, 2 }, { 8.f, 1 }, { 7.f, 2 }, { 6.f, 1 } };
     auto Before = v.data();
     auto x = std::move(v);
     REQUIRE(v.empty());
@@ -64,13 +64,14 @@ TEST_CASE("iterator can report repetitions")
 {
     rle_vector<float> v(11, 77.7f);
     auto i = v.begin();
-    ++i; ++i;
+    ++i;
+    ++i;
     REQUIRE(i.repetition_count() == 9);
 }
 
 TEST_CASE("iterator has in-place addition")
 {
-    rle_vector<float> v{{56.7f, 6}, {123.4f, 7}};
+    rle_vector<float> v{ { 56.7f, 6 }, { 123.4f, 7 } };
     auto i = v.begin();
     i += 10;
     REQUIRE(*i == 123.4f);
@@ -82,7 +83,7 @@ TEST_CASE("iterator has out-of-place addition")
     rle_vector<float> v{ { 56.78f, 11 }, { 123.45f, 4 } };
     auto b = v.begin() + std::size_t(6);
     REQUIRE(*b == 56.78f);
-    REQUIRE(b.repetition_count( )== 5);
+    REQUIRE(b.repetition_count() == 5);
 }
 
 TEST_CASE("can use suffix increment")
@@ -92,4 +93,3 @@ TEST_CASE("can use suffix increment")
     REQUIRE(*i++ == 0xffaaffaaffaaffaaUL);
     REQUIRE(*i == 0x2277227722772277UL);
 }
-

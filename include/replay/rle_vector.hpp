@@ -61,7 +61,7 @@ public:
         iterator& operator+=(size_type rhs)
         {
             auto new_index = index_ + rhs;
-            while (new_index >= backing_->second)
+            while (new_index > 0 && new_index >= backing_->second)
             {
                 new_index -= backing_->second;
                 ++backing_;
