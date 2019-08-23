@@ -29,5 +29,5 @@ TEST_CASE("Normalizes low values correctly")
 
 TEST_CASE("Can interpolate between positive values")
 {
-    REQUIRE(lerp(planar_direction(0.f), planar_direction(pi), 0.25f).angle() == Approx(pi * 0.25f));
+    REQUIRE(lerp(planar_direction(0.f), planar_direction(pi*2.5f), 0.25f).angle() == Approx(pi * 0.125f));
 }

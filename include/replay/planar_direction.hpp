@@ -78,7 +78,7 @@ inline bool operator!=(planar_direction const& lhs, planar_direction const& rhs)
 inline planar_direction lerp(planar_direction const& lhs, planar_direction const& rhs, float alpha)
 {
     // This uses the face that the normalized difference is between -pi and pi
-    auto angle_difference = (lhs - rhs).normalized();
+    auto angle_difference = (rhs - lhs).normalized();
     return planar_direction(angle_difference.angle() * alpha) + lhs;
 }
 }
