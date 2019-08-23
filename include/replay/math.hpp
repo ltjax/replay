@@ -75,7 +75,7 @@ inline float copy_sign(float value, float sign)
     return boost::math::copysign(value, sign);
 }
 
-/** return true if the value is within a treshold of zero.
+/** return true if the value is within a threshold of zero.
     \ingroup Math
 */
 inline bool fuzzy_zero(float value, float epsilon)
@@ -83,7 +83,7 @@ inline bool fuzzy_zero(float value, float epsilon)
     return std::abs(value) < epsilon;
 }
 
-/** return true if the value is within a treshold of zero.
+/** return true if the value is within a threshold of zero.
     \ingroup Math
 */
 inline bool fuzzy_zero(float value)
