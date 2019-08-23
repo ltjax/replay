@@ -240,7 +240,7 @@ inline bool is_pow2(unsigned int Number)
 */
 inline bool is_pow2(int Number)
 {
-    return (Number & (Number - 1)) == 0;
+    return Number > 0 && is_pow2(static_cast<unsigned int>(Number));
 }
 
 /** compute the square.
