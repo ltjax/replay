@@ -2,6 +2,10 @@ project(replay)
 
 cmake_minimum_required(VERSION 3.0)
 
+if(NOT DEFINED Replay_USE_CONAN)
+  option(Replay_USE_CONAN "Use conan to build replay" ON)
+endif()
+
 if(NOT DEFINED Replay_USE_STBIMAGE)
   option(Replay_USE_STBIMAGE "Use stb_image.c to load image files" ON)
 endif()
