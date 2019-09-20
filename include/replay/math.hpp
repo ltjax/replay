@@ -33,6 +33,14 @@ Copyright (c) 2010-2019 Marius Elvert
 namespace replay
 {
 
+/** generic linear interpolation.
+    \ingroup Math
+*/
+template <class type, class delta_type> type lerp(type a, type b, delta_type x)
+{
+    return a + x * (b - a);
+}
+
 /** Math related functions.
 */
 namespace math
@@ -67,7 +75,7 @@ inline float copy_sign(float value, float sign)
     return boost::math::copysign(value, sign);
 }
 
-/** return true if the value is within a treshold of zero.
+/** return true if the value is within a threshold of zero.
     \ingroup Math
 */
 inline bool fuzzy_zero(float value, float epsilon)
@@ -75,7 +83,7 @@ inline bool fuzzy_zero(float value, float epsilon)
     return std::abs(value) < epsilon;
 }
 
-/** return true if the value is within a treshold of zero.
+/** return true if the value is within a threshold of zero.
     \ingroup Math
 */
 inline bool fuzzy_zero(float value)
@@ -232,7 +240,7 @@ inline bool is_pow2(unsigned int Number)
 */
 inline bool is_pow2(int Number)
 {
-    return (Number & (Number - 1)) == 0;
+    return Number > 0 && is_pow2(static_cast<unsigned int>(Number));
 }
 
 /** compute the square.
@@ -247,14 +255,6 @@ template <class T> T square(T p)
     \ingroup Math
 */
 unsigned int solve_quadratic_eq(float a, float b, float c, fcouple& result, float epsilon);
-
-/** linear interpolation.
-    \ingroup Math
-*/
-template <class type, class delta_type> type lerp(const type a, const type b, const delta_type x)
-{
-    return a + x * (b - a);
-}
 
 /** interpolation functions.
     \ingroup Math
