@@ -1,33 +1,25 @@
-language: cpp
+linux: &linux
+  language: cpp
+  os: linux
+    addons:
+      apt:
+        update: true
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - g++-7
+          - git
+          - build-essential
+          - cmake
+          - python3-pip
+          
 matrix:
   include:
-    - os: linux
-      addons:
-        apt:
-          update: true
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-6
-            - git
-            - build-essential
-            - cmake
-            - python3-pip
+    - <<: *linux
       env:
         - MATRIX_EVAL="update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 60 --slave /usr/bin/g++ g++ /usr/bin/g++-6" CONAN_USER_HOME=/tmp/conan
 
-    - os: linux
-      addons:
-        apt:
-          update: true
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-7
-            - git
-            - build-essential
-            - cmake
-            - python3-pip
+    - <<: *linux
       env:
         - MATRIX_EVAL="update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 60 --slave /usr/bin/g++ g++ /usr/bin/g++-7" CONAN_USER_HOME=/tmp/conan
         
