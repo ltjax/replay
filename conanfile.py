@@ -4,7 +4,7 @@ from conans.errors import ConanInvalidConfiguration
 
 class ReplayConan(ConanFile):
     name = "replay"
-    version = "1.3"
+    version = "1.4"
     license = "MIT"
     author = "Marius Elvert marius.elvert@googlemail.com"
     url = "https://github.com/ltjax/replay"
