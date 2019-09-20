@@ -1,17 +1,17 @@
 linux: &linux
   language: cpp
   os: linux
-    addons:
-      apt:
-        update: true
-        sources:
-          - ubuntu-toolchain-r-test
-        packages:
-          - g++-7
-          - git
-          - build-essential
-          - cmake
-          - python3-pip
+  addons:
+    apt:
+      update: true
+      sources:
+        - ubuntu-toolchain-r-test
+      packages:
+        - g++-7
+        - git
+        - build-essential
+        - cmake
+        - python3-pip
           
 matrix:
   include:
