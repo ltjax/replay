@@ -10,6 +10,7 @@ add_executable(${TARGET_NAME}
   rle_vector_test.cpp
   table.t.cpp
   vector2.t.cpp
+  vector3.t.cpp
 )
 
 target_link_libraries(${TARGET_NAME}

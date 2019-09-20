@@ -43,33 +43,33 @@ template <class type> class vector3
 {
 public:
     /** Element type.
-    */
+     */
     typedef type value_type;
 
     /** Get a pointer to the internal array.
-    */
+     */
     inline type* ptr()
     {
         return data;
     }
 
     /** Get a pointer to the internal array.
-    */
+     */
     inline const type* ptr() const
     {
         return data;
     }
 
     /** Index access operator.
-    */
-    template <class index_type> inline value_type& operator[](const index_type i)
+     */
+    template <class index_type> constexpr value_type& operator[](const index_type i)
     {
         return data[i];
     }
 
     /** Index access operator.
-    */
-    template <class index_type> inline const value_type operator[](const index_type i) const
+     */
+    template <class index_type> constexpr const value_type operator[](const index_type i) const
     {
         return data[i];
     }
@@ -98,20 +98,19 @@ public:
     }
 
     /** Create a vector with all elements the same value.
-    */
+     */
     constexpr explicit vector3(value_type value = value_type(0))
+    : data{ value, value, value }
     {
-        reset(value);
     }
 
     /** Create a new vector from seperate values.
-        \param x The first component.
-        \param y The second component.
+        \param xy The first two components.
         \param z The third component.
     */
     constexpr vector3(vector2<value_type> const& xy, value_type z)
+    : data{ xy[0], xy[1], z }
     {
-        reset(xy[0], xy[1], z);
     }
 
     /** Create a new vector from seperate values.
@@ -120,8 +119,8 @@ public:
         \param z The third component.
     */
     constexpr vector3(value_type x, value_type y, value_type z)
+    : data{x, y, z}
     {
-        reset(x, y, z);
     }
 
     vector3<type>& operator+=(vector3<type> const& operand);
@@ -150,7 +149,7 @@ public:
 
 private:
     /** the actual data.
-    */
+     */
     type data[3];
 };
 
@@ -247,7 +246,7 @@ typedef vector3<double> vector3d;
     \ingroup Math
 */
 template <class T> using v3 = vector3<T>;
-}
+} // namespace replay
 
 #include "vector3.inl"
 
