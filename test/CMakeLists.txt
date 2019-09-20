@@ -9,6 +9,7 @@ add_executable(${TARGET_NAME}
   planar_direction_test.cpp
   rle_vector_test.cpp
   table.t.cpp
+  vector2.t.cpp
 )
 
 target_link_libraries(${TARGET_NAME}

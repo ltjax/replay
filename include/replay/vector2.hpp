@@ -94,15 +94,15 @@ public:
     /** Initialize vector by setting all elements to a single value.
     */
     constexpr explicit vector2(value_type value = type(0))
+    : data{value, value}
     {
-        reset(value);
     }
 
     /** Initialize vector from given individual values.
     */
     constexpr vector2(value_type x, value_type y)
+    : data{x, y}
     {
-        reset(x, y);
     }
 
     vector2<type> operator-() const;
