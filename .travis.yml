@@ -17,11 +17,11 @@ matrix:
   include:
     - <<: *linux
       env:
-        - MATRIX_EVAL="apt-get install g++-6 && CC=gcc-6 && CXX=g++-6 && CONAN_USER_HOME=/tmp/conan
+        - MATRIX_EVAL="apt-get install g++-6 && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 60 --slave /usr/bin/g++ g++ /usr/bin/g++-6" CONAN_USER_HOME=/tmp/conan
 
     - <<: *linux
       env:
-        - MATRIX_EVAL="apt-get install g++-7 && CC=gcc-7 && CXX=g++-7 && CONAN_USER_HOME=/tmp/conan
+        - MATRIX_EVAL="apt-get install g++-7 && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 60 --slave /usr/bin/g++ g++ /usr/bin/g++-7" CONAN_USER_HOME=/tmp/conan
         
 sudo: required
 
@@ -30,9 +30,10 @@ cache:
   - $CONAN_USER_HOME
 
 before_install:
-  - eval "${MATRIX_EVAL}"
-  - pip3 install --upgrade setuptools
-  - pip3 install conan
+  - eval "sudo ${MATRIX_EVAL}"
+  - sudo update-alternatives --config gcc
+  - sudo pip3 install --upgrade setuptools
+  - sudo pip3 install conan
   - conan config install conan_config/
 
 script:
