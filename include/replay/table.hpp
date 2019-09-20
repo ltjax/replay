@@ -55,7 +55,7 @@ public:
     typedef const value_type* const_iterator;
 
     /** Fill the table with the given value.
-    */
+     */
     void fill(const value_type& value)
     {
         const size_type num_elements = m_width * m_height;
@@ -64,7 +64,7 @@ public:
     }
 
     /** Construct a table of given width and height.
-    */
+     */
     table(size_type w, size_type h)
     : m_buffer((w && h) ? new value_type[w * h] : 0)
     , m_width(w)
@@ -73,7 +73,7 @@ public:
     }
 
     /** Construct a table of given width and height and fill it with the given value.
-    */
+     */
     table(size_type w, size_type h, const value_type& value)
     : m_buffer((w && h) ? new value_type[w * h] : 0)
     , m_width(w)
@@ -103,27 +103,40 @@ public:
     /** Copy constructor.
         Will create a table of equal size and copy all elements over.
     */
-    table(const table<value_type>& rhs)
+    table(table<value_type> const& rhs)
     : m_buffer(0)
     , m_width(rhs.m_width)
     , m_height(rhs.m_height)
     {
-        if (m_width && m_height)
-        {
-            const size_type num_elements = m_width * m_height;
-            m_buffer = new value_type[num_elements];
+        if (!m_width || !m_height)
+            return;
+        
+        const size_type num_elements = m_width * m_height;
+        m_buffer = new value_type[num_elements];
 
-            try
-            {
-                for (size_type i = 0; i < num_elements; ++i)
-                    m_buffer[i] = rhs.m_buffer[i];
-            }
-            catch (...)
-            {
-                delete[] m_buffer;
-                throw;
-            }
+        try
+        {
+            for (size_type i = 0; i < num_elements; ++i)
+                m_buffer[i] = rhs.m_buffer[i];
         }
+        catch (...)
+        {
+            delete[] m_buffer;
+            throw;
+        }        
+    }
+
+    /** Move constructor.
+        Leaves the source in a state equivalent to default-constructed.
+    */
+    table(table&& rhs) noexcept
+    : m_buffer(rhs.m_buffer)
+    , m_width(rhs.m_width)
+    , m_height(rhs.m_height)
+    {
+        rhs.m_buffer = nullptr;
+        rhs.m_width = 0;
+        rhs.m_height = 0;
     }
 
     /** Destructor.
@@ -135,53 +148,74 @@ public:
     }
 
     /** Get an iterator to the beginning of the table.
-    */
+     */
     iterator begin()
     {
         return iterator(m_buffer);
     }
 
     /** Get an iterator to the beginning of the table.
-    */
+     */
     const_iterator begin() const
     {
         return const_iterator(m_buffer);
     }
 
     /** Get an iterator the end of the table.
-    */
+     */
     iterator end()
     {
         return iterator(m_buffer + width() * height());
     }
 
     /** Get an iterator the end of the table.
-    */
+     */
     const_iterator end() const
     {
         return const_iterator(m_buffer + width() * height());
     }
 
     /** Invalidate the table and free the memory.
-    */
+     */
     void clear()
     {
         delete[] m_buffer;
+        m_buffer = nullptr;
+
         m_width = 0;
         m_height = 0;
-        m_buffer = 0;
+    }
+
+    table& operator=(table&& rhs) noexcept
+    {
+        if (&rhs == this)
+            return *this;
+
+        clear();
+
+        // Move ownership
+        m_buffer = rhs.m_buffer;
+        m_width = rhs.m_width;
+        m_height = rhs.m_height;
+        
+        // Clear old
+        rhs.m_buffer = nullptr;
+        rhs.m_width = 0;
+        rhs.m_height = 0;
+
+        return *this;
     }
 
     /** Assign a table and copy the contained data.
-    */
-    table& operator=(table rhs)
+     */
+    table& operator=(table const& rhs)
     {
-        rhs.swap(*this);
+        *this = table{rhs};
         return *this;
     }
 
     /** Resize the table and write the value to all elements.
-    */
+     */
     void resize(size_type w, size_type h, const value_type& value)
     {
         table rhs(w, h, value);
@@ -189,7 +223,7 @@ public:
     }
 
     /** Resize the table and invalidate all contents.
-    */
+     */
     void resize(size_type w, size_type h)
     {
         table rhs(w, h);
@@ -197,7 +231,7 @@ public:
     }
 
     /** Compute the linear memory offset of an element.
-    */
+     */
     size_type element_offset(size_type x, size_type y) const
     {
         return (m_width * y) + x;
@@ -243,7 +277,7 @@ public:
     }
 
     /** Checks whether the matrix is empty.
-    */
+     */
     bool empty() const
     {
         return m_buffer == 0;
@@ -266,14 +300,14 @@ public:
     }
 
     /** Get the width of the table, i.e. the number of columns.
-    */
+     */
     size_type width() const
     {
         return m_width;
     }
 
     /** Get the height of the table, i.e. the number of rows.
-    */
+     */
     size_type height() const
     {
         return m_height;
@@ -341,34 +375,34 @@ template <class T, unsigned int w, unsigned int h> class fixed_table
 
 public:
     /** Initialize all elements with their default constructor.
-    */
+     */
     fixed_table()
     {
     }
 
     /** Copy the given value to all elements.
-    */
+     */
     fixed_table(T v)
     {
         std::fill_n(data, w * h, v);
     }
 
     /** Fill the table with the given value.
-    */
+     */
     inline void fill(T v)
     {
         std::fill_n(data, w * h, v);
     }
 
     /** Access the array elements using two indices.
-    */
+     */
     inline T& operator()(unsigned int x, unsigned int y)
     {
         return data[x * h + y];
     }
 
     /** Access the array elements using two indices.
-    */
+     */
     inline const T& operator()(unsigned int x, unsigned int y) const
     {
         return data[x * h + y];
@@ -391,47 +425,47 @@ public:
     }
 
     /** Get an element via its linear offset.
-    */
+     */
     T& get(const size_type i)
     {
         return data[i];
     }
 
     /** Get an element via its linear offset.
-    */
+     */
     const T& get(const size_type i) const
     {
         return data[i];
     }
 
     /** Get width.
-    */
+     */
     size_type get_width() const
     {
         return w;
     }
 
     /** Get height.
-    */
+     */
     size_type get_height() const
     {
         return h;
     }
 
     /** Return the raw %buffer.
-    */
+     */
     inline const T* ptr() const
     {
         return data;
     }
 
     /** Return the raw %buffer.
-    */
+     */
     inline T* ptr()
     {
         return data;
     }
 };
-}
+} // namespace replay
 
 #endif

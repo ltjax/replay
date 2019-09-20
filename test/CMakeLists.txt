@@ -8,6 +8,7 @@ add_executable(${TARGET_NAME}
   minibox_test.cpp
   planar_direction_test.cpp
   rle_vector_test.cpp
+  table.t.cpp
 )
 
 target_link_libraries(${TARGET_NAME}
