@@ -3,11 +3,11 @@ set(TARGET_NAME replay_test)
 
 add_executable(${TARGET_NAME}
   test_main.cpp
-  math_test.cpp 
-  index_map_test.cpp 
-  minibox_test.cpp
-  planar_direction_test.cpp
-  rle_vector_test.cpp
+  math.t.cpp 
+  index_map.t.cpp 
+  minibox.t.cpp
+  planar_direction.t.cpp
+  rle_vector.t.cpp
   table.t.cpp
   vector2.t.cpp
   vector3.t.cpp
