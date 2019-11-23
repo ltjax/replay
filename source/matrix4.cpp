@@ -43,8 +43,8 @@ inline float det3(float a, float b, float c, float d, float e, float f, float g,
 
     return r;
 }
-}
-replay::plane3 operator*(const replay::plane3& p, const replay::matrix4& m)
+} // namespace
+replay::plane3 operator*(replay::plane3 const& p, replay::matrix4 const& m)
 {
     replay::plane3 result;
 
@@ -65,14 +65,14 @@ replay::matrix4::matrix4(float d)
     set(d, 0.f, 0.f, 0.f, 0.f, d, 0.f, 0.f, 0.f, 0.f, d, 0.f, 0.f, 0.f, 0.f, d);
 }
 
-replay::matrix4::matrix4(const vector4f& d)
+replay::matrix4::matrix4(v4<float> const& d)
 {
     set(d[0], 0.f, 0.f, 0.f, 0.f, d[1], 0.f, 0.f, 0.f, 0.f, d[2], 0.f, 0.f, 0.f, 0.f, d[3]);
 }
 
 /** Create a matrix from a rotational part and an optional offset.
-*/
-replay::matrix4::matrix4(const quaternion& rotation, const vector3f& offset)
+ */
+replay::matrix4::matrix4(quaternion const& rotation, v3<float> const& offset)
 {
     *this = rotation;
 
@@ -82,8 +82,8 @@ replay::matrix4::matrix4(const quaternion& rotation, const vector3f& offset)
 }
 
 /** Create a matrix from a 3D matrix part and an optional offset.
-*/
-replay::matrix4::matrix4(const matrix3& rotation, const vector3f& offset)
+ */
+replay::matrix4::matrix4(matrix3 const& rotation, v3<float> const& offset)
 {
     // Copy the rotational part
     for (std::size_t i = 0; i < 3; ++i)
@@ -102,15 +102,15 @@ replay::matrix4::matrix4(const matrix3& rotation, const vector3f& offset)
 }
 
 /** Create a matrix from scale and offset.
-*/
-replay::matrix4::matrix4(const vector3f& s, const vector3f& o)
+ */
+replay::matrix4::matrix4(v3<float> const& s, v3<float> const& o)
 {
     set(s[0], 0.f, 0.f, o[0], 0.f, s[1], 0.f, o[1], 0.f, 0.f, s[2], o[2], 0.f, 0.f, 0.f, 1.f);
 }
 
 /** Create a matrix from a rotational part, sign and an offset.
-*/
-replay::matrix4::matrix4(const quaternion& q, const vector3f& offset, float sign)
+ */
+replay::matrix4::matrix4(quaternion const& q, v3<float> const& offset, float sign)
 {
     *this = q;
 
@@ -123,23 +123,23 @@ replay::matrix4::matrix4(const quaternion& q, const vector3f& offset, float sign
 }
 
 /** Create a matrix from the given components.
-*/
-replay::matrix4::matrix4(const float a11,
-                         const float a21,
-                         const float a31,
-                         const float a41,
-                         const float a12,
-                         const float a22,
-                         const float a32,
-                         const float a42,
-                         const float a13,
-                         const float a23,
-                         const float a33,
-                         const float a43,
-                         const float a14,
-                         const float a24,
-                         const float a34,
-                         const float a44)
+ */
+replay::matrix4::matrix4(float a11,
+                         float a21,
+                         float a31,
+                         float a41,
+                         float a12,
+                         float a22,
+                         float a32,
+                         float a42,
+                         float a13,
+                         float a23,
+                         float a33,
+                         float a43,
+                         float a14,
+                         float a24,
+                         float a34,
+                         float a44)
 {
     data[0] = a11;
     data[4] = a21;
@@ -160,23 +160,23 @@ replay::matrix4::matrix4(const float a11,
 }
 
 /** Set a matrix from given components.
-*/
-replay::matrix4& replay::matrix4::set(const float a11,
-                                      const float a21,
-                                      const float a31,
-                                      const float a41,
-                                      const float a12,
-                                      const float a22,
-                                      const float a32,
-                                      const float a42,
-                                      const float a13,
-                                      const float a23,
-                                      const float a33,
-                                      const float a43,
-                                      const float a14,
-                                      const float a24,
-                                      const float a34,
-                                      const float a44)
+ */
+replay::matrix4& replay::matrix4::set(float a11,
+                                      float a21,
+                                      float a31,
+                                      float a41,
+                                      float a12,
+                                      float a22,
+                                      float a32,
+                                      float a42,
+                                      float a13,
+                                      float a23,
+                                      float a33,
+                                      float a43,
+                                      float a14,
+                                      float a24,
+                                      float a34,
+                                      float a44)
 {
     data[0] = a11;
     data[4] = a21;
@@ -199,21 +199,21 @@ replay::matrix4& replay::matrix4::set(const float a11,
 }
 
 /** Set an identity matrix.
-*/
-replay::matrix4& replay::matrix4::set_identity()
+ */
+replay::matrix4 replay::matrix4::identity()
 {
-    return set_scale(1.f, 1.f, 1.f);
+    return from_scale({ 1.f, 1.f, 1.f });
 }
 
 /** Set a scale matrix.
-*/
-replay::matrix4& replay::matrix4::set_scale(const float sx, const float sy, const float sz)
+ */
+replay::matrix4 replay::matrix4::from_scale(v3<float> const& scale)
 {
-    return set(sx, 0.f, 0.f, 0.f, 0.f, sy, 0.f, 0.f, 0.f, 0.f, sz, 0.f, 0.f, 0.f, 0.f, 1.f);
+    return { scale[0], 0.f, 0.f, 0.f, 0.f, scale[1], 0.f, 0.f, 0.f, 0.f, scale[2], 0.f, 0.f, 0.f, 0.f, 1.f };
 }
 
 /** Scale the given transformation.
-*/
+ */
 replay::matrix4& replay::matrix4::scale(const float x, const float y, const float z)
 {
     data[0] *= x;
@@ -230,8 +230,8 @@ replay::matrix4& replay::matrix4::scale(const float x, const float y, const floa
 }
 
 /** Scale the given transformation.
-*/
-replay::matrix4& replay::matrix4::scale(const vector3f& v)
+ */
+replay::matrix4& replay::matrix4::scale(v3<float> const& v)
 {
     data[0] *= v[0];
     data[4] *= v[1];
@@ -247,12 +247,12 @@ replay::matrix4& replay::matrix4::scale(const vector3f& v)
 }
 
 /** Translate by the given offset.
-*/
-replay::matrix4& replay::matrix4::translate(const vector3f& rhs)
+ */
+replay::matrix4& replay::matrix4::translate(v3<float> const& rhs)
 {
-    vector3f rhs0(rhs[0] * data[0] + rhs[1] * data[4] + rhs[2] * data[8],
-                  rhs[0] * data[1] + rhs[1] * data[5] + rhs[2] * data[9],
-                  rhs[0] * data[2] + rhs[1] * data[6] + rhs[2] * data[10]);
+    v3<float> rhs0(rhs[0] * data[0] + rhs[1] * data[4] + rhs[2] * data[8],
+                   rhs[0] * data[1] + rhs[1] * data[5] + rhs[2] * data[9],
+                   rhs[0] * data[2] + rhs[1] * data[6] + rhs[2] * data[10]);
 
     data[12] += rhs0[0];
     data[13] += rhs0[1];
@@ -262,28 +262,28 @@ replay::matrix4& replay::matrix4::translate(const vector3f& rhs)
 }
 
 /** Translate by the given offset.
-*/
+ */
 replay::matrix4& replay::matrix4::translate(const float x, const float y, const float z)
 {
-    return translate(vector3f(x, y, z));
+    return translate(v3<float>(x, y, z));
 }
 
 /** Set the translation.
-*/
-replay::matrix4& replay::matrix4::set_translation(const vector3f& t)
+ */
+replay::matrix4 replay::matrix4::from_translation(v3<float> const& t)
 {
-    return set(1.f, 0.f, 0.f, t[0], 0.f, 1.f, 0.f, t[1], 0.f, 0.f, 1.f, t[2], 0.f, 0.f, 0.f, 1.f);
+    return {1.f, 0.f, 0.f, t[0], 0.f, 1.f, 0.f, t[1], 0.f, 0.f, 1.f, t[2], 0.f, 0.f, 0.f, 1.f};
 }
 
 /** Set a rotational matrix.
-*/
-replay::matrix4& replay::matrix4::set_rotation(const float angle, const vector3f& axis)
+ */
+replay::matrix4 replay::matrix4::from_rotation(float angle, v3<float> const& axis)
 {
-    return (*this = quaternion(angle, axis));
+    return matrix4{quaternion(angle, axis)};
 }
 
 /** Invert the matrix if it is orthogonal.
-*/
+ */
 const replay::matrix4 replay::matrix4::inverted_orthogonal() const
 {
     return matrix4(data[0], data[1], data[2], -(data[12] * data[0] + data[13] * data[1] + data[14] * data[2]), data[4],
@@ -292,8 +292,8 @@ const replay::matrix4 replay::matrix4::inverted_orthogonal() const
 }
 
 /** Assign a quaternion.
-*/
-replay::matrix4& replay::matrix4::operator=(const quaternion& q)
+ */
+replay::matrix4& replay::matrix4::operator=(quaternion const& q)
 {
     data[0] = 1.f - 2.f * (q.y * q.y + q.z * q.z);
     data[1] = 2.f * (q.x * q.y + q.w * q.z);
@@ -319,7 +319,7 @@ replay::matrix4& replay::matrix4::operator=(const quaternion& q)
 }
 
 /** Multiply the matrix by a scalar.
-*/
+ */
 const replay::matrix4 replay::matrix4::operator*(float rhs) const
 {
     matrix4 result = *this;
@@ -327,7 +327,7 @@ const replay::matrix4 replay::matrix4::operator*(float rhs) const
 }
 
 /** Inplace add two matrices component wise.
-*/
+ */
 replay::matrix4& replay::matrix4::operator+=(const matrix4& other)
 {
     for (std::size_t i = 0; i < 16; ++i)
@@ -337,7 +337,7 @@ replay::matrix4& replay::matrix4::operator+=(const matrix4& other)
 }
 
 /** Add two matrices component wise.
-*/
+ */
 const replay::matrix4 replay::matrix4::operator+(const matrix4& other) const
 {
     matrix4 result(*this);
@@ -346,38 +346,38 @@ const replay::matrix4 replay::matrix4::operator+(const matrix4& other) const
 }
 
 /** Set a rotation around the x axis.
-*/
-replay::matrix4& replay::matrix4::set_rotation_x(const float angle)
+ */
+replay::matrix4 replay::matrix4::from_rotation_x(float angle)
 {
     const float cos = std::cos(angle);
     const float sin = std::sin(angle);
 
-    return set(1.f, 0.f, 0.f, 0.f, 0.f, cos, -sin, 0.f, 0.f, sin, cos, 0.f, 0.f, 0.f, 0.f, 1.f);
+    return {1.f, 0.f, 0.f, 0.f, 0.f, cos, -sin, 0.f, 0.f, sin, cos, 0.f, 0.f, 0.f, 0.f, 1.f};
 }
 
 /** Set a rotation around the y axis.
-*/
-replay::matrix4& replay::matrix4::set_rotation_y(const float angle)
+ */
+replay::matrix4 replay::matrix4::from_rotation_y(float angle)
 {
     const float cos = std::cos(angle);
     const float sin = std::sin(angle);
 
-    return set(cos, 0.f, -sin, 0.f, 0.f, 1.f, 0.f, 0.f, sin, 0.f, cos, 0.f, 0.f, 0.f, 0.f, 1.f);
+    return {cos, 0.f, -sin, 0.f, 0.f, 1.f, 0.f, 0.f, sin, 0.f, cos, 0.f, 0.f, 0.f, 0.f, 1.f};
 }
 
 /** Set a rotation around the z axis.
-*/
-replay::matrix4& replay::matrix4::set_rotation_z(const float angle)
+ */
+replay::matrix4 replay::matrix4::from_rotation_z(float angle)
 {
     const float cos = std::cos(angle);
     const float sin = std::sin(angle);
 
-    return set(cos, -sin, 0.f, 0.f, sin, cos, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f, 0.f, 0.f, 0.f, 1.f);
+    return {cos, -sin, 0.f, 0.f, sin, cos, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f, 0.f, 0.f, 0.f, 1.f};
 }
 
 /** Set a column in the matrix.
-*/
-void replay::matrix4::set_column(unsigned int i, const vector4f& column)
+ */
+void replay::matrix4::set_column(unsigned int i, v4<float> const& column)
 {
     float* const dst = data + (i * 4);
     dst[0] = column[0];
@@ -387,7 +387,7 @@ void replay::matrix4::set_column(unsigned int i, const vector4f& column)
 }
 
 /** Swap two columns.
-*/
+ */
 void replay::matrix4::swap_column(unsigned int i, unsigned int j)
 {
     float* const column0 = data + (i * 4);
@@ -398,7 +398,7 @@ void replay::matrix4::swap_column(unsigned int i, unsigned int j)
 }
 
 /** Swap two rows.
-*/
+ */
 void replay::matrix4::swap_row(unsigned int i, unsigned int j)
 {
     for (unsigned int k = 0; k < 4; ++k)
@@ -406,7 +406,7 @@ void replay::matrix4::swap_row(unsigned int i, unsigned int j)
 }
 
 /** Compute a determinat.
-*/
+ */
 float replay::matrix4::determinant() const
 {
     unsigned int index = 0;
@@ -428,7 +428,7 @@ float replay::matrix4::determinant() const
     {
         matrix4 temp(*this);
         temp.swap_column(index, 3);
-        const vector4f last = temp.get_column(3);
+        v4<float> const last = temp.get_column(3);
 
         while (index < 3)
         {
@@ -449,8 +449,8 @@ float replay::matrix4::determinant() const
 }
 
 /** Set a row in a matrix.
-*/
-void replay::matrix4::set_row(unsigned int i, const vector4f& row)
+ */
+void replay::matrix4::set_row(unsigned int i, v4<float> const& row)
 {
     data[i] = row[0];
     data[i + 4] = row[1];
@@ -459,7 +459,7 @@ void replay::matrix4::set_row(unsigned int i, const vector4f& row)
 }
 
 /** Transpose the matrix.
-*/
+ */
 void replay::matrix4::transpose()
 {
     std::swap(data[1], data[4]);
@@ -471,17 +471,17 @@ void replay::matrix4::transpose()
 }
 
 /** Get a column of the matrix.
-*/
-const replay::vector4f replay::matrix4::get_column(unsigned int i) const
+ */
+const replay::v4<float> replay::matrix4::get_column(unsigned int i) const
 {
-    return vector4f::cast(data + (i * 4));
+    return v4<float>::cast(data + (i * 4));
 }
 
 /** Get a row in the matrix.
-*/
-const replay::vector4f replay::matrix4::get_row(unsigned int i) const
+ */
+const replay::v4<float> replay::matrix4::get_row(unsigned int i) const
 {
-    return vector4f(data[i], data[4 + i], data[8 + i], data[12 + i]);
+    return v4<float>(data[i], data[4 + i], data[8 + i], data[12 + i]);
 }
 
 /** Compare two matrices for equality.
