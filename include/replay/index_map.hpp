@@ -180,6 +180,14 @@ public:
 
     ~index_map()
     {
+        for (std::size_t key = 0; key < smallest_key_bound_; ++key)
+        {
+            if (!element_initialized(key))
+                continue;
+            
+            buffer_[key].~mapped_type();
+        }
+
         free_memory();
     }
 

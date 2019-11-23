@@ -9,6 +9,28 @@ struct sample_payload
     double value;
 };
 
+struct destructor_counter
+{
+    destructor_counter(std::size_t* destructor_calls)
+        : destructor_calls_(destructor_calls)
+    {
+    }
+
+    destructor_counter(destructor_counter&& rhs)
+        : destructor_calls_(rhs.destructor_calls_)
+    {
+        rhs.destructor_calls_ = 0;
+    }
+
+    ~destructor_counter()
+    {
+        if (destructor_calls_)
+            (*destructor_calls_)++;
+    }
+
+    std::size_t* destructor_calls_;
+};
+
 using replay::index_map;
 
 auto constexpr SAMPLE_INDEX = 3;
@@ -142,32 +164,24 @@ TEST_CASE("Accessing an erased element throws")
 TEST_CASE("Erasing an element destructs it")
 {
     std::size_t destructor_calls = 0;
-    struct dummy
-    {
-        dummy(std::size_t* destructor_calls)
-        : destructor_calls_(destructor_calls)
-        {
-        }
 
-        dummy(dummy&& rhs)
-        : destructor_calls_(rhs.destructor_calls_)
-        {
-            rhs.destructor_calls_ = 0;
-        }
-
-        ~dummy()
-        {
-            if (destructor_calls_)
-                (*destructor_calls_)++;
-        }
-
-        std::size_t* destructor_calls_;
-    };
-
-    index_map<dummy> map;
-    map.insert(std::make_pair(42, dummy(&destructor_calls)));
+    index_map<destructor_counter> map;
+    map.insert(std::make_pair(42, destructor_counter(&destructor_calls)));
     map.erase(42);
     REQUIRE(destructor_calls == 1);
+}
+
+TEST_CASE("Destructing the map destructs the elements")
+{
+    std::size_t destructor_calls = 0;
+
+    {
+        index_map<destructor_counter> map;
+        map.insert(std::make_pair(42, destructor_counter(&destructor_calls)));
+        map.insert(std::make_pair(77, destructor_counter(&destructor_calls)));
+    }
+
+    REQUIRE(destructor_calls == 2);
 }
 
 TEST_CASE("Trying to erase a non-existant element does nothing")
