@@ -363,7 +363,7 @@ void replay::pixbuf::blit_from(index_type dx,
             dst_pixel = ptr(dx, y1);
             src_pixel = source.ptr(sx, y0);
 
-            for (auto i = 0; i < channel_count_; ++i)
+            for (index_type i = 0; i < channel_count_; ++i)
                 dst_pixel[i] = src_pixel[i];
         }
     }
@@ -385,10 +385,10 @@ void replay::pixbuf::fill(byte_rgba rgba)
 {
     auto pixel_count = width_ * height_;
 
-    for (auto i = 0; i < pixel_count; ++i)
+    for (index_type i = 0; i < pixel_count; ++i)
     {
         auto pixel = ptr(i);
-        for (auto c = 0; c < channel_count_; ++c)
+        for (index_type c = 0; c < channel_count_; ++c)
             pixel[c] = rgba[c];
     }
 }
@@ -417,7 +417,7 @@ void replay::pixbuf::flip()
     auto row_byte_count = width_ * channel_count_;
     std::vector<byte> buffer(row_byte_count);
 
-    for (auto y = 0; y < half_height; ++y)
+    for (index_type y = 0; y < half_height; ++y)
     {
         auto row0 = ptr(0, y);
         auto row1 = ptr(0, height_ - 1 - y);
@@ -445,7 +445,7 @@ void replay::pixbuf::convert_to_rgba()
 
     if (channel_count_ == 3)
     {
-        for (auto i = 0; i < pixel_count; ++i)
+        for (index_type i = 0; i < pixel_count; ++i)
         {
             dst[0] = src[0];
             dst[1] = src[1];
@@ -458,7 +458,7 @@ void replay::pixbuf::convert_to_rgba()
     }
     else if (channel_count_ == 1)
     {
-        for (auto i = 0; i < pixel_count; ++i)
+        for (index_type i = 0; i < pixel_count; ++i)
         {
 
             dst[0] = src[0];
