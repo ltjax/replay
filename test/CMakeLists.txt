@@ -11,6 +11,7 @@ add_executable(${TARGET_NAME}
   table.t.cpp
   vector2.t.cpp
   vector3.t.cpp
+  pixbuf.t.cpp
 )
 
 target_link_libraries(${TARGET_NAME}

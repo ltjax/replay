@@ -28,6 +28,7 @@ Copyright (c) 2010-2019 Marius Elvert
 #include <filesystem>
 #include <replay/bstream.hpp>
 #include <replay/pixbuf_io.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 
 #ifdef REPLAY_USE_STBIMAGE
 #define STB_IMAGE_IMPLEMENTATION
@@ -139,9 +140,9 @@ replay::shared_pixbuf tga_header::load_type2(replay::input_binary_stream& file)
         file >> dummy;
 
     // now read the image data
-    replay::shared_pixbuf result = pixbuf::create(width, height, pixeldepth == 24 ? pixbuf::rgb : pixbuf::rgba);
+    replay::shared_pixbuf result = std::make_shared<pixbuf>(width, height, pixeldepth == 24 ? pixbuf::color_format::rgb : pixbuf::color_format::rgba);
     unsigned int pixelcount = width * height;
-    std::uint8_t* pixel = result->get_data();
+    std::uint8_t* pixel = result->ptr();
     std::uint8_t buffer[4];
 
     if (pixeldepth == 24)
@@ -259,12 +260,12 @@ replay::shared_pixbuf tga_header::load(replay::input_binary_stream& file)
 
 void tga_header::save(replay::output_binary_stream& file, replay::pixbuf const& source)
 {
-    if (source.get_width() && source.get_height() && ((source.get_channels() == 3) || (source.get_channels() == 4)))
+    if (!source.empty() && ((source.channel_count() == 3) || (source.channel_count() == 4)))
     {
         image_type = 2;
-        width = source.get_width();
-        height = source.get_height();
-        pixeldepth = source.get_channels() * 8;
+        width = boost::numeric_cast<std::uint16_t>(source.width());
+        height = boost::numeric_cast<std::uint16_t>(source.height());
+        pixeldepth = boost::numeric_cast<std::uint8_t>(source.channel_count() * 8);
     }
     else
     {
@@ -280,7 +281,7 @@ void tga_header::save(replay::output_binary_stream& file, replay::pixbuf const& 
     file << origin[0] << origin[1] << width << height << pixeldepth << image_descriptor;
 
     unsigned int pixelcount = width * height;
-    const std::uint8_t* pixel = source.get_data();
+    const std::uint8_t* pixel = source.ptr();
     std::uint8_t buffer[4];
     if (pixeldepth == 24)
     {

@@ -25,284 +25,295 @@ Copyright (c) 2010-2019 Marius Elvert
 */
 
 #include <algorithm>
+#include <cassert>
 #include <cstdint>
 #include <replay/pixbuf.hpp>
+#include <stdexcept>
 #include <vector>
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+// Move some types into this unit's namespace
+using index_type = replay::pixbuf::index_type;
+using byte = replay::pixbuf::byte;
+using color_format = replay::pixbuf::color_format;
+using iterator = replay::pixbuf::iterator;
+using const_iterator = replay::pixbuf::const_iterator;
 
-// Private implementation that holds the image data
-class replay::pixbuf::internal_t
+namespace
 {
-public:
-    typedef std::uint8_t uint8;
-    typedef std::uint16_t uint16;
-    typedef unsigned int uint;
 
-    unsigned char* data;
-    unsigned int width;
-    unsigned int height;
-    unsigned int channels;
-
-    internal_t();
-    ~internal_t();
-
-    void create(unsigned int w, unsigned int h, unsigned int c);
-    void free();
-
-    void flip();
-
-    uint8* operator()(const uint x, const uint y)
-    {
-        return data + (y * width + x) * channels;
-    }
-    const uint8* operator()(const uint x, const uint y) const
-    {
-        return data + (y * width + x) * channels;
-    }
-    uint8* operator()(const unsigned int n)
-    {
-        return data + channels * n;
-    }
-    const uint8* operator()(const unsigned int n) const
-    {
-        return data + channels * n;
-    }
-
-    uint get_pixel_count() const
-    {
-        return width * height;
-    }
-
-    void set_pixel(unsigned int x, unsigned int y, const replay::pixbuf::byte* color);
-
-    bool blit(unsigned int dx,
-              unsigned int dy,
-              unsigned int w,
-              unsigned int h,
-              unsigned int sx,
-              unsigned int sy,
-              const internal_t& source);
-
-    void fill(const uint8* color);
-};
-
-replay::pixbuf::internal_t::internal_t()
-: data(0)
-, width(0)
-, height(0)
-, channels(0)
+inline index_type channel_count_for(color_format format)
 {
-}
-
-replay::pixbuf::internal_t::~internal_t()
-{
-    free();
-}
-
-void replay::pixbuf::internal_t::set_pixel(unsigned int x, unsigned int y, const byte* color)
-{
-    byte* target = data + (y * width + x) * channels;
-
-    for (unsigned int i = 0; i < channels; ++i)
-        target[i] = color[i];
-}
-
-void replay::pixbuf::internal_t::fill(const uint8* color)
-{
-    const uint pixelcount = width * height;
-
-    for (uint i = 0; i < pixelcount; ++i)
-        for (uint c = 0; c < channels; ++c)
-            (*this)(i)[c] = color[c];
-}
-
-bool replay::pixbuf::internal_t::blit(unsigned int dx,
-                                      unsigned int dy,
-                                      unsigned int w,
-                                      unsigned int h,
-                                      unsigned int sx,
-                                      unsigned int sy,
-                                      const internal_t& source)
-{
-    uint8* dst_pixel = 0;
-    const uint8* src_pixel = 0;
-
-    if (channels != source.channels)
-        return false;
-
-    uint i;
-    unsigned int y0;
-    unsigned int y1;
-    unsigned int ex = std::min(sx + w, source.width);
-    unsigned int ey = std::min(sy + h, source.height);
-
-    for (; (sx < ex) && (dx < width); ++sx, ++dx)
+    switch (format)
     {
-        for (y0 = sy, y1 = dy; (y0 < ey) && (y1 < height); ++y0, ++y1)
-        {
-            dst_pixel = (*this)(dx, y1);
-            src_pixel = source(sx, y0);
+    case color_format::rgb:
+        return 3;
 
-            for (i = 0; i < channels; ++i)
-                dst_pixel[i] = src_pixel[i];
-        }
-    }
+    case color_format::rgba:
+        return 4;
 
-    return true;
-}
-
-void replay::pixbuf::internal_t::flip()
-{
-    uint const half_height = height >> 1;
-
-    // Temporary swap space
-    uint row_byte_count = width * channels;
-    std::vector<uint8> buffer(row_byte_count);
-
-    for (uint y = 0; y < half_height; ++y)
-    {
-        uint8* row0 = this->data + (y * width) * channels;
-        uint8* row1 = this->data + ((height - 1 - y) * width) * channels;
-
-        // Swap rows
-        std::copy(row0, row0 + row_byte_count, buffer.begin());
-        std::copy(row1, row1 + row_byte_count, row0);
-        std::copy(buffer.begin(), buffer.end(), row1);
+    default:
+        assert(format == color_format::greyscale);
+        return 1;
     }
 }
 
-void replay::pixbuf::internal_t::create(unsigned int w, unsigned int h, unsigned int c)
+inline color_format color_format_for(index_type channel_count)
 {
-    free();
-
-    width = w;
-    height = h;
-    channels = c;
-    data = new uint8[width * height * channels];
+    switch (channel_count)
+    {
+    default:
+    case 1:
+        return color_format::greyscale;
+    case 3:
+        return color_format::rgb;
+    case 4:
+        return color_format::rgba;
+    }
 }
 
-void replay::pixbuf::internal_t::free()
-{
-    delete[] data;
-    width = height = channels = 0;
-    data = 0;
-}
+} // namespace
 
-#endif
 
 /** Create a new invalid pixbuf.
  */
 replay::pixbuf::pixbuf()
-: data(new internal_t)
+: data_(nullptr)
+, width_(0)
+, height_(0)
+, channel_count_(0)
 {
+}
+
+/** Create an image with the given parameters.
+ */
+replay::pixbuf::pixbuf(index_type w, index_type h, index_type channel_count)
+: data_(0)
+, width_(w)
+, height_(h)
+, channel_count_(channel_count)
+{
+    if (channel_count != 1 && channel_count != 3 && channel_count != 4)
+        throw std::invalid_argument("Unsupported channel count");
+
+    data_ = new byte[w * h * channel_count];
+}
+
+/** Create an image with the given parameters.
+ */
+replay::pixbuf::pixbuf(index_type w, index_type h, color_format format)
+: pixbuf(w, h, channel_count_for(format))
+{
+}
+
+/** Move-construct the pixbuf. The original image is as-if default-constructed.
+ */
+replay::pixbuf::pixbuf(pixbuf&& rhs) noexcept
+: data_(rhs.data_)
+, width_(rhs.width_)
+, height_(rhs.height_)
+, channel_count_(rhs.channel_count_)
+{
+    rhs.data_ = nullptr;
+    rhs.width_ = 0;
+    rhs.height_ = 0;
+    rhs.channel_count_ = 0;
+}
+
+/** Copy-construct the pixbuf. The original image is as-if default-constructed.
+ */
+replay::pixbuf::pixbuf(pixbuf const& rhs)
+: data_(nullptr)
+, width_(rhs.width_)
+, height_(rhs.height_)
+, channel_count_(rhs.channel_count_)
+{
+    if (!rhs.data_)
+        return;
+
+    data_ = new byte[width_ * height_ * channel_count_];
+    std::copy(rhs.begin(), rhs.end(), begin());
 }
 
 /** Free the image data.
  */
 replay::pixbuf::~pixbuf()
 {
+    delete[] data_;
+}
+
+replay::pixbuf& replay::pixbuf::operator=(replay::pixbuf const& rhs)
+{
+    *this = std::move(replay::pixbuf(rhs));
+    return *this;
+}
+
+replay::pixbuf& replay::pixbuf::operator=(replay::pixbuf&& rhs) noexcept
+{
+    // Allow x = std::move(x)
+    if (&rhs == this)
+        return *this;
+
+    data_ = rhs.data_;
+    width_ = rhs.width_;
+    height_ = rhs.height_;
+    channel_count_ = rhs.channel_count_;
+
+    rhs.data_ = 0;
+    rhs.width_ = 0;
+    rhs.height_ = 0;
+    rhs.channel_count_ = 0;
+
+    return *this;
 }
 
 /** Get the image width.
  */
-unsigned int replay::pixbuf::get_width() const
+index_type replay::pixbuf::width() const
 {
-    return data->width;
+    return width_;
 }
 
 /** Get the image height.
  */
-unsigned int replay::pixbuf::get_height() const
+index_type replay::pixbuf::height() const
 {
-    return data->height;
+    return height_;
 }
+
 /** Get the image number of channels.
  */
-unsigned int replay::pixbuf::get_channels() const
+index_type replay::pixbuf::channel_count() const
 {
-    return data->channels;
+    return channel_count_;
+}
+
+color_format replay::pixbuf::pixel_format() const
+{
+    return color_format_for(channel_count_);
 }
 
 /** Get a pointer to the pixel data.
  */
-unsigned char* replay::pixbuf::get_data()
+byte* replay::pixbuf::ptr()
 {
-    return data->data;
+    return data_;
 }
 
 /** Get a constant pointer to the pixel data.
  */
-const unsigned char* replay::pixbuf::get_data() const
+byte const* replay::pixbuf::ptr() const
 {
-    return data->data;
+    return data_;
+}
+
+/** Get a const pointer to a specific pixel.
+    \param i Index of the pixel to get.
+*/
+byte const* replay::pixbuf::ptr(index_type i) const
+{
+    return data_ + channel_count_ * i;
 }
 
 /** Get a pointer to a specific pixel.
     \param i Index of the pixel to get.
 */
-const unsigned char* replay::pixbuf::get_pixel(unsigned int i) const
+byte* replay::pixbuf::ptr(index_type i)
 {
-    return (*data)(i);
+    return data_ + channel_count_ * i;
+}
+
+/** Get a const pointer to a specific pixel.
+    \param x Column of the pixel to get.
+    \param y Column of the pixel to get.
+*/
+byte const* replay::pixbuf::ptr(index_type x, index_type y) const
+{
+    return ptr(y * width_ + x);
 }
 
 /** Get a pointer to a specific pixel.
     \param x Column of the pixel to get.
     \param y Column of the pixel to get.
 */
-const unsigned char* replay::pixbuf::get_pixel(unsigned int x, unsigned int y) const
+byte* replay::pixbuf::ptr(index_type x, index_type y)
 {
-    return (*data)(x, y);
+    return ptr(y * width_ + x);
 }
 
-/** Get a pointer to a specific pixel.
-    \param x Column of the pixel to get.
-    \param y Column of the pixel to get.
-*/
-unsigned char* replay::pixbuf::get_pixel(unsigned int x, unsigned int y)
+/** Access the pixbuf as a const range.
+ */
+const_iterator replay::pixbuf::begin() const
 {
-    return (*data)(x, y);
+    return data_;
+}
+
+/** Access the pixbuf as a range.
+ */
+iterator replay::pixbuf::begin()
+{
+    return data_;
+}
+
+/** Access the pixbuf as a const range.
+ */
+const_iterator replay::pixbuf::end() const
+{
+    return data_ + size();
+}
+
+/** Access the pixbuf as a range.
+ */
+iterator replay::pixbuf::end()
+{
+    return data_ + size();
+}
+
+index_type replay::pixbuf::size() const
+{
+    return width_ * height_ * channel_count_;
+}
+
+bool replay::pixbuf::empty() const
+{
+    return width_ == 0 || height_ == 0;
 }
 
 /** Set the pixel.
  */
-void replay::pixbuf::set_pixel(
-    const unsigned int x, const unsigned int y, const byte r, const byte g, const byte b, const byte a)
+void replay::pixbuf::assign_pixel(index_type x, index_type y, byte_rgba rgba)
 {
-    const byte color[4] = { r, g, b, a };
-
-    data->set_pixel(x, y, color);
+    auto target = ptr(x, y);
+    for (index_type i = 0; i < channel_count_; ++i)
+        target[i] = rgba[i];
 }
 
 /** Set the pixel.
  */
-void replay::pixbuf::set_pixel(const unsigned int x, const unsigned int y, const byte grey)
+void replay::pixbuf::assign_pixel(index_type x, index_type y, byte r, byte g, byte b, byte a)
 {
-    data->set_pixel(x, y, &grey);
+    assign_pixel(x, y, { r, g, b, a });
 }
 
-/** Create an image with the given parameters.
+/** Set the pixel.
  */
-std::shared_ptr<replay::pixbuf> replay::pixbuf::create(unsigned int x, unsigned int y, color_format format)
+void replay::pixbuf::assign_pixel(index_type x, index_type y, byte grey)
 {
-    std::shared_ptr<replay::pixbuf> result(new replay::pixbuf);
+    assign_pixel(x, y, byte_rgba{ grey });
+}
 
-    switch (format)
+replay::byte_rgba replay::pixbuf::read_pixel(index_type x, index_type y) const
+{
+    auto src = ptr(x, y);
+    switch (channel_count_)
     {
-    case rgb:
-        result->data->create(x, y, 3);
-        break;
-
-    case rgba:
-        result->data->create(x, y, 4);
-        break;
-
-    default: // greyscale
-        result->data->create(x, y, 1);
-        break;
+    case 4:
+        return byte_rgba{ src[0], src[1], src[2], src[3] };
+    case 3:
+        return byte_rgba{ src[0], src[1], src[2], 255 };
+    case 1:
+    default:
+        return byte_rgba{ *src };
     }
-
-    return result;
 }
 
 /** Return a section of this image.
@@ -311,15 +322,10 @@ std::shared_ptr<replay::pixbuf> replay::pixbuf::create(unsigned int x, unsigned 
     \param w Width of the part to copy.
     \param h Height of the part to copy.
 */
-std::shared_ptr<replay::pixbuf>
-replay::pixbuf::get_sub_image(unsigned int x, unsigned int y, unsigned int w, unsigned int h)
+replay::pixbuf replay::pixbuf::crop(index_type x, index_type y, index_type w, index_type h) const
 {
-    std::shared_ptr<replay::pixbuf> result(new replay::pixbuf);
-
-    result->data->create(w, h, this->data->channels);
-
-    result->blit(0, 0, w, h, x, y, *this);
-
+    replay::pixbuf result(w, h, channel_count_);
+    result.blit_from(0, 0, *this, w, h, x, y);
     return result;
 }
 
@@ -333,15 +339,34 @@ replay::pixbuf::get_sub_image(unsigned int x, unsigned int y, unsigned int w, un
     \param source Image to source the data from.
 */
 
-bool replay::pixbuf::blit(unsigned int dx,
-                          unsigned int dy,
-                          unsigned int w,
-                          unsigned int h,
-                          unsigned int sx,
-                          unsigned int sy,
-                          const pixbuf& source)
+void replay::pixbuf::blit_from(index_type dx,
+                               index_type dy,
+                               replay::pixbuf const& source,
+                               index_type w,
+                               index_type h,
+                               index_type sx,
+                               index_type sy)
 {
-    return this->data->blit(dx, dy, w, h, sx, sy, *source.data);
+    byte* dst_pixel = 0;
+    byte const* src_pixel = 0;
+
+    if (channel_count_ != source.channel_count_)
+        throw std::invalid_argument("Incompatible channel counts");
+
+    auto ex = std::min(sx + w, source.width_);
+    auto ey = std::min(sy + h, source.height_);
+
+    for (; (sx < ex) && (dx < width_); ++sx, ++dx)
+    {
+        for (auto y0 = sy, y1 = dy; (y0 < ey) && (y1 < height_); ++y0, ++y1)
+        {
+            dst_pixel = ptr(dx, y1);
+            src_pixel = source.ptr(sx, y0);
+
+            for (auto i = 0; i < channel_count_; ++i)
+                dst_pixel[i] = src_pixel[i];
+        }
+    }
 }
 
 /** Simplified blit. Copies the whole source image to the given coordinates.
@@ -349,32 +374,59 @@ bool replay::pixbuf::blit(unsigned int dx,
     \param dy Destination y-coordinate.
     \param source Image to source the data from.
 */
-bool replay::pixbuf::blit(unsigned int dx, unsigned int dy, const pixbuf& source)
+void replay::pixbuf::blit_from(index_type dx, index_type dy, pixbuf const& source)
 {
-    return this->data->blit(dx, dy, source.get_width(), source.get_height(), 0, 0, *source.data);
+    blit_from(dx, dy, source, source.width(), source.height(), 0, 0);
 }
 
 /** Fill the whole image with the given pixel value.
  */
-void replay::pixbuf::fill(const byte r, const byte g, const byte b, const byte a)
+void replay::pixbuf::fill(byte_rgba rgba)
 {
-    const byte array[] = { r, g, b, a };
-    this->data->fill(array);
+    auto pixel_count = width_ * height_;
+
+    for (auto i = 0; i < pixel_count; ++i)
+    {
+        auto pixel = ptr(i);
+        for (auto c = 0; c < channel_count_; ++c)
+            pixel[c] = rgba[c];
+    }
+}
+
+/** Fill the whole image with the given pixel value.
+ */
+void replay::pixbuf::fill(byte r, byte g, byte b, byte a)
+{
+    fill({ r, g, b, a });
 }
 
 /** Fill the whole image with the given greyscale value.
  */
 void replay::pixbuf::fill(const byte grey)
 {
-    const byte array[] = { grey, grey, grey, grey };
-    this->data->fill(array);
+    fill({ grey, grey, grey, grey });
 }
 
 /** Flip the image vertically.
  */
 void replay::pixbuf::flip()
 {
-    data->flip();
+    auto const half_height = height_ / 2;
+
+    // Temporary swap space
+    auto row_byte_count = width_ * channel_count_;
+    std::vector<byte> buffer(row_byte_count);
+
+    for (auto y = 0; y < half_height; ++y)
+    {
+        auto row0 = ptr(0, y);
+        auto row1 = ptr(0, height_ - 1 - y);
+
+        // Swap rows
+        std::copy(row0, row0 + row_byte_count, buffer.begin());
+        std::copy(row1, row1 + row_byte_count, row0);
+        std::copy(buffer.begin(), buffer.end(), row1);
+    }
 }
 
 /** Convert this image to 4-channel RGBA format.
@@ -382,20 +434,18 @@ void replay::pixbuf::flip()
 void replay::pixbuf::convert_to_rgba()
 {
     // Nothing to do
-    if (data->channels == 4)
+    if (channel_count_ == 4)
         return;
 
-    std::unique_ptr<internal_t> new_data(new internal_t);
+    pixbuf result(width_, height_, 4);
 
-    new_data->create(data->width, data->height, 4);
+    auto pixel_count = width_ * height_;
+    auto* src = ptr();
+    auto* dst = result.ptr();
 
-    internal_t::uint pixel_count = data->get_pixel_count();
-    internal_t::uint8* src = data->data;
-    internal_t::uint8* dst = new_data->data;
-
-    if (data->channels == 3)
+    if (channel_count_ == 3)
     {
-        for (unsigned int i = 0; i < pixel_count; ++i)
+        for (auto i = 0; i < pixel_count; ++i)
         {
             dst[0] = src[0];
             dst[1] = src[1];
@@ -406,9 +456,9 @@ void replay::pixbuf::convert_to_rgba()
             dst += 4;
         }
     }
-    else if (data->channels == 1)
+    else if (channel_count_ == 1)
     {
-        for (unsigned int i = 0; i < pixel_count; ++i)
+        for (auto i = 0; i < pixel_count; ++i)
         {
 
             dst[0] = src[0];
@@ -421,8 +471,7 @@ void replay::pixbuf::convert_to_rgba()
         }
     }
 
-    this->data.reset();
-    this->data = std::move(new_data);
+    *this = std::move(result);
 }
 
 /** \defgroup Imaging Image manipulation, loading and saving.

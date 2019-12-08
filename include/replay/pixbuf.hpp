@@ -1,35 +1,9 @@
-/*
-replay
-Software Library
+#pragma once
 
-Copyright (c) 2010-2019 Marius Elvert
-
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
-
- The above copyright notice and this permission notice shall be included in
- all copies or substantial portions of the Software.
-
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- THE SOFTWARE.
-
-*/
-
-#ifndef replay_pixbuf_hpp
-#define replay_pixbuf_hpp
-
-#include <boost/noncopyable.hpp>
+#include <cstdint>
 #include <memory>
 #include <string>
+#include <replay/byte_rgba.hpp>
 
 namespace replay
 {
@@ -39,74 +13,94 @@ namespace replay
    e.g., the Windows API, where images are stored with the top-most row first.
     \ingroup Imaging
 */
-class pixbuf : public boost::noncopyable
+class pixbuf
 {
 
 public:
     /** A shared (reference-counted) pointer to a pixbuf.
      */
-    typedef std::shared_ptr<pixbuf> shared_pixbuf;
+    using shared_pixbuf = std::shared_ptr<pixbuf>;
 
     /** Color-Format.
      */
-    enum color_format
+    enum class color_format
     {
         greyscale, /**< Greyscale (8-bit). */
         rgb,       /**< Red, Green, Blue (24-bit). */
         rgba       /**< Red, Green, Blue and Alpha (32-bit). */
     };
 
-    /** 8-bit unsigned int.
-     */
-    typedef unsigned char byte;
+    using byte = std::uint8_t;
+    using index_type = std::size_t;
+    using iterator = byte*; // Warning: This is an implementation detail
+    using const_iterator = byte const*; // Warning: This is an implementation detail 
 
+    pixbuf();
+    pixbuf(index_type w, index_type h, color_format format);
+    pixbuf(index_type w, index_type h, index_type channel_count);
+    pixbuf(pixbuf&& rhs) noexcept;
+    pixbuf(pixbuf const& rhs);
     ~pixbuf();
 
-    unsigned int get_width() const;
-    unsigned int get_height() const;
-    unsigned int get_channels() const;
-    const unsigned char* get_data() const;
-    unsigned char* get_data();
+    pixbuf& operator=(pixbuf&& rhs) noexcept;
+    pixbuf& operator=(pixbuf const& rhs);
 
-    const unsigned char* get_pixel(unsigned int i) const;
+    index_type width() const;
+    index_type height() const;
+    index_type channel_count() const;
 
-    unsigned char* get_pixel(unsigned int x, unsigned int y);
-    const unsigned char* get_pixel(unsigned int x, unsigned int y) const;
+    color_format pixel_format() const;
 
-    bool blit(unsigned int dx,
-              unsigned int dy,
-              unsigned int w,
-              unsigned int h,
-              unsigned int sx,
-              unsigned int sy,
-              const pixbuf& source);
+    byte const* ptr() const;
+    byte* ptr();
 
-    bool blit(unsigned int dx, unsigned int dy, const pixbuf& source);
+    byte* ptr(index_type i);
+    byte const* ptr(index_type i) const;
+    byte* ptr(index_type x, index_type y);
+    byte const* ptr(index_type x, index_type y) const;
 
-    void fill(const byte r, const byte g, const byte b, const byte a = 255);
-    void fill(const byte grey);
+    const_iterator begin() const;
+    iterator begin();
+
+    const_iterator end() const;
+    iterator end();
+
+    /** The size in bytes.
+    */
+    index_type size() const;
+
+    bool empty() const;
+
+    void blit_from(
+        index_type dx, index_type dy, pixbuf const& source, index_type w, index_type h, index_type sx, index_type sy);
+
+    void blit_from(index_type dx, index_type dy, pixbuf const& source);
+
+    void fill(byte_rgba rgba);
+    void fill(byte r, byte g, byte b, byte a = 255);
+    void fill(byte grey);
 
     void flip();
 
-    void set_pixel(const unsigned int x, const unsigned int y, const byte r, const byte g, const byte b, const byte a);
+    void assign_pixel(index_type x, index_type y, byte_rgba rgba);
+    void assign_pixel(index_type x, index_type y, byte r, byte g, byte b, byte a);
+    void assign_pixel(index_type x, index_type y, byte grey);
 
-    void set_pixel(const unsigned int x, const unsigned int y, const byte grey);
+    byte_rgba read_pixel(index_type x, index_type y) const;
 
     void convert_to_rgba();
 
-    static shared_pixbuf create(unsigned int x, unsigned int y, color_format format);
-    shared_pixbuf get_sub_image(unsigned int x, unsigned int y, unsigned int w, unsigned int h);
+    pixbuf crop(index_type x, index_type y, index_type w, index_type h) const;
 
 private:
-    class internal_t;
-    std::unique_ptr<internal_t> data;
-
-    pixbuf();
+    byte* data_;
+    index_type width_;
+    index_type height_;
+    index_type channel_count_;
 };
 
 /** A shared (reference-counted) pointer to a pixbuf.
  */
-typedef pixbuf::shared_pixbuf shared_pixbuf;
-}
+using shared_pixbuf = pixbuf::shared_pixbuf;
+} // namespace replay
 
-#endif // replay_pixbuf_hpp
