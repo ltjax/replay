@@ -27,7 +27,7 @@ Copyright (c) 2010-2019 Marius Elvert
 #ifndef replay_matrix2_hpp
 #define replay_matrix2_hpp
 
-#include <boost/optional/optional.hpp>
+#include <optional>
 #include <replay/vector2.hpp>
 
 namespace replay

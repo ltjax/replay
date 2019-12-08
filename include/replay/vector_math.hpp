@@ -29,7 +29,7 @@ Copyright (c) 2010-2019 Marius Elvert
 
 #include <algorithm>
 #include <array>
-#include <boost/optional.hpp>
+#include <optional>
 #include <ostream>
 #include <replay/lines3.hpp>
 #include <replay/math.hpp>
@@ -374,10 +374,10 @@ bool line_sphere(const linear_component3& line,
     \param epsilon Numerical epsilon to determine if the matrix is singular. Must be 0.0 or greater.
     \returns The inverse of the given matrix on success, none otherwise.
 */
-inline boost::optional<matrix2> inverse(matrix2 rhs)
+inline std::optional<matrix2> inverse(matrix2 rhs)
 {
     if (!rhs.invert())
-        return boost::none;
+        return {};
 
     return rhs;
 }
@@ -387,7 +387,7 @@ inline boost::optional<matrix2> inverse(matrix2 rhs)
     \param epsilon Numerical epsilon to determine if the matrix is singular. Must be 0.0 or greater.
     \returns The inverse of the given matrix on success, none otherwise.
 */
-boost::optional<matrix4> inverse(const matrix4& rhs, double epsilon = 0.0);
+std::optional<matrix4> inverse(const matrix4& rhs, double epsilon = 0.0);
 
 /** Find the closest point to a given point on a line.
     \param line line on which to look for the closest point.

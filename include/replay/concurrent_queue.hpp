@@ -29,7 +29,7 @@ Copyright (c) 2010-2019 Marius Elvert
 #include <deque>
 #include <mutex>
 #include <condition_variable>
-#include <boost/optional.hpp>
+#include <optional>
 
 namespace replay
 {
@@ -71,7 +71,7 @@ public:
         return result;
     }
 
-    boost::optional<T> pop_optional()
+    std::optional<T> pop_optional()
     {
         std::unique_lock<std::mutex> lock(m_mutex);
         if (m_queue.empty())
@@ -82,7 +82,7 @@ public:
         auto value = std::move(m_queue.front());
         m_queue.pop_front();
         m_pop_signal.notify_one();
-        return boost::make_optional(std::move(value));
+        return std::make_optional(std::move(value));
     }
 
 private:
