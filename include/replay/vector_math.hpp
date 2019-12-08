@@ -296,15 +296,13 @@ unsigned int convex_hull_contains(vector2f* hull, unsigned int hullsize, const v
 */
 bool intersect_line2(const line2& a, const line2& b, vector2f& result);
 
-/** Construct the minimal sphere containing a set of points using Welzl's algorithm.
+/** Facade to construct the minimal sphere containing a set of points using Welzl's algorithm.
     Expected linear runtime.
-    \note This will permute the points in the given array.
     \param p Array of points.
     \param n Number of points in the array.
-    \param m Center of the computed sphere.
-    \param r Squared radius of the computed sphere.
+    \returns Center and square-radius of the computed sphere.
 */
-void minimal_sphere(vector3f* p, std::size_t n, vector3f& m, float& r);
+std::tuple<v3<float>, float> minimal_sphere(std::vector<v3<float>> points);
 
 /** Matrix decomposition into lower and upper matrices.
  */

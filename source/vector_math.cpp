@@ -24,7 +24,6 @@ Copyright (c) 2010-2019 Marius Elvert
 
 */
 
-#include <boost/range/iterator_range.hpp>
 #include <cmath>
 #include <iostream>
 #include <replay/matrix3.hpp>
@@ -103,12 +102,10 @@ inline float det3( float a, float b, float c,
 #endif
 }
 
-void replay::math::minimal_sphere(vector3f* p, std::size_t n, vector3f& m, float& r)
+std::tuple<replay::v3<float>, float> replay::math::minimal_sphere(std::vector<v3<float>> points)
 {
-    boost::iterator_range<vector3f*> range(p, p + n);
-    minimal_ball<float, vector3f, 3> mb(range, 1e-15f);
-    m = mb.center();
-    r = mb.square_radius();
+    minimal_ball<float, vector3f, 3> mb(points, 1e-15f);
+    return std::make_tuple(mb.center(), mb.square_radius());
 }
 
 void replay::math::decompose_rotational_matrix(const matrix3& m, quaternion& result)

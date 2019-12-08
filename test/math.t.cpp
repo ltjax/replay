@@ -247,9 +247,7 @@ TEST_CASE("minimal_sphere")
 
         std::shuffle(p.begin(), p.end(), rng);
 
-        vector3f result_center;
-        float result_square_radius = 0.f;
-        math::minimal_sphere(&(p[0]), p.size(), result_center, result_square_radius);
+        auto const [result_center, result_square_radius] = math::minimal_sphere(p);
 
         float square_radius = radius * radius;
 
