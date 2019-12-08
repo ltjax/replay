@@ -25,8 +25,9 @@ cache:
 before_install:
   - eval "sudo ${MATRIX_EVAL}"
   - sudo update-alternatives --config gcc
-  - sudo pip3 install --upgrade setuptools
-  - sudo pip3 install conan
+  - wget https://dl.bintray.com/conan/installers/conan-ubuntu-64_1_20_5.deb
+  - sudo dpkg -i ./conan-ubuntu-64_1_20_5.deb
+  - conan --version
   - conan config install conan_config/
 
 script:
