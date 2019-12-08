@@ -24,9 +24,8 @@ Copyright (c) 2010-2019 Marius Elvert
 
 */
 
-#include <boost/filesystem/convenience.hpp>
-#include <boost/filesystem/fstream.hpp>
 #include <cstdint>
+#include <filesystem>
 #include <replay/bstream.hpp>
 #include <replay/pixbuf_io.hpp>
 
@@ -41,7 +40,7 @@ Copyright (c) 2010-2019 Marius Elvert
 #endif
 
 namespace
-{ // BEGIN PRIVATE NAMESPACE
+{
 
 int stb_read_callback(void* user, char* data, int size)
 {
@@ -98,7 +97,7 @@ private:
     replay::shared_pixbuf load_type2(replay::input_binary_stream& file);
 };
 
-} // END PRIVATE NAMESPACE
+} // namespace
 
 #ifdef REPLAY_USE_STBIMAGE_WRITE
 /** Serialize by encoding a PNG file via stbimage_write.
@@ -198,26 +197,21 @@ void replay::pixbuf_io::save_to_tga_file(std::ostream& file, const pixbuf& sourc
     \param source The image to be saved.
     \ingroup Imaging
 */
-void replay::pixbuf_io::save_to_file(const boost::filesystem::path& filename, const pixbuf& source)
+void replay::pixbuf_io::save_to_file(std::filesystem::path const& filename, pixbuf const& source)
 {
-#if BOOST_FILESYSTEM_VERSION < 3
-    const std::string ext = boost::filesystem::extension(filename);
-#else
-    const std::string ext = filename.extension().string();
-#endif
+    auto const extension = filename.extension().string();
 
-    boost::filesystem::ofstream file;
+    std::ofstream file;
 
     file.exceptions(std::ifstream::badbit | std::ifstream::eofbit | std::ifstream::failbit);
-
     file.open(filename, std::ios_base::out | std::ios_base::binary);
 
-    if (ext == ".tga")
+    if (extension == ".tga")
     {
         save_to_tga_file(file, source);
     }
 #ifdef REPLAY_USE_STBIMAGE_WRITE
-    else if (ext == ".png")
+    else if (extension == ".png")
     {
         save_to_png_file(file, source);
     }
@@ -249,9 +243,9 @@ replay::shared_pixbuf tga_header::load(replay::input_binary_stream& file)
         result = load_type2(file);
         break;
 
-    // FIXME: add this
-    // compressed, unmapped
-    // case 10: load_type10( dst, file ); break;
+        // FIXME: add this
+        // compressed, unmapped
+        // case 10: load_type10( dst, file ); break;
 
     default:
         throw pixbuf_io::unrecognized_format();
@@ -319,15 +313,11 @@ void tga_header::save(replay::output_binary_stream& file, replay::pixbuf const& 
     \param filename Path of the file to be loaded.
     \ingroup Imaging
 */
-replay::shared_pixbuf replay::pixbuf_io::load_from_file(const boost::filesystem::path& filename)
+replay::shared_pixbuf replay::pixbuf_io::load_from_file(std::filesystem::path const& filename)
 {
-#if BOOST_FILESYSTEM_VERSION < 3
-    const std::string ext = boost::filesystem::extension(filename);
-#else
-    const std::string ext = filename.extension().string();
-#endif
+    auto const extension = filename.extension().string();
 
-    boost::filesystem::ifstream file;
+    std::ifstream file;
     file.open(filename, std::ios_base::in | std::ios_base::binary);
 
     if (!file.good())
@@ -373,12 +363,12 @@ replay::shared_pixbuf replay::pixbuf_io::load_from_file(const boost::filesystem:
 #else
     file.exceptions(std::ifstream::badbit | std::ifstream::eofbit | std::ifstream::failbit);
 
-    if (ext == ".tga")
+    if (extension == ".tga")
     {
         return load_from_tga_file(file);
     }
 #ifdef REPLAY_USE_LIBPNG
-    else if (ext == ".png")
+    else if (extension == ".png")
     {
         return load_from_png_file(file);
     }

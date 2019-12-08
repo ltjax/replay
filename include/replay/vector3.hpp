@@ -27,7 +27,6 @@ Copyright (c) 2010-2019 Marius Elvert
 #ifndef replay_vector3_hpp
 #define replay_vector3_hpp
 
-#include <boost/utility.hpp>
 #include <iosfwd>
 #include <replay/common.hpp>
 #include <replay/vector2.hpp>

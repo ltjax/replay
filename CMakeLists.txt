@@ -30,7 +30,7 @@ if(NOT DEFINED Replay_ENABLE_INSTALL)
   option(Replay_ENABLE_INSTALL "Create the install target" ON)
 endif()
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${replay_BINARY_DIR}/build)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${replay_BINARY_DIR}/build)

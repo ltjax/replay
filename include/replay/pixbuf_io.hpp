@@ -28,24 +28,25 @@ Copyright (c) 2010-2019 Marius Elvert
 #define replay_pixbuf_io_hpp
 
 #include "pixbuf.hpp"
-#include <boost/filesystem/path.hpp>
+#include <filesystem>
 #include <string>
 
 namespace replay
 {
 
 /** Loading and saving functions for raster images.
-*/
+ */
 namespace pixbuf_io
 {
+
 /** Exception that is thrown on read errors.
-    \ingroup Imaging
+\ingroup Imaging
 */
 class read_error : public std::runtime_error
 {
 public:
     /** Initialize with an error string.
-    */
+     */
     explicit read_error(const std::string& str)
     : std::runtime_error(str)
     {
@@ -67,16 +68,16 @@ class unrecognized_format : public std::exception
 };
 
 shared_pixbuf load_from_file(std::istream& file);
-shared_pixbuf load_from_file(const boost::filesystem::path& filename);
-void save_to_file(const boost::filesystem::path& filename, const pixbuf& source);
+shared_pixbuf load_from_file(std::filesystem::path const& filename);
+void save_to_file(std::filesystem::path const& filename, pixbuf const& source);
 
 shared_pixbuf load_from_tga_file(std::istream& file);
-void save_to_tga_file(std::ostream& file, const pixbuf& source);
+void save_to_tga_file(std::ostream& file, pixbuf const& source);
 
 #ifdef REPLAY_USE_STBIMAGE_WRITE
-void save_to_png_file(std::ostream& file, const pixbuf& source);
+void save_to_png_file(std::ostream& file, pixbuf const& source);
 #endif
-}
-}
+} // namespace pixbuf_io
+} // namespace replay
 
 #endif // replay_pixbuf_io_hpp
