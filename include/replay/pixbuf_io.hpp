@@ -67,11 +67,11 @@ class unrecognized_format : public std::exception
 {
 };
 
-shared_pixbuf load_from_file(std::istream& file);
-shared_pixbuf load_from_file(std::filesystem::path const& filename);
+pixbuf load_from_file(std::istream& file);
+pixbuf load_from_file(std::filesystem::path const& filename);
 void save_to_file(std::filesystem::path const& filename, pixbuf const& source);
 
-shared_pixbuf load_from_tga_file(std::istream& file);
+pixbuf load_from_tga_file(std::istream& file);
 void save_to_tga_file(std::ostream& file, pixbuf const& source);
 
 #ifdef REPLAY_USE_STBIMAGE_WRITE

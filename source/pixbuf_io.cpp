@@ -81,7 +81,7 @@ public:
         origin[0] = origin[1] = 0;
     }
 
-    replay::shared_pixbuf load(replay::input_binary_stream& file);
+    replay::pixbuf load(replay::input_binary_stream& file);
     void save(replay::output_binary_stream& file, replay::pixbuf const& source);
 
 private:
@@ -95,7 +95,7 @@ private:
     std::uint8_t pixeldepth;
     std::uint8_t image_descriptor;
 
-    replay::shared_pixbuf load_type2(replay::input_binary_stream& file);
+    replay::pixbuf load_type2(replay::input_binary_stream& file);
 };
 
 } // namespace
@@ -113,14 +113,17 @@ void replay::pixbuf_io::save_to_png_file(std::ostream& file, pixbuf const& sourc
         file->write(reinterpret_cast<char const*>(data), size);
     };
 
-    int stride = source.get_width() * source.get_channels();
+    auto stride = boost::numeric_cast<int>(source.width() * source.channel_count());
+    auto width = boost::numeric_cast<int>(source.width());
+    auto height = boost::numeric_cast<int>(source.height());
+    auto channel_count = boost::numeric_cast<int>(source.channel_count());
 
-    stbi_write_png_to_func(write_callback, &file, source.get_width(), source.get_height(), source.get_channels(),
-                           source.get_data() + stride * (source.get_height() - 1), -stride);
+    stbi_write_png_to_func(write_callback, &file, width, height, channel_count,
+                           source.ptr() + stride * (height - 1), -stride);
 }
 #endif
 
-replay::shared_pixbuf tga_header::load_type2(replay::input_binary_stream& file)
+replay::pixbuf tga_header::load_type2(replay::input_binary_stream& file)
 {
     using namespace replay;
 
@@ -139,15 +142,17 @@ replay::shared_pixbuf tga_header::load_type2(replay::input_binary_stream& file)
     for (int i = 0; i < id_length; ++i)
         file >> dummy;
 
+    using index_type = replay::pixbuf::index_type;
+
     // now read the image data
-    replay::shared_pixbuf result = std::make_shared<pixbuf>(width, height, pixeldepth == 24 ? pixbuf::color_format::rgb : pixbuf::color_format::rgba);
-    unsigned int pixelcount = width * height;
-    std::uint8_t* pixel = result->ptr();
+    replay::pixbuf result(width, height, pixeldepth == 24 ? pixbuf::color_format::rgb : pixbuf::color_format::rgba);
+    auto pixelcount = index_type(width) * height;
+    auto pixel = result.ptr();
     std::uint8_t buffer[4];
 
     if (pixeldepth == 24)
     {
-        for (unsigned int i = 0; i < pixelcount; ++i)
+        for (index_type i = 0; i < pixelcount; ++i)
         {
             file.read(buffer, 3);
             *(pixel++) = buffer[2];
@@ -157,7 +162,7 @@ replay::shared_pixbuf tga_header::load_type2(replay::input_binary_stream& file)
     }
     else // pixeldepth == 32
     {
-        for (unsigned int i = 0; i < pixelcount; ++i)
+        for (index_type i = 0; i < pixelcount; ++i)
         {
             file.read(buffer, 4);
             *(pixel++) = buffer[2];
@@ -173,7 +178,7 @@ replay::shared_pixbuf tga_header::load_type2(replay::input_binary_stream& file)
 /** Deserialize a TGA encoded file.
     \ingroup Imaging
 */
-replay::shared_pixbuf replay::pixbuf_io::load_from_tga_file(std::istream& file)
+replay::pixbuf replay::pixbuf_io::load_from_tga_file(std::istream& file)
 {
     tga_header header;
     input_binary_stream binary_file(file);
@@ -225,7 +230,7 @@ void replay::pixbuf_io::save_to_file(std::filesystem::path const& filename, pixb
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 
-replay::shared_pixbuf tga_header::load(replay::input_binary_stream& file)
+replay::pixbuf tga_header::load(replay::input_binary_stream& file)
 {
     using namespace replay;
 
@@ -235,7 +240,7 @@ replay::shared_pixbuf tga_header::load(replay::input_binary_stream& file)
     if (colormap_type != 0)
         throw pixbuf_io::unrecognized_format();
 
-    replay::shared_pixbuf result;
+    replay::pixbuf result;
 
     switch (image_type)
     {
@@ -253,7 +258,7 @@ replay::shared_pixbuf tga_header::load(replay::input_binary_stream& file)
     }
 
     if (image_descriptor & (1 << 5))
-        result->flip();
+        result.flip();
 
     return result;
 }
@@ -314,7 +319,7 @@ void tga_header::save(replay::output_binary_stream& file, replay::pixbuf const& 
     \param filename Path of the file to be loaded.
     \ingroup Imaging
 */
-replay::shared_pixbuf replay::pixbuf_io::load_from_file(std::filesystem::path const& filename)
+replay::pixbuf replay::pixbuf_io::load_from_file(std::filesystem::path const& filename)
 {
     auto const extension = filename.extension().string();
 
@@ -322,7 +327,7 @@ replay::shared_pixbuf replay::pixbuf_io::load_from_file(std::filesystem::path co
     file.open(filename, std::ios_base::in | std::ios_base::binary);
 
     if (!file.good())
-        return shared_pixbuf();
+        throw read_error("Unable to open file " + filename.string());
 
 #ifdef REPLAY_USE_STBIMAGE
     stbi_io_callbacks callbacks;
@@ -331,35 +336,35 @@ replay::shared_pixbuf replay::pixbuf_io::load_from_file(std::filesystem::path co
     callbacks.eof = &stb_eof_callback;
 
     int rx = 0, ry = 0, comp = 0;
-    unsigned char* data = stbi_load_from_callbacks(&callbacks, static_cast<std::istream*>(&file), &rx, &ry, &comp, 0);
+    auto* data = stbi_load_from_callbacks(&callbacks, static_cast<std::istream*>(&file), &rx, &ry, &comp, 0);
 
     if (!data)
     {
         throw pixbuf_io::unrecognized_format();
     }
 
-    replay::pixbuf::color_format format = pixbuf::rgba;
+    replay::pixbuf::color_format format = pixbuf::color_format::rgba;
     if (comp != 4)
     {
         if (comp == 3)
-            format = replay::pixbuf::rgb;
+            format = replay::pixbuf::color_format::rgb;
         else if (comp == 1)
-            format = replay::pixbuf::greyscale;
+            format = replay::pixbuf::color_format::greyscale;
         else
         {
             stbi_image_free(data);
             throw pixbuf_io::unrecognized_format();
         }
     }
-    replay::shared_pixbuf result = replay::pixbuf::create(rx, ry, format);
-    unsigned char* target = result->get_data();
+    pixbuf result(rx, ry, format);
+    auto target = result.ptr();
 
     std::size_t byte_count = rx * ry * comp;
     for (std::size_t i = 0; i < byte_count; ++i)
         target[i] = data[i];
 
     stbi_image_free(data);
-    result->flip();
+    result.flip();
     return result;
 #else
     file.exceptions(std::ifstream::badbit | std::ifstream::eofbit | std::ifstream::failbit);
@@ -384,7 +389,7 @@ replay::shared_pixbuf replay::pixbuf_io::load_from_file(std::filesystem::path co
     \param filename Path of the file to be loaded.
     \ingroup Imaging
 */
-replay::shared_pixbuf replay::pixbuf_io::load_from_file(std::istream& file)
+replay::pixbuf replay::pixbuf_io::load_from_file(std::istream& file)
 {
 #ifdef REPLAY_USE_STBIMAGE
     stbi_io_callbacks callbacks;
@@ -393,7 +398,7 @@ replay::shared_pixbuf replay::pixbuf_io::load_from_file(std::istream& file)
     callbacks.eof = &stb_eof_callback;
 
     int rx = 0, ry = 0, comp = 0;
-    unsigned char* data = stbi_load_from_callbacks(&callbacks, static_cast<std::istream*>(&file), &rx, &ry, &comp, 0);
+    auto* data = stbi_load_from_callbacks(&callbacks, static_cast<std::istream*>(&file), &rx, &ry, &comp, 0);
 
     if (!data)
     {
@@ -401,28 +406,28 @@ replay::shared_pixbuf replay::pixbuf_io::load_from_file(std::istream& file)
         throw pixbuf_io::read_error(failure);
     }
 
-    replay::pixbuf::color_format format = pixbuf::rgba;
+    replay::pixbuf::color_format format = pixbuf::color_format::rgba;
     if (comp != 4)
     {
         if (comp == 3)
-            format = replay::pixbuf::rgb;
+            format = replay::pixbuf::color_format::rgb;
         else if (comp == 1)
-            format = replay::pixbuf::greyscale;
+            format = replay::pixbuf::color_format::greyscale;
         else
         {
             stbi_image_free(data);
             throw pixbuf_io::unrecognized_format();
         }
     }
-    replay::shared_pixbuf result = replay::pixbuf::create(rx, ry, format);
-    unsigned char* target = result->get_data();
+    pixbuf result(rx, ry, format);
+    auto target = result.ptr();
 
     std::size_t byte_count = rx * ry * comp;
     for (std::size_t i = 0; i < byte_count; ++i)
         target[i] = data[i];
 
     stbi_image_free(data);
-    result->flip();
+    result.flip();
     return result;
 #else
     throw pixbuf_io::unrecognized_format();
