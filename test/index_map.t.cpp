@@ -9,6 +9,11 @@ struct sample_payload
     double value;
 };
 
+bool operator==(sample_payload const& lhs, sample_payload const& rhs)
+{
+    return std::tie(lhs.key, lhs.value) == std::tie(rhs.key, rhs.value);
+}
+
 struct destructor_counter
 {
     destructor_counter(std::size_t* destructor_calls)
@@ -238,4 +243,26 @@ TEST_CASE("can correctly tell smallest key bound after a removal")
     map.insert(1, 'g');
     map.erase(7);
     REQUIRE(map.smallest_key_bound() == 2);
+}
+
+TEST_CASE("is value equal")
+{
+    REQUIRE(multi_element_sample() == multi_element_sample());
+}
+
+TEST_CASE("no longer equal after erase")
+{
+    auto many = multi_element_sample();
+    many.erase(many.begin().key());
+    REQUIRE(many != multi_element_sample());
+}
+
+TEST_CASE("no longer equal after replacing the last value by a bigger one")
+{
+    auto many = multi_element_sample();
+    auto last_key = many.smallest_key_bound() - 1;
+
+    many.erase(last_key);
+    many.insert(last_key * 3, sample_payload{ 111, 12345678.0 });
+    REQUIRE(many != multi_element_sample());
 }

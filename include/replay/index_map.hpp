@@ -358,6 +358,37 @@ public:
         return capacity_;
     }
 
+    bool operator==(index_map const& rhs) const
+    {
+        if (size_ != rhs.size_ || smallest_key_bound_ != rhs.smallest_key_bound_)
+            return false;
+
+        auto const B = smallest_key_bound_;
+        for (std::size_t i = 0; i < B; ++i)
+        {
+            if (element_initialized(i))
+            {
+                if (!rhs.element_initialized(i))
+                    return false;
+
+                if (!(this->operator[](i) == rhs[i]))
+                    return false;
+            }
+            else
+            {
+                if (rhs.element_initialized(i))
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
+    bool operator!=(index_map const& rhs) const
+    {
+        return !(*this == rhs);
+    }
+
     /** The smallest number so that all keys are smaller than this.
     */
     size_type smallest_key_bound() const
