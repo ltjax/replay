@@ -20,4 +20,15 @@
 	  </CustomListItems>
     </Expand>
   </Type>
+  <Type Name="replay::table&lt;*&gt;">
+    <DisplayString>{{ size={m_width} x {m_height} }}</DisplayString>
+    <Expand>
+      <Item Name="[width]" ExcludeView="simple" >m_width</Item>
+      <Item Name="[height]" ExcludeView="simple" >m_height</Item>
+      <ArrayItems>
+        <Size>m_width*m_height</Size>
+        <ValuePointer>m_buffer</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
 </AutoVisualizer>
