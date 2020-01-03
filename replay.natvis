@@ -5,19 +5,19 @@
     <Expand>
       <Item Name="[size]" ExcludeView="simple">size_</Item>
       <Item Name="[capacity]" ExcludeView="simple">capacity_</Item>
-	  <CustomListItems MaxItemsPerView="5000" ExcludeView="simple">
-	    <Variable Name="index" InitialValue="0"/>
-		<Variable Name="valid" InitialValue="true"/>
-		<Size>size_</Size>
-		<Loop>
-		  <Break Condition="index == capacity_"/>
-		  <Exec>valid = mask_[index/bits_per_mask]&amp;(1&lt;&lt;(index%bits_per_mask))</Exec>
-		  <If Condition="valid">
-		    <Item Name="{index}">buffer_[index],na</Item>
-		  </If>
-		  <Exec>index++</Exec>
-		</Loop>
-	  </CustomListItems>
+      <CustomListItems MaxItemsPerView="5000" ExcludeView="simple">
+        <Variable Name="index" InitialValue="0"/>
+        <Variable Name="valid" InitialValue="true"/>
+        <Size>size_</Size>
+        <Loop>
+          <Break Condition="index == capacity_"/>
+          <Exec>valid = mask_[index/bits_per_mask]&amp;(1&lt;&lt;(index%bits_per_mask))</Exec>
+          <If Condition="valid">
+            <Item Name="{index}">buffer_[index],na</Item>
+          </If>
+          <Exec>index++</Exec>
+        </Loop>
+      </CustomListItems>
     </Expand>
   </Type>
   <Type Name="replay::table&lt;*&gt;">
@@ -36,7 +36,7 @@
     <Expand>
       <ArrayItems>
         <Size>4</Size>
-        <ValuePointer>data</ValuePointer>        
+        <ValuePointer>data</ValuePointer>
       </ArrayItems>
     </Expand>
   </Type>
@@ -54,7 +54,7 @@
     <Expand>
       <ArrayItems>
         <Size>3</Size>
-        <ValuePointer>data</ValuePointer>        
+        <ValuePointer>data</ValuePointer>
       </ArrayItems>
     </Expand>
   </Type>
