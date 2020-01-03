@@ -40,4 +40,31 @@
       </ArrayItems>
     </Expand>
   </Type>
+  <Type Name="replay::vector2&lt;*&gt;">
+    <DisplayString>{{{data[0]}, {data[1]}}}</DisplayString>
+    <Expand>
+      <ArrayItems>
+        <Size>2</Size>
+        <ValuePointer>data</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+  <Type Name="replay::vector3&lt;*&gt;">
+    <DisplayString>{{{data[0]}, {data[1]}, {data[2]}}}</DisplayString>
+    <Expand>
+      <ArrayItems>
+        <Size>3</Size>
+        <ValuePointer>data</ValuePointer>        
+      </ArrayItems>
+    </Expand>
+  </Type>
+  <Type Name="replay::vector4&lt;*&gt;">
+    <DisplayString>{{{data[0]}, {data[1]}, {data[2]}, {data[3]}}}</DisplayString>
+    <Expand>
+      <ArrayItems>
+        <Size>4</Size>
+        <ValuePointer>data</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
 </AutoVisualizer>
