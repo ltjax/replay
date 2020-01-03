@@ -31,4 +31,13 @@
       </ArrayItems>
     </Expand>
   </Type>
+  <Type Name="replay::byte_rgba">
+    <DisplayString>{{ r:{(int)data[0]} g:{(int)data[1]} b:{(int)data[2]} a:{(int)data[3]} }}</DisplayString>
+    <Expand>
+      <ArrayItems>
+        <Size>4</Size>
+        <ValuePointer>data</ValuePointer>        
+      </ArrayItems>
+    </Expand>
+  </Type>
 </AutoVisualizer>
