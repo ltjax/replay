@@ -12,6 +12,7 @@ add_executable(${TARGET_NAME}
   vector2.t.cpp
   vector3.t.cpp
   pixbuf.t.cpp
+  byte_rgba.t.cpp
 )
 
 target_link_libraries(${TARGET_NAME}
