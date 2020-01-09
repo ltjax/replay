@@ -17,10 +17,17 @@ linux: &linux
         - build-essential
         - cmake
         - python3-pip
+osx: &osx
+   os: osx
+   language: generic
 matrix:
   include:
     - <<: *linux
-      env: GCC_VERSION=9 
+      env: GCC_VERSION=9
+    
+    - <<: *osx
+      osx_image: xcode11
+      env: CONAN_APPLE_CLANG_VERSIONS=11.0
         
 sudo: required
 
