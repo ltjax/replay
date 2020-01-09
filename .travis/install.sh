@@ -10,6 +10,6 @@ sudo update-alternatives --config gcc
 wget https://dl.bintray.com/conan/installers/conan-ubuntu-64_1_20_5.deb
 sudo dpkg -i ./conan-ubuntu-64_1_20_5.deb
 conan --version
-conan user
 conan config install conan_config/
+conan profile new default --detect
 conan profile update settings.compiler.libcxx=libstdc++11 default
