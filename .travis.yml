@@ -1,20 +1,26 @@
-language: cpp
+
+env:
+  global:
+    - CONAN_USER_HOME: "/tmp/conan"
+
+linux: &linux
+  os: linux
+  dist: xenial
+  language: cpp
+  addons:
+    apt:
+      update: true
+      sources:
+        - ubuntu-toolchain-r-test
+      packages:
+        - git
+        - build-essential
+        - cmake
+        - python3-pip
 matrix:
   include:
-    - os: linux
-      addons:
-        apt:
-          update: true
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-9
-            - git
-            - build-essential
-            - cmake
-            - python3-pip
-      env:
-        - GCC_VERSION=9 CONAN_USER_HOME=/tmp/conan
+    - <<: *linux
+      env: GCC_VERSION=9 
         
 sudo: required
 
