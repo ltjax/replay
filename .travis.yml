@@ -14,7 +14,7 @@ matrix:
             - cmake
             - python3-pip
       env:
-        - MATRIX_EVAL="update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 60 --slave /usr/bin/g++ g++ /usr/bin/g++-9" CONAN_USER_HOME=/tmp/conan
+        - GCC_VERSION=9 CONAN_USER_HOME=/tmp/conan
         
 sudo: required
 
@@ -22,16 +22,10 @@ cache:
   directories:
   - $CONAN_USER_HOME
 
-before_install:
-  - eval "sudo ${MATRIX_EVAL}"
-  - sudo update-alternatives --config gcc
-  - wget https://dl.bintray.com/conan/installers/conan-ubuntu-64_1_20_5.deb
-  - sudo dpkg -i ./conan-ubuntu-64_1_20_5.deb
-  - conan --version
-  - conan config install conan_config/
+install:
+  - chmod +x .travis/install.sh
+  - ./.travis/install.sh
 
 script:
-  - mkdir build && cd build
-  - conan install .. -s compiler.libcxx=libstdc++11 --build missing
-  - cmake -DCMAKE_BUILD_TYPE=Release -DReplay_USE_CONAN=ON -DReplay_ENABLE_UNIT_TESTS=OFF -DReplay_USE_STBIMAGE=OFF -DReplay_USE_LIBPNG=OFF ..
-  - cmake --build .
+  - chmod +x .travis/run.sh
+  - ./.travis/run.sh
