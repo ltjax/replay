@@ -15,7 +15,7 @@ class ReplayConan(ConanFile):
     default_options = {"shared": False, "use_stb": True, "use_libpng": False}
     generators = "cmake"
     exports_sources = "source/*", "test/*", "include/*", "CMakeLists.txt", "replay.natvis"
-    requires = "boost/1.71.0",
+    requires = "boost/1.71.0@conan/stable",
     build_requires = "Catch2/2.7.2@catchorg/stable",
     
     def _configured_cmake(self):

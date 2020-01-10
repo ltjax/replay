@@ -8,7 +8,6 @@ environment:
     CONAN_CHANNEL: "testing"
     CONAN_REMOTES: "https://api.bintray.com/conan/bincrafters/public-conan"
     CONAN_UPLOAD: "https://api.bintray.com/conan/ltjax/conan"
-    CONAN_BUILD_POLICY: "missing"
     
     matrix:
         - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
