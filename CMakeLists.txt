@@ -38,7 +38,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${replay_BINARY_DIR}/build)
 if(Replay_USE_CONAN)
   include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
   conan_basic_setup(TARGETS)
-  set(Replay_BOOST_TARGETS CONAN_PKG::boost_math CONAN_PKG::boost_range)
+  set(Replay_BOOST_TARGETS CONAN_PKG::boost)
 else()
   # Replay is typically included in a host project that already has boost
   if(NOT Boost_FOUND AND NOT DEFINED Replay_BOOST_TARGETS)
