@@ -10,8 +10,8 @@ if [[ "$(uname -s)" == 'Linux' ]]; then
     python3 --version
     pip3 install --upgrade pip --user
     pip --version
-    pip install conan --upgrade
-    pip install conan_package_tools
+    pip install conan --upgrade --user
+    pip install conan_package_tools --user
     conan --version
     conan config install conan_config/
     conan profile new default --detect --force
