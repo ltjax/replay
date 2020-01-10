@@ -15,7 +15,6 @@ linux: &linux
       packages:
         - git
         - build-essential
-        - cmake
         - python3-pip
         - python3-setuptools
 osx: &osx
@@ -24,7 +23,7 @@ osx: &osx
 matrix:
   include:
     - <<: *linux
-      env: GCC_VERSION=9 CONAN_GCC_VERSIONS=9
+      env: GCC_VERSION=9 CONAN_GCC_VERSIONS=9 CONAN_BUILD_POLICY="missing"
       
     - <<: *linux
       env: GCC_VERSION=8 CONAN_GCC_VERSIONS=8
