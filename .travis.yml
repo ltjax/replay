@@ -24,10 +24,10 @@ osx: &osx
 matrix:
   include:
     - <<: *linux
-      env: GCC_VERSION=9
+      env: GCC_VERSION=9 CONAN_GCC_VERSIONS=9
       
     - <<: *linux
-      env: GCC_VERSION=8
+      env: GCC_VERSION=8 CONAN_GCC_VERSIONS=8
     
 # macOS 10.15 is currently not supported by travis, but required by replay
 #    - <<: *osx
