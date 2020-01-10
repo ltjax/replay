@@ -17,6 +17,7 @@ linux: &linux
         - build-essential
         - cmake
         - python3-pip
+        - python3-setuptools
 osx: &osx
   os: osx
   language: generic
