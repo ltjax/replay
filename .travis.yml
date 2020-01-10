@@ -18,16 +18,20 @@ linux: &linux
         - cmake
         - python3-pip
 osx: &osx
-   os: osx
-   language: generic
+  os: osx
+  language: generic
 matrix:
   include:
     - <<: *linux
       env: GCC_VERSION=9
+      
+    - <<: *linux
+      env: GCC_VERSION=8
     
-    - <<: *osx
-      osx_image: xcode11
-      env: CONAN_APPLE_CLANG_VERSIONS=11.0
+# macOS 10.15 is currently not supported by travis, but required by replay
+#    - <<: *osx
+#      osx_image: xcode11
+#      env: CONAN_APPLE_CLANG_VERSIONS=11.0
         
 sudo: required
 
