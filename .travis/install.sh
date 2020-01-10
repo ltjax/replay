@@ -12,6 +12,8 @@ if [[ "$(uname -s)" == 'Linux' ]]; then
     pip --version
     pip install conan --upgrade --user
     pip install conan_package_tools --user
+    pip install cmake --user
+    cmake --version
     conan --version
     conan config install conan_config/
     conan profile new default --detect --force
