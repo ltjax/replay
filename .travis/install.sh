@@ -15,15 +15,12 @@ if [[ "$(uname -s)" == 'Linux' ]]; then
     conan profile update settings.compiler.libcxx=libstdc++11 default
 fi
 
-if [[ "$(uname -s)" == 'Darwin' ]]; then
-    brew update || brew update
-    brew install cmake || true
-    brew install python || true
-    
-    python --version
+if [[ "$(uname -s)" == 'Darwin' ]]; then  
+    python3 --version
 
-    pip install conan --upgrade
-    pip install conan_package_tools
-    
+    pip3 install conan --upgrade
+    pip3 install conan_package_tools
+    conan --version
     conan user
+    conan config install conan_config/
 fi
