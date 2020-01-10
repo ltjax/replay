@@ -8,8 +8,10 @@ if [[ "$(uname -s)" == 'Linux' ]]; then
     sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${GCC_VERSION} 60 --slave /usr/bin/g++ g++ /usr/bin/g++-${GCC_VERSION}
     sudo update-alternatives --config gcc
     python3 --version
-    pip3 install conan --upgrade
-    pip3 install conan_package_tools
+    pip3 install --upgrade pip --user
+    pip --version
+    pip install conan --upgrade
+    pip install conan_package_tools
     conan --version
     conan config install conan_config/
     conan profile new default --detect --force

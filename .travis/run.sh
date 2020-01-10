@@ -3,4 +3,4 @@
 set -e
 set -x
 
-python build.py
+python3 build.py
