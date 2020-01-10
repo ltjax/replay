@@ -17,17 +17,10 @@ fi
 
 if [[ "$(uname -s)" == 'Darwin' ]]; then
     brew update || brew update
-    brew outdated pyenv || brew upgrade pyenv
     brew install cmake || true
-    brew install readline xz openssl
-
-    if which pyenv > /dev/null; then
-        eval "$(pyenv init -)"
-    fi
+    brew install python || true
     
-    pyenv versions
-    pyenv install 3.5.1
-    pyenv rehash
+    python --version
 
     pip install conan --upgrade
     pip install conan_package_tools
