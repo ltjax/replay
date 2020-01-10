@@ -181,7 +181,7 @@ void replay::rotate(quaternion& q, const float angle, const vector3f& axis)
 
 std::tuple<replay::vector3f, float> replay::to_axis_angle(const quaternion& obj)
 {
-    const float angle = 2.f * std::acos(math::clampabs(obj.w, 1.f));
+    const float angle = 2.f * std::acos(math::clamp_absolute(obj.w, 1.f));
 
     // begin calculating the inverse sine
     float factor = std::sqrt(std::max(1.f - (obj.w * obj.w), 0.f));
@@ -266,7 +266,7 @@ const replay::quaternion replay::slerp(const replay::quaternion& a, const replay
             return result.normalize();
         }
 
-        const float theta = std::acos(math::clamp(-angle, -1.f, 1.f));
+        const float theta = std::acos(math::clamp_absolute(-angle, 1.f));
         const float sin_theta = std::sin(theta);
         const float m = std::sin((1.f - x) * theta) / sin_theta;
         const float n = std::sin(x * theta) / sin_theta;
@@ -281,7 +281,7 @@ const replay::quaternion replay::slerp(const replay::quaternion& a, const replay
             return result.normalize();
         }
 
-        const float theta = std::acos(math::clamp(angle, -1.f, 1.f));
+        const float theta = std::acos(math::clamp_absolute(angle, 1.f));
         const float sin_theta = std::sin(theta);
         const float m = std::sin((1.f - x) * theta) / sin_theta;
         const float n = std::sin(x * theta) / sin_theta;

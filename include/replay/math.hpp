@@ -36,7 +36,7 @@ namespace replay
 /** generic linear interpolation.
     \ingroup Math
 */
-template <class type, class delta_type> type lerp(type a, type b, delta_type x)
+template <class type, class delta_type> inline constexpr type lerp(type a, type b, delta_type x)
 {
     return a + x * (b - a);
 }
@@ -127,7 +127,7 @@ template <class T> inline bool intervals_intersect(const couple<T>& a, const cou
 /** clamp a value into the range [-abs,abs]
     \ingroup Math
 */
-template <class T> inline T clampabs(const T value, const T abs)
+template <class T> inline constexpr T clamp_absolute(const T value, const T abs)
 {
     if (value < -abs)
         return -abs;
@@ -140,7 +140,7 @@ template <class T> inline T clampabs(const T value, const T abs)
 /** Clamp a value into a range.
     \ingroup Math
 */
-template <class T> inline T clamp(const T value, const couple<T>& range)
+template <class T> inline constexpr T clamp(T value, couple<T> const& range)
 {
     if (value < range[0])
         return range[0];
@@ -150,24 +150,11 @@ template <class T> inline T clamp(const T value, const couple<T>& range)
         return value;
 }
 
-/** Clamp a value into a range.
-    \ingroup Math
-*/
-template <class T> inline T clamp(const T value, const T a, const T b)
-{
-    if (value < a)
-        return a;
-    else if (value > b)
-        return b;
-    else
-        return value;
-}
-
 /** Saturate the value, i.e., clamp it into the [0..1] range.
     \param x Value to be saturated.
     \ingroup Math
 */
-inline float saturate(float x)
+inline constexpr float saturate(float x)
 {
     if (x < 0.f)
         return 0.f;
@@ -212,18 +199,18 @@ inline unsigned int same_sign(float a, float b)
 /** convert radians to degrees.
     \ingroup Math
 */
-inline float convert_to_degrees(const float radians)
+inline constexpr float convert_to_degrees(float radians)
 {
-    static float factor = 180.f / 3.14159265358979323846f;
+    constexpr float factor = 180.f / 3.14159265358979323846f;
     return radians * factor;
 }
 
 /** convert degrees to radians.
     \ingroup Math
 */
-inline float convert_to_radians(const float degrees)
+inline constexpr float convert_to_radians(float degrees)
 {
-    static float factor = 3.14159265358979323846f / 180.f;
+    constexpr float factor = 3.14159265358979323846f / 180.f;
     return degrees * factor;
 }
 
@@ -246,7 +233,7 @@ inline bool is_pow2(int Number)
 /** compute the square.
     \ingroup Math
 */
-template <class T> T square(T p)
+template <class T> inline constexpr T square(T p)
 {
     return p * p;
 }
