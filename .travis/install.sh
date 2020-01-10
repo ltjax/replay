@@ -11,7 +11,7 @@ if [[ "$(uname -s)" == 'Linux' ]]; then
     sudo dpkg -i ./conan-ubuntu-64_1_20_5.deb
     conan --version
     conan config install conan_config/
-    conan profile new default --detect
+    conan profile new default --detect --force
     conan profile update settings.compiler.libcxx=libstdc++11 default
 fi
 
