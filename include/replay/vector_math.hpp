@@ -112,6 +112,11 @@ public:
     }
 };
 
+/** Compute the intersection of two 2d lines.
+    \ingroup Math
+*/
+std::optional<v2<float>> intersect_planar_lines(line2 const& a, line2 const& b, float epsilon = math::default_epsilon);
+
 namespace math
 {
 
@@ -290,11 +295,6 @@ std::size_t gift_wrap(vector2f* points, std::size_t count);
 /** Checks whether the given point is inside the given convex hull.
  */
 unsigned int convex_hull_contains(vector2f* hull, unsigned int hullsize, const vector2f& point, const float threshold);
-
-/** Compute the intersection of two 2d lines.
-    \ingroup Math
-*/
-bool intersect_line2(const line2& a, const line2& b, vector2f& result);
 
 /** Facade to construct the minimal sphere containing a set of points using Welzl's algorithm.
     Expected linear runtime.

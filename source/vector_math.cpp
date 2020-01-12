@@ -476,19 +476,20 @@ replay::vector3f replay::math::intersect_3planes(const plane3& a, const plane3& 
     return Temp * -vector3f(a.d, b.d, c.d);
 }
 
-bool replay::math::intersect_line2(const line2& a, const line2& b, vector2f& result)
+std::optional<replay::v2<float>> replay::intersect_planar_lines(line2 const& a, line2 const& b, float epsilon)
 {
+    using namespace replay::math;
+
     float denom = det(a.direction, b.direction);
 
     // lines parallel?
-    if (fuzzy_zero(denom))
-        return false;
+    if (fuzzy_zero(denom, epsilon))
+        return {};
 
     float num = det(b.origin - a.origin, b.direction);
     float lambda = num / denom;
 
-    result = a.get_point(lambda);
-    return true;
+    return a.get_point(lambda);
 }
 
 float replay::square_distance(const line3& la, const line3& lb)
