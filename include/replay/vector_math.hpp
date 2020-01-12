@@ -241,14 +241,6 @@ template <class x> vector3<x> vector_max(const vector3<x>& a, const vector3<x>& 
     return vector3<x>(std::max(a[0], b[0]), std::max(a[1], b[1]), std::max(a[2], b[2]));
 }
 
-/** splice off the first two elements.
-    \ingroup Math
-*/
-template <class x> vector2<x> splice2(const vector3<x>& v)
-{
-    return vector2<x>(v[0], v[1]);
-}
-
 /** Computes a 2d vector pointing at the given angle relative to x+.
     \param radians Angle in radians.
     \ingroup Math
