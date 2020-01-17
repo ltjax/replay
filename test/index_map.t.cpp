@@ -266,3 +266,59 @@ TEST_CASE("no longer equal after replacing the last value by a bigger one")
     many.insert(last_key * 3, sample_payload{ 111, 12345678.0 });
     REQUIRE(many != multi_element_sample());
 }
+
+TEST_CASE("can iterate when smallest key is smaller than capacity")
+{
+    index_map<std::size_t> squares;
+
+    std::size_t index = 0;
+    while (squares.smallest_key_bound() >= squares.capacity())
+    {
+        squares.insert(index, index * index);
+        ++index;
+    }
+
+    std::size_t iteration_count = 0;
+    auto i = squares.begin(), ie = squares.end();
+    for (; i != ie; ++i)
+    {
+        ++iteration_count;
+    }
+
+    REQUIRE(iteration_count == squares.size());
+}
+
+TEST_CASE("can erase only element via iterator")
+{
+    index_map<std::string> strings;
+    strings.insert(42, "the answer");
+
+    strings.erase(strings.begin());
+    REQUIRE(strings.empty());
+}
+
+TEST_CASE("iterators stay valid after erase, just not dereferencable")
+{
+    index_map<std::vector<int>> vectors;
+    vectors.insert(7, std::vector<int>{ 1, 2, 3 });
+    vectors.insert(11, std::vector<int>{ 4, 5, 6 });
+
+    auto i = vectors.begin();
+    vectors.erase(i);
+    ++i;
+    REQUIRE(*i == std::vector<int>{4, 5, 6});
+}
+
+TEST_CASE("can filter using remove_if")
+{
+    index_map<double> values;
+    values.insert(3, 55.0);
+    values.insert(7, 7.0);
+    values.insert(11, 42.0);
+
+    auto removed = values.remove_if([](std::size_t key, double v) { return key == 3 || v == 7.0; });
+
+    REQUIRE(removed == 2);
+    REQUIRE(values.size() == 1);
+    REQUIRE(values.at(11) == 42.0);
+}
