@@ -115,7 +115,7 @@ public:
     private:
         void skip_invalid_forward()
         {
-            while (index_ < parent_->capacity_ && !parent_->element_initialized(index_))
+            while (index_ < parent_->smallest_key_bound_ && !parent_->element_initialized(index_))
                 ++index_;
         }
 
@@ -239,6 +239,16 @@ public:
             while (smallest_key_bound_ > 0 && !element_initialized(smallest_key_bound_ - 1))
                 --smallest_key_bound_;
         }
+    }
+
+    void erase(iterator it)
+    {
+        erase(it.key());
+    }
+
+    void erase(const_iterator it)
+    {
+        erase(it.key());
     }
 
     void insert(value_type&& value)
@@ -387,6 +397,21 @@ public:
     bool operator!=(index_map const& rhs) const
     {
         return !(*this == rhs);
+    }
+
+    template <typename BinaryPredicate>
+    size_type remove_if(BinaryPredicate p)
+    {
+        size_type removal_count = 0;
+        for (auto i = begin(), ie = end(); i != ie; ++i)
+        {
+            if (!p(i.key(), *i))
+                continue;
+
+            erase(i);
+            ++removal_count;
+        }
+        return removal_count;
     }
 
     /** The smallest number so that all keys are smaller than this.

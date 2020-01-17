@@ -1,14 +1,11 @@
 # Replay #
 
 [![Build Status](https://travis-ci.org/ltjax/replay.svg?branch=master)](https://travis-ci.org/ltjax/replay)
+[![Build status](https://ci.appveyor.com/api/projects/status/0b8i5chwamnpfmxp/branch/master?svg=true)](https://ci.appveyor.com/project/ltjax/replay/branch/master)
 
 ## Overview ##
 
 **Replay** is a lightweight game development utility library. It contains data structures for 3D maths, such as vectors, quaternions and matrices. It also contains common algorithms that operate on these data structures and other utility data structures that are useful in game development.
-
-It is thoroughly documented with Doxygen (http://www.doxygen.org) comments. The API reference can be found in the link section on the right.
-
-The implementation of critical algorithms is checked via unit testing (using Boost.Test).
 
 ## Features ##
   * 2,3 and 4 dimensional vector classes and math functions.
@@ -21,8 +18,16 @@ The implementation of critical algorithms is checked via unit testing (using Boo
 
 ## Install ##
 
-To use replay, just check out the source for the subversion server. There are currently build files for:
-  * CMake
+They easiest way to use replay is to use conan. Add the remote via:
+```
+conan remote add ltjax https://api.bintray.com/conan/ltjax/conan 
+```
+Then add a dependency to your project:
+```
+replay/2.4@ltjax/stable
+```
+
+Alternatively, replay can be build using CMake.
 
 ## History ##
 
