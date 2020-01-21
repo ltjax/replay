@@ -322,3 +322,19 @@ TEST_CASE("can filter using remove_if")
     REQUIRE(values.size() == 1);
     REQUIRE(values.at(11) == 42.0);
 }
+
+TEST_CASE("clear() removes all elements")
+{
+    auto many = multi_element_sample();
+    many.clear();
+    REQUIRE(many.empty());
+    REQUIRE(many.size() == 0);
+}
+
+TEST_CASE("clear() does not change capacity")
+{
+    auto many = multi_element_sample();
+    auto capacity_before = many.capacity();
+    many.clear();
+    REQUIRE(many.capacity() == capacity_before);
+}
