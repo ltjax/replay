@@ -399,6 +399,24 @@ public:
         return !(*this == rhs);
     }
 
+    void clear()
+    {
+        auto const B = smallest_key_bound_;
+        for (std::size_t i = 0; i < B; ++i)
+        {
+            if (!element_initialized(i))
+                continue;
+
+            (buffer_[i]).~mapped_type();
+        }
+
+        for (std::size_t i = 0; i < mask_size_for(capacity_); ++i)
+            mask_[i] = 0;
+
+        size_ = 0;
+        smallest_key_bound_ = 0;
+    }
+
     template <typename BinaryPredicate>
     size_type remove_if(BinaryPredicate p)
     {
