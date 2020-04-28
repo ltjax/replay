@@ -110,18 +110,18 @@ public:
         return *this;
     }
 
-    /** Inequantity.
+    /** Inequality.
      */
-    bool operator!=(interval const& other) const
+    constexpr bool operator!=(interval const& other) const
     {
-        return array[0] != other.array[0] || array[1] != other.array[1];
+        return data_[0] != other.data_[0] || data_[1] != other.data_[1];
     }
 
-    /** Equantity.
+    /** Equality.
      */
-    bool operator==(interval const& other) const
+    constexpr bool operator==(interval const& other) const
     {
-        return array[0] == other.array[0] && array[1] == other.array[1];
+        return data_[0] == other.data_[0] && data_[1] == other.data_[1];
     }
 
 private:
