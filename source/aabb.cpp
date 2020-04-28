@@ -134,9 +134,7 @@ std::array<float, 2> replay::aabb::project(vector3f const& x) const
 replay::aabb::classify_result replay::aabb::classify(plane3 const& x) const
 {
     unsigned int mask;
-    fcouple result;
-
-    result.set(x.d, x.d);
+    interval result(x.d, x.d);
 
     for (unsigned int i = 0; i < 3; ++i)
     {
@@ -147,7 +145,7 @@ replay::aabb::classify_result replay::aabb::classify(plane3 const& x) const
     }
 
     if (result[0] > result[1])
-        result.swap();
+        result.swap_sides();
 
     if (!math::same_sign(result[0], result[1]))
         return spanning;

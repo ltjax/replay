@@ -25,6 +25,7 @@ Copyright (c) 2010-2019 Marius Elvert
 */
 
 #include <replay/box_packer.hpp>
+#include <replay/vector2.hpp>
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 
@@ -57,7 +58,7 @@ public:
         return rectangle;
     }
 
-    node const* insert(replay::couple<int> const& size, int padding);
+    node const* insert(replay::v2<int> const& size, int padding);
 
 private:
     std::unique_ptr<node> child[2];
@@ -65,7 +66,7 @@ private:
     bool in_use;
 };
 
-const replay::box_packer::node* replay::box_packer::node::insert(const couple<int>& size, int padding)
+const replay::box_packer::node* replay::box_packer::node::insert(v2<int> const& size, int padding)
 {
     if (in_use)
         return nullptr;
@@ -187,7 +188,7 @@ replay::box<int> const& replay::box_packer::pack(int width, int height)
     if (root == nullptr)
         throw pack_overflow();
 
-    const node* result = root->insert(replay::make_couple(width, height), this->padding);
+    const node* result = root->insert(v2<int>(width, height), this->padding);
 
     if (result == nullptr)
         throw pack_overflow();
@@ -207,7 +208,7 @@ bool replay::box_packer::pack(int width, int height, replay::box<int>* rect)
     if (root == nullptr)
         return false;
 
-    const node* result = root->insert(replay::make_couple(width, height), this->padding);
+    const node* result = root->insert(v2<int>(width, height), this->padding);
 
     if (result == nullptr)
         return false;

@@ -28,7 +28,6 @@ Copyright (c) 2010-2019 Marius Elvert
 #define replay_box_packer_hpp
 
 #include <replay/box.hpp>
-#include <replay/couple.hpp>
 #include <stdexcept>
 #include <memory>
 

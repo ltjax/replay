@@ -9,7 +9,7 @@ set(HEADER_FILES
   ${replay_SOURCE_DIR}/include/replay/bstream.hpp
   ${replay_SOURCE_DIR}/include/replay/byte_rgba.hpp
   ${replay_SOURCE_DIR}/include/replay/common.hpp
-  ${replay_SOURCE_DIR}/include/replay/couple.hpp
+  ${replay_SOURCE_DIR}/include/replay/interval.hpp
   ${replay_SOURCE_DIR}/include/replay/lines3.hpp
   ${replay_SOURCE_DIR}/include/replay/math.hpp
   ${replay_SOURCE_DIR}/include/replay/matrix2.hpp

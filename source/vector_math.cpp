@@ -133,9 +133,9 @@ void replay::math::decompose_rotational_matrix(const matrix4& m, quaternion& res
 }
 
 void replay::math::set_orthographic_matrix(matrix4& matrix,
-                                           const fcouple& width,
-                                           const fcouple& height,
-                                           const fcouple& depth)
+                                           interval<> const& width,
+                                           interval<> const& height,
+                                           interval<> const& depth)
 {
     matrix.set(2.f / (width[1] - width[0]), 0.f, 0.f, -(width[1] + width[0]) / (width[1] - width[0]), 0.f,
                2.f / (height[1] - height[0]), 0.f, -(height[1] + height[0]) / (height[1] - height[0]), 0.f, 0.f,
@@ -269,7 +269,7 @@ bool replay::math::intersection_test::line_triangle(const linear_component3& lin
                                                     const vector3f& t1,
                                                     const vector3f& t2,
                                                     float* lambda,
-                                                    fcouple* barycentrics,
+                                                    v2<float>* barycentrics,
                                                     float epsilon)
 {
     // find vectors for two edges sharing v0
@@ -313,7 +313,7 @@ bool replay::math::intersection_test::line_triangle(const linear_component3& lin
 
     // store the barycentric coords
     if (barycentrics)
-        barycentrics->set(u, v);
+        barycentrics->reset(u, v);
 
     // calculate lambda as ray intersects triangle
     if (lambda)
@@ -332,7 +332,7 @@ bool replay::math::intersection_test::line_sphere(const linear_component3& line,
                                                   float epsilon)
 {
     const vector3f v0 = line.origin - center;
-    fcouple result;
+    interval<> result;
     float square_radius = radius * radius;
 
     // <d,d>

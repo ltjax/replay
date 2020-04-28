@@ -179,12 +179,12 @@ inline matrix4 make_perspective_matrix(float fovy, float aspect, float neardist,
 /** Setup an orthographic matrix for homogenous coordinates.
     \ingroup Math
 */
-void set_orthographic_matrix(matrix4& matrix, const fcouple& width, const fcouple& height, const fcouple& depth);
+void set_orthographic_matrix(matrix4& matrix, interval<> const& width, interval<> const& height, interval<> const& depth);
 
 /** Setup an orthographic matrix for homogenous coordinates.
     \ingroup Math
 */
-inline matrix4 make_orthographic_matrix(const fcouple& width, const fcouple& height, const fcouple& depth)
+inline matrix4 make_orthographic_matrix(interval<> const& width, interval<> const& height, interval<> const& depth)
 {
     matrix4 result((uninitialized_tag()));
     set_orthographic_matrix(result, width, height, depth);
@@ -337,7 +337,7 @@ bool line_triangle(const linear_component3& line,
                    const vector3f& t1,
                    const vector3f& t2,
                    float* lambda = 0,
-                   fcouple* barycentrics = 0,
+                   v2<float>* barycentrics = 0,
                    float epsilon = default_epsilon);
 
 /** Test for intersection of a line and a sphere.
