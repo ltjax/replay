@@ -28,7 +28,7 @@ Copyright (c) 2010-2019 Marius Elvert
 #define replay_lines3_hpp
 
 #include <limits>
-#include <replay/couple.hpp>
+#include <replay/interval.hpp>
 #include <replay/vector3.hpp>
 
 namespace replay
@@ -185,7 +185,7 @@ public:
 class line_interval3 : public linear_component3
 {
 public:
-    fcouple interval; /**< begin -> end */
+    replay::interval<> interval; /**< begin -> end */
 
     /** Create a unbounded line interval.
     */
@@ -220,7 +220,7 @@ public:
 
     /** Create a line interval from a linear component and a parameter interval.
     */
-    line_interval3(const linear_component3& x, const fcouple& interval)
+    line_interval3(const linear_component3& x, replay::interval<> const& interval)
     : linear_component3(x)
     , interval(interval)
     {
@@ -285,7 +285,7 @@ public:
 
     /** Set from a linear component and an interval.
     */
-    void set(const linear_component3& x, const fcouple& interval)
+    void set(const linear_component3& x, replay::interval<> const& interval)
     {
         linear_component3::set(x);
         this->interval = interval;

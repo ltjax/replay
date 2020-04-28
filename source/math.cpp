@@ -27,7 +27,7 @@ Copyright (c) 2010-2019 Marius Elvert
 #include <cmath>
 #include <replay/math.hpp>
 
-unsigned int replay::math::solve_quadratic_eq(float a, float b, float c, fcouple& result, float epsilon)
+unsigned int replay::math::solve_quadratic_eq(float a, float b, float c, interval<>& result, float epsilon)
 {
     if (!math::fuzzy_zero(a, epsilon))
     {
@@ -45,7 +45,7 @@ unsigned int replay::math::solve_quadratic_eq(float a, float b, float c, fcouple
                 result.set((-b + r) / (2 * a), (-b - r) / (2 * a));
 
                 if (result[0] > result[1])
-                    result.swap();
+                    result.swap_sides();
 
                 return 2;
             }

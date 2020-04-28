@@ -28,7 +28,7 @@ Copyright (c) 2010-2019 Marius Elvert
 #define replay_math_hpp
 
 #include <boost/math/special_functions/sign.hpp>
-#include <replay/couple.hpp>
+#include <replay/interval.hpp>
 
 namespace replay
 {
@@ -103,7 +103,7 @@ inline bool fuzzy_equals(float a, float b, float epsilon = default_epsilon)
 /** check if the value is in the range. borders count as in.
     \ingroup Math
 */
-template <class T> inline bool in_range(const T value, const couple<T>& range)
+template <class T> inline bool in_range(T value, interval<T> const& range)
 {
     return (range[0] <= value) && (value <= range[1]);
 }
@@ -111,7 +111,7 @@ template <class T> inline bool in_range(const T value, const couple<T>& range)
 /** check if the value is in the range. borders count as in.
     \ingroup Math
 */
-template <class T> inline bool in_range(const T value, const T left, const T right)
+template <class T> inline bool in_range(T value, const T left, const T right)
 {
     return (left <= value) && (value <= right);
 }
@@ -119,7 +119,7 @@ template <class T> inline bool in_range(const T value, const T left, const T rig
 /** check whether two intervals intersect.
     \ingroup Math
 */
-template <class T> inline bool intervals_intersect(const couple<T>& a, const couple<T>& b)
+template <class T> inline bool intervals_intersect(interval<T> const& a, interval<T> const& b)
 {
     return a[1] > b[0] && a[0] < b[1];
 }
@@ -140,7 +140,7 @@ template <class T> inline constexpr T clamp_absolute(const T value, const T abs)
 /** Clamp a value into a range.
     \ingroup Math
 */
-template <class T> inline constexpr T clamp(T value, couple<T> const& range)
+template <class T> inline constexpr T clamp(T value, interval<T> const& range)
 {
     if (value < range[0])
         return range[0];
@@ -241,7 +241,7 @@ template <class T> inline constexpr T square(T p)
 /** Solve a quadratic equation of the form: a*x^2+b*x+c=0
     \ingroup Math
 */
-unsigned int solve_quadratic_eq(float a, float b, float c, fcouple& result, float epsilon);
+unsigned int solve_quadratic_eq(float a, float b, float c, interval<>& result, float epsilon);
 
 /** interpolation functions.
     \ingroup Math

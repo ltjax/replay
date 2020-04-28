@@ -118,7 +118,7 @@ TEST_CASE("quadratic_equation_solver")
         if (replay::math::fuzzy_equals(a, b))
             continue;
 
-        fcouple r;
+        interval<> r;
         // FIXME: use a relative epsilon
         math::solve_quadratic_eq(1.f, -a - b, a * b, r, 0.001f);
 
