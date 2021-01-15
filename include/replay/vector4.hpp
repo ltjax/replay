@@ -157,14 +157,14 @@ public:
         \param z The third component.
         \param w The fourth component.
     */
-    vector4(value_type x, value_type y, value_type z, value_type w)
+    constexpr vector4(value_type x, value_type y, value_type z, value_type w)
     {
         reset(x, y, z, w);
     }
 
     /** Assemble a 4D vector by concatenating a 2D vector and 2 more values.
     */
-    vector4(vector2<type> const& xy, value_type z, value_type w)
+    constexpr vector4(vector2<type> const& xy, value_type z, value_type w)
     {
         reset(xy, z, w);
     }
@@ -172,7 +172,7 @@ public:
     /** Convert an array-like type to a 4D vector.
         The parameter needs to be indexable for at least 4 elements.
     */
-    template <class array_type> static vector4<type> cast(const array_type& src)
+    template <class array_type> constexpr static vector4<type> cast(array_type const& src)
     {
         return vector4<type>(static_cast<type>(src[0]), static_cast<type>(src[1]), static_cast<type>(src[2]),
                              static_cast<type>(src[3]));

@@ -80,27 +80,6 @@ replay::byte_rgba replay::lerp(byte_rgba lhs, byte_rgba rhs, float x)
     return lerp(lhs, rhs, static_cast<int>(255 * x));
 }
 
-replay::vector4f replay::to_float(byte_rgba rhs)
-{
-    vector4f result((uninitialized_tag()));
-
-    for (std::size_t i = 0; i < 4; ++i)
-        result[i] = rhs[i] / 255.f;
-
-    return result;
-}
-
-replay::byte_rgba replay::from_float(vector4f const& rhs)
-{
-    replay::byte_rgba result;
-
-    for (std::size_t i = 0; i < 4; ++i)
-        result[i] =
-            static_cast<replay::byte_rgba::byte>(std::max(std::min(static_cast<int>(rhs[i] * 255.f), 255), 0));
-
-    return result;
-}
-
 std::string replay::to_rgb_hex_string(replay::byte_rgba Color)
 {
     std::string result = "#";

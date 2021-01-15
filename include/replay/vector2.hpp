@@ -123,7 +123,7 @@ public:
     /** Element wise static typecast.
         Works on all indexable types.
     */
-    template <class array_type> inline static vector2<type> cast(const array_type& src)
+    template <class array_type> constexpr inline static vector2<type> cast(array_type const& src)
     {
         return vector2<type>(static_cast<type>(src[0]), static_cast<type>(src[1]));
     }

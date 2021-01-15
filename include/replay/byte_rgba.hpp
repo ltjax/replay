@@ -91,14 +91,14 @@ public:
 
     /** Access a color element.
      */
-    byte operator[](std::size_t i) const
+    constexpr byte operator[](std::size_t i) const
     {
         return data[i];
     }
 
     /** Access a color element.
      */
-    byte& operator[](std::size_t i)
+    constexpr byte& operator[](std::size_t i)
     {
         return data[i];
     }
@@ -163,11 +163,22 @@ byte_rgba from_rgba_uint(std::uint32_t rgba);
 
 /** Create a color from a 4D vector.
  */
-byte_rgba from_float(vector4f const& rhs);
+constexpr byte_rgba from_float(vector4f const& rhs)
+{
+    return replay::byte_rgba(
+        static_cast<replay::byte_rgba::byte>(std::clamp(static_cast<int>(rhs[0] * 255.f), 0, 255)),
+        static_cast<replay::byte_rgba::byte>(std::clamp(static_cast<int>(rhs[1] * 255.f), 0, 255)),
+        static_cast<replay::byte_rgba::byte>(std::clamp(static_cast<int>(rhs[2] * 255.f), 0, 255)),
+        static_cast<replay::byte_rgba::byte>(std::clamp(static_cast<int>(rhs[3] * 255.f), 0, 255))
+    );
+}
 
 /** Create a 4D vector from this color.
  */
-vector4f to_float(byte_rgba rhs);
+constexpr vector4f to_float(byte_rgba rhs)
+{
+    return vector4f(rhs[0] / 255.f, rhs[1] / 255.f, rhs[2] / 255.f, rhs[3] / 255.f);
+}
 
 /** Linear interpolation of byte_color4 objects using a byte from 0 to 255.
  */
