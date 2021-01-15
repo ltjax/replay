@@ -141,7 +141,7 @@ public:
     /** Static element wise type cast.
         This can be used on all indexable array-like types.
     */
-    template <class array_type> inline static vector3<type> cast(const array_type& src)
+    template <class array_type> constexpr inline static vector3<type> cast(array_type const& src)
     {
         return vector3<type>(static_cast<type>(src[0]), static_cast<type>(src[1]), static_cast<type>(src[2]));
     }

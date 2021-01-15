@@ -5,8 +5,8 @@ namespace
 {
 struct sample_payload
 {
-    std::uint8_t key;
-    double value;
+    std::uint8_t key=0;
+    double value=0.0;
 };
 
 bool operator==(sample_payload const& lhs, sample_payload const& rhs)
@@ -337,4 +337,19 @@ TEST_CASE("clear() does not change capacity")
     auto capacity_before = many.capacity();
     many.clear();
     REQUIRE(many.capacity() == capacity_before);
+}
+
+TEST_CASE("upsert()", "[index_map]")
+{
+    auto many = multi_element_sample();
+    SECTION("inserts_if_key_does_not_exist")
+    {
+        many.upsert(17, sample_payload{});
+        REQUIRE(many.size() == 5);
+    }
+    SECTION("updates_if_key_exists")
+    {
+        many.upsert(11, sample_payload{});
+        REQUIRE(many[11].value == 0.0);
+    }
 }

@@ -31,6 +31,7 @@ Copyright (c) 2010-2019 Marius Elvert
 #include <array>
 #include <optional>
 #include <ostream>
+#include <cmath>
 #include <replay/lines3.hpp>
 #include <replay/math.hpp>
 #include <replay/matrix2.hpp>
@@ -512,6 +513,36 @@ template <class type> inline std::ostream& operator<<(std::ostream& lhs, const r
 template <class type> inline std::ostream& operator<<(std::ostream& lhs, const replay::vector4<type>& rhs)
 {
     return lhs << '(' << rhs[0] << ' ' << rhs[1] << ' ' << rhs[2] << ' ' << rhs[3] << ')';
+}
+
+inline vector2<float> ceil(vector2<float> rhs)
+{
+    return { std::ceil(rhs[0]), std::ceil(rhs[1]) };
+}
+
+inline vector3<float> ceil(vector3<float> rhs)
+{
+    return { std::ceil(rhs[0]), std::ceil(rhs[1]), std::ceil(rhs[2]) };
+}
+
+inline vector4<float> ceil(vector4<float> rhs)
+{
+    return { std::ceil(rhs[0]), std::ceil(rhs[1]), std::ceil(rhs[2]), std::ceil(rhs[3]) };
+}
+
+inline vector2<float> floor(vector2<float> rhs)
+{
+    return { std::floor(rhs[0]), std::floor(rhs[1]) };
+}
+
+inline vector3<float> floor(vector3<float> rhs)
+{
+    return { std::floor(rhs[0]), std::floor(rhs[1]), std::floor(rhs[2]) };
+}
+
+inline vector4<float> floor(vector4<float> rhs)
+{
+    return { std::floor(rhs[0]), std::floor(rhs[1]), std::floor(rhs[2]), std::floor(rhs[3]) };
 }
 
 }

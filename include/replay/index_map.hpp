@@ -261,6 +261,32 @@ public:
         insert(value.first, value.second);
     }
 
+    /** Insert or update an value.
+     */
+    template <class InitializerType>
+    void upsert(key_type const& key, InitializerType&& value)
+    {
+        // Make sure the arrays are big enough
+        size_to_include(key);
+
+        if (element_initialized(key))
+        {
+            buffer_[key] = std::move(value);
+            return;
+        }
+
+        new (buffer_ + key) mapped_type(std::forward<InitializerType>(value));
+
+        ++size_;
+        mask_[key / bits_per_mask] |= mask_element_type{ 1 } << (key % bits_per_mask);
+
+        if (key >= smallest_key_bound_)
+        {
+            smallest_key_bound_ = key + 1;
+        }
+
+    }
+
     template <class InitializerType>
     void insert(key_type const& key, InitializerType&& value)
     {

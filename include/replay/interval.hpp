@@ -70,7 +70,7 @@ public:
 
     /** Get the second element.
      */
-    constexpr T const& right()
+    constexpr T& right()
     {
         return data_[1];
     }
@@ -100,7 +100,7 @@ public:
         return *this;
     }
 
-    /** Swap the values in the couple.
+    /** Swap the values in the interval.
      */
     inline interval& swap_sides()
     {
