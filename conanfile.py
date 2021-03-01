@@ -12,11 +12,15 @@ class ReplayConan(ConanFile):
     topics = ("games", "math")
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False], "use_stb": [True, False], "use_libpng": [True, False]}
-    default_options = {"shared": False, "use_stb": True, "use_libpng": False}
     generators = "cmake"
     exports_sources = "source/*", "test/*", "include/*", "CMakeLists.txt", "replay.natvis"
-    requires = "boost/1.71.0@conan/stable",
-    build_requires = "Catch2/2.7.2@catchorg/stable",
+    requires = "boost/1.75.0",
+    build_requires = "catch2/2.13.4",
+    default_options = {
+      "shared": False,
+      "use_stb": True,
+      "use_libpng": False
+    }
     
     def _configured_cmake(self):
         cmake = CMake(self)
