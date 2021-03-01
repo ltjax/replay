@@ -19,7 +19,8 @@ class ReplayConan(ConanFile):
     default_options = {
       "shared": False,
       "use_stb": True,
-      "use_libpng": False
+      "use_libpng": False,
+      "boost:header_only": True,
     }
     
     def _configured_cmake(self):
