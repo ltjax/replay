@@ -30,7 +30,7 @@ Copyright (c) 2010-2019 Marius Elvert
 #include <cstdint>
 #include <memory>
 #include <string>
-#include <replay/vector4.hpp>
+#include <replay/v4.hpp>
 
 namespace replay
 {
@@ -163,7 +163,7 @@ byte_rgba from_rgba_uint(std::uint32_t rgba);
 
 /** Create a color from a 4D vector.
  */
-constexpr byte_rgba from_float(vector4f const& rhs)
+constexpr byte_rgba from_float(v4<float> const& rhs)
 {
     return replay::byte_rgba(
         static_cast<replay::byte_rgba::byte>(std::clamp(static_cast<int>(rhs[0] * 255.f), 0, 255)),
@@ -175,9 +175,9 @@ constexpr byte_rgba from_float(vector4f const& rhs)
 
 /** Create a 4D vector from this color.
  */
-constexpr vector4f to_float(byte_rgba rhs)
+constexpr v4<float> to_float(byte_rgba rhs)
 {
-    return vector4f(rhs[0] / 255.f, rhs[1] / 255.f, rhs[2] / 255.f, rhs[3] / 255.f);
+    return { rhs[0] / 255.f, rhs[1] / 255.f, rhs[2] / 255.f, rhs[3] / 255.f };
 }
 
 /** Linear interpolation of byte_color4 objects using a byte from 0 to 255.

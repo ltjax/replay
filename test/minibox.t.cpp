@@ -4,10 +4,10 @@
 #include <memory>
 #include <replay/bounding_rectangle.hpp>
 #include <replay/matrix2.hpp>
-#include <replay/vector2.hpp>
+#include <replay/v2.hpp>
 #include <replay/vector_math.hpp>
 
-typedef replay::vector2f vec2;
+using vec2 = replay::v2<float>;
 
 float BoundingRectangleUnderTransformation(
     const vec2* Points, std::size_t n, const replay::matrix2& M, vec2& Min, vec2& Max)
@@ -124,10 +124,10 @@ TEST_CASE("random minibox")
 
     for (std::size_t k = 0; k < test_count; ++k)
     {
-        std::vector<vector2f> Points;
+        std::vector<v2<float>> Points;
 
         for (std::size_t i = 0; i < 32; ++i)
-            Points.push_back(vector2f(random_coord(), random_coord()));
+            Points.push_back(v2<float>(random_coord(), random_coord()));
 
         std::size_t n = math::gift_wrap(ptr(Points), Points.size());
         REQUIRE(n >= 3U);
@@ -135,14 +135,14 @@ TEST_CASE("random minibox")
         Points.resize(n);
 
         bounding_rectangle_algorithm RCBox(ptr(Points), n);
-        float Size = dot(RCBox.get_max() - RCBox.get_min(), vector2f(1.f));
+        float Size = dot(RCBox.get_max() - RCBox.get_min(), v2<float>(1.f));
 
         // Compute the minimal rectangle with an easiely provable algorithm
         matrix2 M;
         vec2 Min, Max;
         MinimalAreaBoundingRectangle(ptr(Points), n, M, Min, Max);
 
-        float CorrectSize = dot(Max - Min, vector2f(1.f));
+        float CorrectSize = dot(Max - Min, v2<float>(1.f));
 
         // Allow 5percent error
         REQUIRE(Size == Approx(CorrectSize).epsilon(0.05f));

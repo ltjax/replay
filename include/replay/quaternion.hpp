@@ -27,7 +27,7 @@ Copyright (c) 2010-2019 Marius Elvert
 #ifndef replay_quaternion_hpp
 #define replay_quaternion_hpp
 
-#include <replay/vector3.hpp>
+#include <replay/v3.hpp>
 #include <tuple>
 
 namespace replay
@@ -57,7 +57,7 @@ public:
         \returns A reference to this object.
         \see convert_to_axis_angle, rotate
     */
-    quaternion& set_rotation(float angle, const vector3f& v);
+    quaternion& set_rotation(float angle, const v3<float>& v);
 
     /** Set all individual components.
         \returns A reference to this object.
@@ -71,7 +71,7 @@ public:
     /** Create a rotational quaternion.
         \see set_rotation, rotate, convert_to_axis_angle
     */
-    quaternion(float angle, const vector3f& v);
+    quaternion(float angle, const v3<float>& v);
 
     /** Create a quaternion by setting all individual components.
      */
@@ -159,15 +159,15 @@ public:
 
     /** Get the x vector after transformation by this rotation.
      */
-    const vector3f get_transformed_x() const;
+    const v3<float> get_transformed_x() const;
 
     /** Get the y vector after transformation by this rotation.
      */
-    const vector3f get_transformed_y() const;
+    const v3<float> get_transformed_y() const;
 
     /** Get the z vector after transformation by this rotation.
      */
-    const vector3f get_transformed_z() const;
+    const v3<float> get_transformed_z() const;
 };
 
 /** Compare two quaternions for equality.
@@ -232,11 +232,11 @@ inline const quaternion multiply(const quaternion& lhs, const quaternion& rhs)
     \note The result is undefined if the quaternion is not unit-length.
     \see set_rotation, rotate
 */
-std::tuple<vector3f, float> to_axis_angle(const quaternion& obj);
+std::tuple<v3<float>, float> to_axis_angle(const quaternion& obj);
 
 /** Transform a vector by a quaternion.
  */
-vector3f transform(const quaternion& lhs, const vector3f& rhs);
+v3<float> transform(const quaternion& lhs, const v3<float>& rhs);
 
 /** Concaternate a rotation to a given quaternion.
     This is equivalent to creating a new quaternion with the given axis/angle pair, inplace multiplying it from the
@@ -245,11 +245,11 @@ vector3f transform(const quaternion& lhs, const vector3f& rhs);
     \param[in] angle The angle to rotate, in radians.
     \param[in] axis The axis to rotate around. Has to be unit-length.
 */
-void rotate(quaternion& obj, const float angle, const vector3f& axis);
+void rotate(quaternion& obj, const float angle, const v3<float>& axis);
 
 /** Find the shortest arc rotation that maps vector a to vector b.
  */
-const quaternion shortest_arc(const vector3f& a, const vector3f& b);
+const quaternion shortest_arc(const v3<float>& a, const v3<float>& b);
 }
 
 #endif // replay_quaternion_hpp

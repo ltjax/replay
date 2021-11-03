@@ -26,7 +26,7 @@ Copyright (c) 2010-2019 Marius Elvert
 
 /** Set vector elements from individual values.
 */
-template <class type> inline constexpr replay::vector2<type>& replay::vector2<type>::reset(const value_type x, const value_type y)
+template <class type> inline constexpr replay::v2<type>& replay::v2<type>::reset(value_type x, value_type y)
 {
     data[0] = x;
     data[1] = y;
@@ -36,7 +36,7 @@ template <class type> inline constexpr replay::vector2<type>& replay::vector2<ty
 /** Vector reset.
     Sets all elements to a given value, which defaults to 0.
 */
-template <class type> inline constexpr replay::vector2<type>& replay::vector2<type>::reset(const value_type value)
+template <class type> inline constexpr replay::v2<type>& replay::v2<type>::reset(value_type value)
 {
     data[0] = value;
     data[1] = value;
@@ -45,14 +45,14 @@ template <class type> inline constexpr replay::vector2<type>& replay::vector2<ty
 
 /** Vector negation.
 */
-template <class type> inline replay::vector2<type> replay::vector2<type>::operator-() const
+template <class type> inline replay::v2<type> replay::v2<type>::operator-() const
 {
-    return vector2<type>(-data[0], -data[1]);
+    return v2<type>(-data[0], -data[1]);
 }
 
 /** Vector add-assign.
 */
-template <class type> inline replay::vector2<type>& replay::vector2<type>::operator+=(vector2<type> const& rhs)
+template <class type> inline replay::v2<type>& replay::v2<type>::operator+=(v2<type> const& rhs)
 {
     data[0] += rhs.data[0];
     data[1] += rhs.data[1];
@@ -62,7 +62,7 @@ template <class type> inline replay::vector2<type>& replay::vector2<type>::opera
 
 /** Vector subtract-assign.
 */
-template <class type> inline replay::vector2<type>& replay::vector2<type>::operator-=(vector2<type> const& rhs)
+template <class type> inline replay::v2<type>& replay::v2<type>::operator-=(v2<type> const& rhs)
 {
     data[0] -= rhs.data[0];
     data[1] -= rhs.data[1];
@@ -72,7 +72,7 @@ template <class type> inline replay::vector2<type>& replay::vector2<type>::opera
 
 /** Vector scalar divide-assign.
 */
-template <class type> inline replay::vector2<type>& replay::vector2<type>::operator/=(const value_type rhs)
+template <class type> inline replay::v2<type>& replay::v2<type>::operator/=(value_type rhs)
 {
     data[0] /= rhs;
     data[1] /= rhs;
@@ -82,7 +82,7 @@ template <class type> inline replay::vector2<type>& replay::vector2<type>::opera
 
 /** Vector scalar multiplicate-assign.
 */
-template <class type> inline replay::vector2<type>& replay::vector2<type>::operator*=(const value_type rhs)
+template <class type> inline replay::v2<type>& replay::v2<type>::operator*=(value_type rhs)
 {
     data[0] *= rhs;
     data[1] *= rhs;
@@ -92,21 +92,21 @@ template <class type> inline replay::vector2<type>& replay::vector2<type>::opera
 
 /** Vector element wise compare.
 */
-template <class type> inline bool replay::vector2<type>::operator==(vector2<type> const& rhs) const
+template <class type> inline bool replay::v2<type>::operator==(v2<type> const& rhs) const
 {
     return data[0] == rhs.data[0] && data[1] == rhs.data[1];
 }
 
 /** Vector element wise compare.
 */
-template <class type> inline bool replay::vector2<type>::operator!=(vector2<type> const& rhs) const
+template <class type> inline bool replay::v2<type>::operator!=(v2<type> const& rhs) const
 {
     return data[0] != rhs.data[0] || data[1] != rhs.data[1];
 }
 
 /** In-place vector negate.
 */
-template <class type> inline replay::vector2<type>& replay::vector2<type>::negate()
+template <class type> inline replay::v2<type>& replay::v2<type>::negate()
 {
     data[0] = -data[0];
     data[1] = -data[1];
@@ -116,14 +116,14 @@ template <class type> inline replay::vector2<type>& replay::vector2<type>::negat
 
 /** Vector dot-product square.
 */
-template <class type> inline typename replay::vector2<type>::value_type replay::vector2<type>::squared() const
+template <class type> inline typename replay::v2<type>::value_type replay::v2<type>::squared() const
 {
     return data[0] * data[0] + data[1] * data[1];
 }
 
 /** Sum of all elements in the vector.
 */
-template <class type> inline typename replay::vector2<type>::value_type replay::vector2<type>::sum() const
+template <class type> inline typename replay::v2<type>::value_type replay::v2<type>::sum() const
 {
     return data[0] + data[1];
 }

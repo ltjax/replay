@@ -1,5 +1,5 @@
 #include <catch2/catch.hpp>
-#include <replay/vector2.hpp>
+#include <replay/v2.hpp>
 
 using namespace replay;
 

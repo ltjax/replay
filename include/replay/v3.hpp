@@ -1,8 +1,11 @@
+#ifndef replay_v3_hpp
+#define replay_v3_hpp
+
 /*
 replay
 Software Library
 
-Copyright (c) 2010-2019 Marius Elvert
+Copyright (c) 2010-2021 Marius Elvert
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -24,12 +27,8 @@ Copyright (c) 2010-2019 Marius Elvert
 
 */
 
-#ifndef replay_vector3_hpp
-#define replay_vector3_hpp
-
-#include <iosfwd>
 #include <replay/common.hpp>
-#include <replay/vector2.hpp>
+#include <replay/v2.hpp>
 
 namespace replay
 {
@@ -38,52 +37,52 @@ namespace replay
     \note The element type is supposed to be a mathematical group.
     \ingroup Math
 */
-template <class type> class vector3
+template <class T> class v3
 {
 public:
     /** Element type.
      */
-    typedef type value_type;
+    using value_type = T;
 
     /** Get a pointer to the internal array.
      */
-    inline type* ptr()
+    inline T* ptr()
     {
         return data;
     }
 
     /** Get a pointer to the internal array.
      */
-    inline const type* ptr() const
+    inline const T* ptr() const
     {
         return data;
     }
 
     /** Index access operator.
      */
-    template <class index_type> constexpr value_type& operator[](const index_type i)
+    template <class index_type> constexpr value_type& operator[](index_type i)
     {
         return data[i];
     }
 
     /** Index access operator.
      */
-    template <class index_type> constexpr const value_type operator[](const index_type i) const
+    template <class index_type> constexpr const value_type operator[](index_type i) const
     {
         return data[i];
     }
 
     // Access
-    constexpr vector3<type>& reset(value_type x, value_type y, value_type z);
-    constexpr vector3<type>& reset(value_type value = value_type(0));
+    constexpr v3& reset(value_type x, value_type y, value_type z);
+    constexpr v3& reset(value_type value = value_type(0));
 
     // Linear Algebra
-    vector3<type> operator-() const; // Negation
+    v3 operator-() const; // Negation
 
     /** Create a new vector.
         This constructor will leave all values uninitialized.
     */
-    explicit vector3(uninitialized_tag)
+    explicit v3(uninitialized_tag)
     {
     }
 
@@ -91,14 +90,14 @@ public:
         \see convertible_tag
     */
     template <class source_type>
-    vector3(const source_type& other, typename convertible_tag<source_type, vector3>::type empty = 0)
+    v3(const source_type& other, typename convertible_tag<source_type, v3>::type empty = 0)
     {
         *this = convert(other);
     }
 
     /** Create a vector with all elements the same value.
      */
-    constexpr explicit vector3(value_type value = value_type(0))
+    constexpr explicit v3(value_type value = {})
     : data{ value, value, value }
     {
     }
@@ -107,7 +106,7 @@ public:
         \param xy The first two components.
         \param z The third component.
     */
-    constexpr vector3(vector2<value_type> const& xy, value_type z)
+    constexpr v3(v2<value_type> const& xy, value_type z)
     : data{ xy[0], xy[1], z }
     {
     }
@@ -117,23 +116,23 @@ public:
         \param y The second component.
         \param z The third component.
     */
-    constexpr vector3(value_type x, value_type y, value_type z)
+    constexpr v3(value_type x, value_type y, value_type z)
     : data{x, y, z}
     {
     }
 
-    vector3<type>& operator+=(vector3<type> const& operand);
-    vector3<type>& operator-=(vector3<type> const& operand);
-    vector3<type>& operator*=(const type& operand);
-    vector3<type>& operator/=(const type& operand);
+    v3& operator+=(v3<T> const& operand);
+    v3& operator-=(v3<T> const& operand);
+    v3& operator*=(T const& operand);
+    v3& operator/=(T const& operand);
 
-    bool operator==(vector3<type> const& operand) const;
-    bool operator!=(vector3<type> const& operand) const;
+    bool operator==(v3 const& operand) const;
+    bool operator!=(v3 const& operand) const;
 
     /** In-place negate.
         Negates each element of this vector.
     */
-    vector3<type>& negate();
+    v3& negate();
 
     value_type squared() const;
     value_type sum() const;
@@ -141,15 +140,15 @@ public:
     /** Static element wise type cast.
         This can be used on all indexable array-like types.
     */
-    template <class array_type> constexpr inline static vector3<type> cast(array_type const& src)
+    template <class array_type> constexpr inline static v3 cast(array_type const& src)
     {
-        return vector3<type>(static_cast<type>(src[0]), static_cast<type>(src[1]), static_cast<type>(src[2]));
+        return v3<T>(static_cast<T>(src[0]), static_cast<T>(src[1]), static_cast<T>(src[2]));
     }
 
 private:
     /** the actual data.
      */
-    type data[3];
+    T data[3];
 };
 
 /** Cross product.
@@ -157,96 +156,79 @@ private:
     is perpendicular to both input vectors.
     The length of this vector is equal to the area of the parallelogram spanned
     by the two input vectors.
-    \relates vector3
+    \relates v3
     \ingroup Math
 */
-template <class type> inline vector3<type> cross(vector3<type> const& lhs, vector3<type> const& rhs);
+template <class type> inline v3<type> cross(v3<type> const& lhs, v3<type> const& rhs);
 
 /** Dot product of two 3D vectors.
-    \relates vector3
+    \relates v3
     \ingroup Math
 */
-template <class type> inline type dot(vector3<type> const& lhs, vector3<type> const& rhs);
+template <class type> inline type dot(v3<type> const& lhs, v3<type> const& rhs);
 
 /** Component wise product of two 3D vectors.
-    \relates vector3
+    \relates v3
     \ingroup Math
 */
-template <class type> inline vector3<type> comp(vector3<type> const& lhs, vector3<type> const& rhs);
+template <class type> inline v3<type> comp(v3<type> const& lhs, v3<type> const& rhs);
 
 /** Addition.
-    \relates vector3
+    \relates v3
     \ingroup Math
 */
-template <class type> inline vector3<type> operator+(vector3<type> lhs, vector3<type> const& rhs)
+template <class type> inline v3<type> operator+(v3<type> lhs, v3<type> const& rhs)
 {
     return lhs += rhs;
 }
 
 /** Subtraction.
-    \relates vector3
+    \relates v3
     \ingroup Math
 */
-template <class type> inline vector3<type> operator-(vector3<type> lhs, vector3<type> const& rhs)
+template <class type> inline v3<type> operator-(v3<type> lhs, v3<type> const& rhs)
 {
     return lhs -= rhs;
 }
 
 /** Scalar product.
-    \relates vector3
+    \relates v3
     \ingroup Math
 */
-template <class type> inline vector3<type> operator*(vector3<type> lhs, type rhs)
+template <class type> inline v3<type> operator*(v3<type> lhs, type rhs)
 {
     return lhs *= rhs;
 }
 
 /** Scalar product.
-    \relates vector3
+    \relates v3
     \ingroup Math
 */
-template <class type> inline vector3<type> operator*(type lhs, vector3<type> rhs)
+template <class type> inline v3<type> operator*(type lhs, v3<type> rhs)
 {
     return rhs *= lhs;
 }
 
 /** Scalar division.
-    \relates vector3
+    \relates v3
     \ingroup Math
 */
-template <class type> inline vector3<type> operator/(vector3<type> lhs, type rhs)
+template <class type> inline v3<type> operator/(v3<type> lhs, type rhs)
 {
     return lhs /= rhs;
 }
 
 /** Scalar division.
-    \relates vector3
+    \relates v3
     \ingroup Math
 */
-template <class type> inline vector3<type> operator/(type lhs, vector3<type> const& rhs)
+template <class type> inline v3<type> operator/(type lhs, v3<type> const& rhs)
 {
-    return vector3<type>(lhs / rhs[0], lhs / rhs[1], lhs / rhs[2]);
+    return v3<type>(lhs / rhs[0], lhs / rhs[1], lhs / rhs[2]);
 }
 
-/** A convenience typedef for a 3d floating-point vector.
-    \relates vector3
-    \ingroup Math
-*/
-typedef vector3<float> vector3f;
-
-/** A convenience typedef for a 3d double-precision floating-point vector.
-    \relates vector3
-    \ingroup Math
-*/
-typedef vector3<double> vector3d;
-
-/** Shorthandle for all 3d vectors
-    \relates vector2
-    \ingroup Math
-*/
-template <class T> using v3 = vector3<T>;
 } // namespace replay
 
-#include "vector3.inl"
+#include "v3.inl"
 
-#endif // replay_vector3_hpp
+#endif // replay_v3_hpp

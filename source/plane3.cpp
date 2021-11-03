@@ -27,7 +27,7 @@ Copyright (c) 2010-2019 Marius Elvert
 #include <replay/plane3.hpp>
 #include <replay/vector_math.hpp>
 
-replay::plane3& replay::plane3::set(const vector3f& normal, const float d)
+replay::plane3& replay::plane3::set(const v3<float>& normal, const float d)
 {
     this->normal = normal;
     this->d = d;
@@ -58,7 +58,7 @@ void replay::plane3::clear()
     d = 0.f;
 }
 
-replay::plane3::plane3(const vector3f& normal, const float d)
+replay::plane3::plane3(const v3<float>& normal, const float d)
 : normal(normal)
 , d(d)
 {
@@ -81,12 +81,12 @@ replay::plane3 replay::plane3::get_flipped(const plane3& from)
     return plane3(-from.normal, -from.d);
 }
 
-replay::plane3 replay::plane3::construct_from_pointnormal(const vector3f& normal, const vector3f& point)
+replay::plane3 replay::plane3::construct_from_pointnormal(const v3<float>& normal, const v3<float>& point)
 {
     return plane3(normal, -dot(normal, point));
 }
 
-replay::plane3 replay::plane3::construct_from_points(const vector3f& p0, const vector3f& p1, const vector3f& p2)
+replay::plane3 replay::plane3::construct_from_points(const v3<float>& p0, const v3<float>& p1, const v3<float>& p2)
 {
     return construct_from_pointnormal(cross(p1 - p0, p2 - p0), p0);
 }

@@ -62,7 +62,7 @@ public:
 
     /** Offset part of this transformation.
     */
-    vector3f position;
+    v3<float> position;
 
     /** construct a default identity transformation.
     */
@@ -72,7 +72,7 @@ public:
 
     /** Construct a mapping based on an offset.
     */
-    explicit affinity(const vector3f& position)
+    explicit affinity(const v3<float>& position)
     : position(position)
     {
     }
@@ -86,7 +86,7 @@ public:
 
     /** Construct a mapping based on an orientation and an offset.
     */
-    affinity(const quaternion& orientation, const vector3f& position)
+    affinity(const quaternion& orientation, const v3<float>& position)
     : orientation(orientation)
     , position(position)
     {
@@ -120,7 +120,7 @@ public:
 
     /** Transform a position vector by this mapping.
     */
-    const vector3f operator*(const vector3f& rhs) const
+    const v3<float> operator*(const v3<float>& rhs) const
     {
         return transform(orientation, rhs) + position;
     }

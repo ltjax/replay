@@ -38,8 +38,8 @@ Copyright (c) 2010-2019 Marius Elvert
 #include <replay/matrix3.hpp>
 #include <replay/matrix4.hpp>
 #include <replay/plane3.hpp>
-#include <replay/vector2.hpp>
-#include <replay/vector3.hpp>
+#include <replay/v2.hpp>
+#include <replay/v3.hpp>
 
 namespace replay
 {
@@ -50,8 +50,8 @@ namespace replay
 class line2
 {
 public:
-    vector2f origin;    /**< origin of the line. */
-    vector2f direction; /**< direction of the line. */
+    v2<float> origin;    /**< origin of the line. */
+    v2<float> direction; /**< direction of the line. */
 
     /** Create a degenerated line.
      */
@@ -61,7 +61,7 @@ public:
 
     /** Create a line by setting the origin and direction.
      */
-    line2(const vector2f& p, const vector2f& d)
+    line2(const v2<float>& p, const v2<float>& d)
     : origin(p)
     , direction(d)
     {
@@ -69,7 +69,7 @@ public:
 
     /** Get a point on the line.
      */
-    inline vector2f get_point(float x) const
+    inline v2<float> get_point(float x) const
     {
         return direction * x + origin;
     }
@@ -124,12 +124,12 @@ namespace math
 /** Compute the length of a vector in manhattan norm. (max-norm)
     \ingroup Math
 */
-float max_norm(const vector2f& vector);
+float max_norm(const v2<float>& vector);
 
 /** Compute the length of a vector in manhatten norm. (max-norm)
     \ingroup Math
 */
-float max_norm(const vector3f& vector);
+float max_norm(const v3<float>& vector);
 
 /** Decompose a rotational matrix into a quaternion. Effectively a conversion between the two.
     \param m Matrix to decompose.
@@ -149,7 +149,7 @@ void decompose_rotational_matrix(const matrix4& m, quaternion& result);
 /** Compute the determinante of a 2x2 matrix given as two vectors.
     \ingroup Math
 */
-inline float det(const vector2f& a, const vector2f& b)
+inline float det(const v2<float>& a, const v2<float>& b)
 {
     return a[0] * b[1] - a[1] * b[0];
 }
@@ -196,62 +196,30 @@ inline matrix4 make_orthographic_matrix(interval<> const& width, interval<> cons
     In general, the resulting vector will be shorter than the given one.
     \ingroup Math
 */
-const vector3f construct_perpendicular(const vector3f& x);
+const v3<float> construct_perpendicular(const v3<float>& x);
 
 /** vector component wise mult by sign.
     \ingroup Math
 */
-inline vector3f mult_by_sign(const vector3f& x, float sign)
+inline v3<float> mult_by_sign(const v3<float>& x, float sign)
 {
-    vector3f result;
+    v3<float> result;
     mult_by_sign(x[0], sign, result[0]);
     mult_by_sign(x[1], sign, result[1]);
     mult_by_sign(x[2], sign, result[2]);
     return result;
 }
 
-/** vector component wise min.
-    \ingroup Math
-*/
-template <class x> vector2<x> vector_min(const vector2<x>& a, const vector2<x>& b)
-{
-    return vector2<x>(std::min(a[0], b[0]), std::min(a[1], b[1]));
-}
-
-/** vector component wise max.
-    \ingroup Math
-*/
-template <class x> vector2<x> vector_max(const vector2<x>& a, const vector2<x>& b)
-{
-    return vector2<x>(std::max(a[0], b[0]), std::max(a[1], b[1]));
-}
-
-/** vector component wise min.
-    \ingroup Math
-*/
-template <class x> vector3<x> vector_min(const vector3<x>& a, const vector3<x>& b)
-{
-    return vector3<x>(std::min(a[0], b[0]), std::min(a[1], b[1]), std::min(a[2], b[2]));
-}
-
-/** vector component wise max.
-    \ingroup Math
-*/
-template <class x> vector3<x> vector_max(const vector3<x>& a, const vector3<x>& b)
-{
-    return vector3<x>(std::max(a[0], b[0]), std::max(a[1], b[1]), std::max(a[2], b[2]));
-}
-
 /** Computes a 2d vector pointing at the given angle relative to x+.
     \param radians Angle in radians.
     \ingroup Math
 */
-vector2f angle_vector(const float radians);
+v2<float> angle_vector(const float radians);
 
 /** Find the intersection point of the 3 given planes, if such a point exists.
     \ingroup Math
 */
-vector3f intersect_3planes(const plane3& a, const plane3& b, const plane3& c);
+v3<float> intersect_3planes(const plane3& a, const plane3& b, const plane3& c);
 
 /** Extract the view frustum planes from a given scene matrix.
     The normals of the resulting planes are pointing inwards, i.e. the intersection of all positive sides is 'in'.
@@ -264,7 +232,7 @@ void extract_frustum(const matrix4& scene, plane3* frustum);
 /** Find the frustum corners from the 6 given frustum points.
     \ingroup Math
 */
-void compute_frustum_corners(const plane3* frustum, vector3f* points);
+void compute_frustum_corners(const plane3* frustum, v3<float>* points);
 
 /** Extract the view frustum side planes from a given scene matrix.
     \param scene The scene matrix is Projection * Modelview
@@ -283,11 +251,11 @@ void extract_frustum_sides(const matrix4& scene, plane3* frustum);
     \return The number of points that make up the convex hull.
     \ingroup Math
 */
-std::size_t gift_wrap(vector2f* points, std::size_t count);
+std::size_t gift_wrap(v2<float>* points, std::size_t count);
 
 /** Checks whether the given point is inside the given convex hull.
  */
-unsigned int convex_hull_contains(vector2f* hull, unsigned int hullsize, const vector2f& point, const float threshold);
+unsigned int convex_hull_contains(v2<float>* hull, unsigned int hullsize, const v2<float>& point, const float threshold);
 
 /** Facade to construct the minimal sphere containing a set of points using Welzl's algorithm.
     Expected linear runtime.
@@ -310,18 +278,18 @@ namespace lup
     \param epsilon Error value to test for zeros.
     \returns true, exactly if the decomposition was successful, i.e., when the matrix is not singular.
 */
-bool decompose(matrix3& m, vector3<std::size_t>& p, float epsilon = default_epsilon);
+bool decompose(matrix3& m, v3<std::size_t>& p, float epsilon = default_epsilon);
 
 /** Solve an equation in LUP decomposed form.
  */
-vector3f solve(const matrix3& lu, const vector3<std::size_t>& p, const vector3f& rhs);
+v3<float> solve(matrix3 const& lu, v3<std::size_t> const& p, v3<float> const& rhs);
 
 /** Solve an equation.
     The matrix does not need to be decomposed for this form.
     This is just a convenience function that does the LUP decomposition internally.
     Do not use is
 */
-vector3f solve(matrix3 m, const vector3f& rhs);
+v3<float> solve(matrix3 m, const v3<float>& rhs);
 }
 
 /** Primitive intersection tests.
@@ -334,9 +302,9 @@ namespace intersection_test
     \ingroup Math
 */
 bool line_triangle(const linear_component3& line,
-                   const vector3f& t0,
-                   const vector3f& t1,
-                   const vector3f& t2,
+                   const v3<float>& t0,
+                   const v3<float>& t1,
+                   const v3<float>& t2,
                    float* lambda = 0,
                    v2<float>* barycentrics = 0,
                    float epsilon = default_epsilon);
@@ -352,7 +320,7 @@ bool line_triangle(const linear_component3& line,
     \ingroup Math
 */
 bool line_sphere(const linear_component3& line,
-                 const vector3f& center,
+                 const v3<float>& center,
                  const float radius,
                  float* lambda0 = 0,
                  float* lambda1 = 0,
@@ -385,26 +353,26 @@ std::optional<matrix4> inverse(const matrix4& rhs, double epsilon = 0.0);
     \param point where to find the closest point to.
     \ingroup Math
 */
-vector3f find_closest_point(const line3& line, const vector3f& point);
+v3<float> find_closest_point(const line3& line, const v3<float>& point);
 
 /** Compute the square distance of a point to a polygon.
  */
-float square_distance(const vector3f& point, const std::array<vector3f, 3>& triangle);
+float square_distance(const v3<float>& point, const std::array<v3<float>, 3>& triangle);
 
 /** finds the square of the euclidean distance of a line and a point.
     \ingroup Math
 */
-float square_distance(const line3& line, const vector3f& point);
+float square_distance(const line3& line, const v3<float>& point);
 
 /** Compute the square of the euclidean distance of two points.
 \ingroup Math
 */
-float square_distance(vector2f const& lhs, vector2f const& rhs);
+float square_distance(v2<float> const& lhs, v2<float> const& rhs);
 
 /** Compute the square of the euclidean distance of two points.
 \ingroup Math
 */
-float square_distance(vector3f const& lhs, vector3f const& rhs);
+float square_distance(v3<float> const& lhs, v3<float> const& rhs);
 
 /** Compute the square of the euclidean distance of two 3d lines.
  */
@@ -413,19 +381,19 @@ float square_distance(const line3& la, const line3& lb);
 /** Compute the euclidean distance of a line and a point.
     \ingroup Math
 */
-float distance(const replay::line3& line, const replay::vector3f& point);
+float distance(const replay::line3& line, const replay::v3<float>& point);
 
 /** Compute the signed distance of a plane and a point.
     If the plane's normal is unit-length, the absolute of this
     distance is the euclidean distance.
     \ingroup Math
 */
-float distance(const replay::plane3& p, const replay::vector3f& point);
+float distance(const replay::plane3& p, const replay::v3<float>& point);
 
 /** Compute the euclidean distance of two points.
     \ingroup Math
 */
-inline float distance(replay::vector2f const& lhs, replay::vector2f const& rhs)
+inline float distance(replay::v2<float> const& lhs, replay::v2<float> const& rhs)
 {
     return std::sqrt(square_distance(lhs, rhs));
 }
@@ -433,7 +401,7 @@ inline float distance(replay::vector2f const& lhs, replay::vector2f const& rhs)
 /** Compute the euclidean distance of two points.
 \ingroup Math
 */
-inline float distance(replay::vector3f const& lhs, replay::vector3f const& rhs)
+inline float distance(replay::v3<float> const& lhs, replay::v3<float> const& rhs)
 {
     return std::sqrt(square_distance(lhs, rhs));
 }
@@ -441,54 +409,54 @@ inline float distance(replay::vector3f const& lhs, replay::vector3f const& rhs)
 /** Compute the euclidean length of a vector.
     \ingroup Math
 */
-float magnitude(const vector2f& vector);
+float magnitude(const v2<float>& vector);
 
 /** Compute the euclidean length of a vector.
     \ingroup Math
 */
-float magnitude(const vector3f& vector);
+float magnitude(const v3<float>& vector);
 
 /** Compute the euclidean length of a vector.
     \ingroup Math
 */
-float magnitude(const vector4f& vector);
+float magnitude(const v4<float>& vector);
 
 /** In-place normalize the given vector.
     \ingroup Math
 */
-void normalize(vector4f& vector);
+void normalize(v4<float>& vector);
 
 /** In-place normalize the given vector.
     \ingroup Math
 */
-void normalize(vector3f& vector);
+void normalize(v3<float>& vector);
 
 /** In-place normalize the given vector.
     \ingroup Math
 */
-void normalize(vector2f& vector);
+void normalize(v2<float>& vector);
 
 /** Return a normalized vector.
     \ingroup Math
 */
-vector4f normalized(const vector4f& vector);
+v4<float> normalized(v4<float> const& vector);
 
 /** Return a normalized vector.
     \ingroup Math
 */
-vector3f normalized(const vector3f& vector);
+v3<float> normalized(v3<float> const& vector);
 
 /** Return a normalized vector.
     \ingroup Math
 */
-vector2f normalized(const vector2f& vector);
+v2<float> normalized(v2<float> const& vector);
 
 /** Stream-out a vector in human-readable form.
     This streams a vector with elements x and y as "(x y)".
     \note The element type needs to be streamable.
     \ingroup Math
 */
-template <class type> inline std::ostream& operator<<(std::ostream& lhs, const replay::vector2<type>& rhs)
+template <class type> inline std::ostream& operator<<(std::ostream& lhs, replay::v2<type> const& rhs)
 {
     return lhs << '(' << rhs[0] << ' ' << rhs[1] << ')';
 }
@@ -499,7 +467,7 @@ template <class type> inline std::ostream& operator<<(std::ostream& lhs, const r
     \relates vector3
     \ingroup Math
 */
-template <class type> inline std::ostream& operator<<(std::ostream& lhs, const replay::vector3<type>& rhs)
+template <class type> inline std::ostream& operator<<(std::ostream& lhs, replay::v3<type> const& rhs)
 {
     return lhs << '(' << rhs[0] << ' ' << rhs[1] << ' ' << rhs[2] << ')';
 }
@@ -510,39 +478,91 @@ template <class type> inline std::ostream& operator<<(std::ostream& lhs, const r
     \relates vector4
     \ingroup Math
 */
-template <class type> inline std::ostream& operator<<(std::ostream& lhs, const replay::vector4<type>& rhs)
+template <class type> inline std::ostream& operator<<(std::ostream& lhs, replay::v4<type> const& rhs)
 {
     return lhs << '(' << rhs[0] << ' ' << rhs[1] << ' ' << rhs[2] << ' ' << rhs[3] << ')';
 }
 
-inline vector2<float> ceil(vector2<float> rhs)
+inline v2<float> ceil(v2<float> const& rhs)
 {
     return { std::ceil(rhs[0]), std::ceil(rhs[1]) };
 }
 
-inline vector3<float> ceil(vector3<float> rhs)
+inline v3<float> ceil(v3<float> const& rhs)
 {
     return { std::ceil(rhs[0]), std::ceil(rhs[1]), std::ceil(rhs[2]) };
 }
 
-inline vector4<float> ceil(vector4<float> rhs)
+inline v4<float> ceil(v4<float> const& rhs)
 {
     return { std::ceil(rhs[0]), std::ceil(rhs[1]), std::ceil(rhs[2]), std::ceil(rhs[3]) };
 }
 
-inline vector2<float> floor(vector2<float> rhs)
+inline v2<float> floor(v2<float> const& rhs)
 {
     return { std::floor(rhs[0]), std::floor(rhs[1]) };
 }
 
-inline vector3<float> floor(vector3<float> rhs)
+inline v3<float> floor(v3<float> const& rhs)
 {
     return { std::floor(rhs[0]), std::floor(rhs[1]), std::floor(rhs[2]) };
 }
 
-inline vector4<float> floor(vector4<float> rhs)
+inline v4<float> floor(v4<float> const& rhs)
 {
     return { std::floor(rhs[0]), std::floor(rhs[1]), std::floor(rhs[2]), std::floor(rhs[3]) };
+}
+
+/** Component-wise min
+\relates v2
+\ingroup Math
+*/
+template <class T> inline v2<T> min(v2<T> const& lhs, v2<T> const& rhs)
+{
+    return { std::min(lhs[0], rhs[0]), std::min(lhs[1], rhs[1]) };
+}
+
+/** Component-wise max
+\relates v2
+\ingroup Math
+*/
+template <class T> inline v2<T> max(v2<T> const& lhs, v2<T> const& rhs)
+{
+    return { std::max(lhs[0], rhs[0]), std::max(lhs[1], rhs[1]) };
+}
+
+/** Component-wise min
+    \ingroup Math
+*/
+template <class T> v3<T> min(v3<T> const& a, v3<T> const& b)
+{
+    return { std::min(a[0], b[0]), std::min(a[1], b[1]), std::min(a[2], b[2]) };
+}
+
+/** Component-wise max
+    \ingroup Math
+*/
+template <class T> v3<T> max(v3<T> const& a, v3<T> const& b)
+{
+    return { std::max(a[0], b[0]), std::max(a[1], b[1]), std::max(a[2], b[2]) };
+}
+
+/** Component-wise min
+\relates v2
+\ingroup Math
+*/
+template <class T> inline v4<T> min(v4<T> const& lhs, v4<T> const& rhs)
+{
+    return { std::min(lhs[0], rhs[0]), std::min(lhs[1], rhs[1]), std::min(lhs[2], rhs[2]), std::min(lhs[3], rhs[3]) };
+}
+
+/** Component-wise max
+\relates v2
+\ingroup Math
+*/
+template <class T> inline v4<T> max(v4<T> const& lhs, v4<T> const& rhs)
+{
+    return { std::max(lhs[0], rhs[0]), std::max(lhs[1], rhs[1]), std::max(lhs[2], rhs[2]), std::max(lhs[3], rhs[3]) };
 }
 
 }

@@ -29,8 +29,8 @@ Copyright (c) 2010-2019 Marius Elvert
 
 #include <cstddef>
 #include <replay/common.hpp>
-#include <replay/vector3.hpp>
-#include <replay/vector4.hpp>
+#include <replay/v3.hpp>
+#include <replay/v4.hpp>
 
 namespace replay
 {

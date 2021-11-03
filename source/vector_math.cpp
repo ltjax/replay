@@ -36,7 +36,7 @@ namespace
 
 /** Compute the square distance of a point p to a segment from 0,0 to t.
  */
-inline float square_distance_point_segment(const replay::vector2f& t, const replay::vector2f& p)
+inline float square_distance_point_segment(const replay::v2<float>& t, const replay::v2<float>& p)
 {
     const float lambda = dot(p, t) / t.squared();
 
@@ -52,7 +52,7 @@ inline float square_distance_point_segment(const replay::vector2f& t, const repl
    in t.
     w has to be positive. Other triangles can be rotated to match this.
 */
-inline float square_distance_point_triangle(float w, const replay::vector2f& t, const replay::vector2f& p)
+inline float square_distance_point_triangle(float w, const replay::v2<float>& t, const replay::v2<float>& p)
 {
     using namespace replay;
 
@@ -76,8 +76,8 @@ inline float square_distance_point_triangle(float w, const replay::vector2f& t, 
     else // inside the lower and the left edge
     {
         // transform t to the origin
-        vector2f dw(w - t[0], -t[1]);
-        vector2f dp = p - t;
+        v2<float> dw(w - t[0], -t[1]);
+        v2<float> dp = p - t;
 
         // inside all edges - inside the triangle
         if (math::det(dw, dp) < 0.f)
@@ -100,11 +100,11 @@ inline float det3( float a, float b, float c,
 	return r;
 }
 #endif
-}
+} // namespace
 
 std::tuple<replay::v3<float>, float> replay::math::minimal_sphere(std::vector<v3<float>> points)
 {
-    minimal_ball<float, vector3f, 3> mb(points, 1e-15f);
+    minimal_ball<float, v3<float>, 3> mb(points, 1e-15f);
     return std::make_tuple(mb.center(), mb.square_radius());
 }
 
@@ -151,7 +151,7 @@ void replay::math::set_perspective_matrix(matrix4& matrix, float fovy, float asp
                -1.f, 0.f);
 }
 
-void replay::math::compute_frustum_corners(const plane3* frustum, vector3f* points)
+void replay::math::compute_frustum_corners(const plane3* frustum, v3<float>* points)
 {
     // LEFT - BOTTOM - NEAR
     points[0] = math::intersect_3planes(frustum[0], frustum[2], frustum[4]);
@@ -172,118 +172,118 @@ void replay::math::compute_frustum_corners(const plane3* frustum, vector3f* poin
     points[7] = math::intersect_3planes(frustum[0], frustum[3], frustum[5]);
 }
 
-replay::vector3f replay::find_closest_point(const line3& line, const vector3f& point)
+replay::v3<float> replay::find_closest_point(const line3& line, v3<float> const& point)
 {
     const float lambda = dot(point - line.origin, line.direction) / line.direction.squared();
 
     return line.get_point(lambda);
 }
 
-float replay::square_distance(const line3& line, const vector3f& point)
+float replay::square_distance(const line3& line, v3<float> const& point)
 {
     return (point - find_closest_point(line, point)).squared();
 }
 
-float replay::square_distance(vector2f const& lhs, vector2f const& rhs)
+float replay::square_distance(v2<float> const& lhs, v2<float> const& rhs)
 {
     return (rhs - lhs).squared();
 }
 
-float replay::square_distance(vector3f const& lhs, vector3f const& rhs)
+float replay::square_distance(v3<float> const& lhs, v3<float> const& rhs)
 {
     return (rhs - lhs).squared();
 }
 
-float replay::distance(const plane3& p, const vector3f& point)
+float replay::distance(const plane3& p, v3<float> const& point)
 {
     return dot(p.normal, point) + p.d;
 }
 
-float replay::distance(const line3& line, const vector3f& point)
+float replay::distance(const line3& line, v3<float> const& point)
 {
     return std::sqrt(square_distance(line, point));
 }
 
-float replay::magnitude(const vector2f& vector)
+float replay::magnitude(v2<float> const& vector)
 {
     return std::sqrt(vector.squared());
 }
 
-float replay::math::max_norm(const vector2f& vector)
+float replay::math::max_norm(v2<float> const& vector)
 {
     return std::max(std::abs(vector[0]), std::abs(vector[1]));
 }
 
-float replay::magnitude(const vector3f& vector)
+float replay::magnitude(v3<float> const& vector)
 {
     return std::sqrt(vector.squared());
 }
 
-float replay::magnitude(const vector4f& vector)
+float replay::magnitude(v4<float> const& vector)
 {
     return std::sqrt(vector.squared());
 }
 
-float replay::math::max_norm(const vector3f& vector)
+float replay::math::max_norm(v3<float> const& vector)
 {
     return std::max(std::max(std::abs(vector[0]), std::abs(vector[1])), std::abs(vector[2]));
 }
 
-void replay::normalize(vector4f& vector)
+void replay::normalize(v4<float>& vector)
 {
     vector /= magnitude(vector);
 }
 
-replay::vector4f replay::normalized(const vector4f& vector)
+replay::v4<float> replay::normalized(v4<float> const& vector)
 {
     return vector / magnitude(vector);
 }
 
-void replay::normalize(vector3f& vector)
+void replay::normalize(v3<float>& vector)
 {
     vector /= magnitude(vector);
 }
 
-replay::vector3f replay::normalized(const vector3f& vector)
+replay::v3<float> replay::normalized(v3<float> const& vector)
 {
     return vector / magnitude(vector);
 }
 
-void replay::normalize(vector2f& vector)
+void replay::normalize(v2<float>& vector)
 {
     vector /= magnitude(vector);
 }
 
-replay::vector2f replay::normalized(const vector2f& vector)
+replay::v2<float> replay::normalized(v2<float> const& vector)
 {
     return vector / magnitude(vector);
 }
 
-replay::vector2f replay::math::angle_vector(const float radians)
+replay::v2<float> replay::math::angle_vector(const float radians)
 {
-    return vector2f(std::cos(radians), std::sin(radians));
+    return v2<float>(std::cos(radians), std::sin(radians));
 }
 
 bool replay::math::intersection_test::line_triangle(const linear_component3& line,
-                                                    const vector3f& t0,
-                                                    const vector3f& t1,
-                                                    const vector3f& t2,
+                                                    v3<float> const& t0,
+                                                    v3<float> const& t1,
+                                                    v3<float> const& t2,
                                                     float* lambda,
                                                     v2<float>* barycentrics,
                                                     float epsilon)
 {
     // find vectors for two edges sharing v0
-    const vector3f edge0 = t1 - t0;
-    const vector3f edge1 = t2 - t0;
+    v3<float> const edge0 = t1 - t0;
+    v3<float> const edge1 = t2 - t0;
 
-    const vector3f normal = cross(edge0, edge1);
+    v3<float> const normal = cross(edge0, edge1);
 
     // Backface culling
     if (dot(normal, line.direction) > 0.0f)
         return false;
 
     // begin calculating determinant - also used to calculate u parameter
-    const vector3f perp = cross(line.direction, edge1);
+    v3<float> const perp = cross(line.direction, edge1);
 
     // if determinant is near zero, ray lies in plane of triangle
     float determinant = dot(edge0, perp);
@@ -295,7 +295,7 @@ bool replay::math::intersection_test::line_triangle(const linear_component3& lin
     determinant = 1.0f / determinant;
 
     // calculate distance from vert0 to ray origin
-    const vector3f delta = line.origin - t0;
+    v3<float> const delta = line.origin - t0;
 
     // calculate u parameter and test bounds
     const float u = dot(delta, perp) * determinant;
@@ -304,7 +304,7 @@ bool replay::math::intersection_test::line_triangle(const linear_component3& lin
         return false;
 
     // prepare to test v parameter
-    const vector3f temp = cross(delta, edge0);
+    v3<float> const temp = cross(delta, edge0);
 
     // calculate v parameter and test bounds
     const float v = dot(line.direction, temp) * determinant;
@@ -325,13 +325,13 @@ bool replay::math::intersection_test::line_triangle(const linear_component3& lin
 }
 
 bool replay::math::intersection_test::line_sphere(const linear_component3& line,
-                                                  const vector3f& center,
+                                                  v3<float> const& center,
                                                   const float radius,
                                                   float* lambda0,
                                                   float* lambda1,
                                                   float epsilon)
 {
-    const vector3f v0 = line.origin - center;
+    v3<float> const v0 = line.origin - center;
     interval<> result;
     float square_radius = radius * radius;
 
@@ -397,8 +397,10 @@ void replay::math::extract_frustum(const matrix4& scene, plane3* frustum)
     frustum[5].hnf();
 }
 
-unsigned int
-replay::math::convex_hull_contains(vector2f* hull, unsigned int hullsize, const vector2f& point, const float threshold)
+unsigned int replay::math::convex_hull_contains(v2<float>* hull,
+                                                unsigned int hullsize,
+                                                v2<float> const& point,
+                                                const float threshold)
 {
     for (unsigned int i = 0; i < hullsize; ++i)
     {
@@ -411,9 +413,9 @@ replay::math::convex_hull_contains(vector2f* hull, unsigned int hullsize, const 
     return 1;
 }
 
-const replay::vector3f replay::math::construct_perpendicular(const vector3f& x)
+const replay::v3<float> replay::math::construct_perpendicular(v3<float> const& x)
 {
-    vector3f result;
+    v3<float> result;
     std::size_t p = 0;
     float m = std::abs(x[0]);
 
@@ -438,7 +440,7 @@ const replay::vector3f replay::math::construct_perpendicular(const vector3f& x)
     return result;
 }
 
-std::size_t replay::math::gift_wrap(vector2f* point, std::size_t n)
+std::size_t replay::math::gift_wrap(v2<float>* point, std::size_t n)
 {
     // No need to construct a hull
     if (n < 3)
@@ -466,14 +468,14 @@ std::size_t replay::math::gift_wrap(vector2f* point, std::size_t n)
     return n;
 }
 
-replay::vector3f replay::math::intersect_3planes(const plane3& a, const plane3& b, const plane3& c)
+replay::v3<float> replay::math::intersect_3planes(const plane3& a, const plane3& b, const plane3& c)
 {
     matrix3 Temp(a.normal[0], a.normal[1], a.normal[2], b.normal[0], b.normal[1], b.normal[2], c.normal[0], c.normal[1],
                  c.normal[2]);
 
     Temp.invert();
 
-    return Temp * -vector3f(a.d, b.d, c.d);
+    return Temp * -v3<float>(a.d, b.d, c.d);
 }
 
 std::optional<replay::v2<float>> replay::intersect_planar_lines(line2 const& a, line2 const& b, float epsilon)
@@ -494,7 +496,7 @@ std::optional<replay::v2<float>> replay::intersect_planar_lines(line2 const& a, 
 
 float replay::square_distance(const line3& la, const line3& lb)
 {
-    vector3f comp = cross(la.direction, lb.direction);
+    v3<float> comp = cross(la.direction, lb.direction);
 
     float length = magnitude(comp);
 
@@ -502,62 +504,62 @@ float replay::square_distance(const line3& la, const line3& lb)
     if (math::fuzzy_zero(length))
     {
         // find a reference point
-        vector3f ref = find_closest_point(la, lb.origin);
+        v3<float> ref = find_closest_point(la, lb.origin);
 
         return square_distance(ref, lb.origin);
     }
 
     // compute the plane intersection
-    vector3f n = cross(comp, lb.direction);
+    v3<float> n = cross(comp, lb.direction);
 
     float lambda = dot(n, lb.origin - la.origin) / dot(n, la.direction);
 
     // find the reference point on the first line
-    vector3f pa = la.get_point(lambda);
+    v3<float> pa = la.get_point(lambda);
 
     // find the reference point on the second line
-    vector3f pb = find_closest_point(lb, pa);
+    v3<float> pb = find_closest_point(lb, pa);
 
     return square_distance(pa, pb);
 }
 
-float replay::square_distance(const vector3f& point, const std::array<vector3f, 3>& triangle)
+float replay::square_distance(v3<float> const& point, const std::array<v3<float>, 3>& triangle)
 {
-    const vector3f u = triangle[1] - triangle[0];
-    const vector3f v = triangle[2] - triangle[0];
+    v3<float> const u = triangle[1] - triangle[0];
+    v3<float> const v = triangle[2] - triangle[0];
 
-    const vector3f p = point - triangle[0];
+    v3<float> const p = point - triangle[0];
 
     float u_length = magnitude(u);
 
     // build and orthogonal base to translate this to 2d
-    const vector3f n = normalized(cross(u, v));
-    const vector3f t = u / u_length;
-    const vector3f b = cross(n, t);
+    v3<float> const n = normalized(cross(u, v));
+    v3<float> const t = u / u_length;
+    v3<float> const b = cross(n, t);
 
     float sqr_plane_distance = math::square(dot(p, n));
 
     return sqr_plane_distance +
-           square_distance_point_triangle(u_length, vector2f(dot(v, t), dot(v, b)), vector2f(dot(p, t), dot(p, b)));
+           square_distance_point_triangle(u_length, v2<float>(dot(v, t), dot(v, b)), v2<float>(dot(p, t), dot(p, b)));
 }
 
-replay::vector3f replay::math::lup::solve(matrix3 m, const vector3f& rhs)
+replay::v3<float> replay::math::lup::solve(matrix3 m, v3<float> const& rhs)
 {
-    vector3<std::size_t> permutation;
+    v3<std::size_t> permutation;
 
     decompose(m, permutation);
     return solve(m, permutation, rhs);
 }
 
-replay::vector3f replay::math::lup::solve(const matrix3& lu, const vector3<std::size_t>& p, const vector3f& rhs)
+replay::v3<float> replay::math::lup::solve(const matrix3& lu, v3<std::size_t> const& p, v3<float> const& rhs)
 {
-    vector3f y;
+    v3<float> y;
 
     y[0] = rhs[p[0]];
     y[1] = rhs[p[1]] - lu(1, 0) * y[0];
     y[2] = rhs[p[2]] - lu(2, 0) * y[0] - lu(2, 1) * y[1];
 
-    vector3f x;
+    v3<float> x;
 
     x[2] = (y[2]) / lu(2, 2);
     x[1] = (y[1] - x[2] * lu(1, 2)) / lu(1, 1);
@@ -566,7 +568,7 @@ replay::vector3f replay::math::lup::solve(const matrix3& lu, const vector3<std::
     return x;
 }
 
-bool replay::math::lup::decompose(matrix3& m, vector3<std::size_t>& p, float epsilon)
+bool replay::math::lup::decompose(matrix3& m, v3<std::size_t>& p, float epsilon)
 {
     std::size_t best = 0;
     p.reset(0, 1, 2);
@@ -623,7 +625,7 @@ bool replay::math::lup::decompose(matrix3& m, vector3<std::size_t>& p, float eps
     return true;
 }
 
-std::optional<replay::matrix4> replay::inverse(const replay::matrix4& m, double epsilon)
+std::optional<replay::matrix4> replay::inverse(replay::matrix4 const& m, double epsilon)
 {
     double inv[16];
 

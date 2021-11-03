@@ -29,7 +29,7 @@ Copyright (c) 2010-2019 Marius Elvert
 
 #include <memory>
 #include <replay/matrix2.hpp>
-#include <replay/vector2.hpp>
+#include <replay/v2.hpp>
 #include <replay/vector_math.hpp>
 
 namespace replay
@@ -47,7 +47,7 @@ public:
         \param hull A pointer to the convex hull.
         \param n The number of points on the convex hull.
     */
-    bounding_rectangle_algorithm(const vector2f* hull, std::size_t n)
+    bounding_rectangle_algorithm(const v2<float>* hull, std::size_t n)
     : hull(hull)
     , n(n)
     {
@@ -91,25 +91,25 @@ public:
 
     /** Return the minimum of the bounding box under the rotation given by the matrix.
     */
-    const vector2f& get_min() const
+    const v2<float>& get_min() const
     {
         return best.min;
     }
 
     /** Return the maximum of the bounding box under the rotation given by the matrix.
     */
-    const vector2f& get_max() const
+    const v2<float>& get_max() const
     {
         return best.max;
     }
 
 private:
-    static inline vector2f rotated_left(const vector2f& x)
+    static inline v2<float> rotated_left(const v2<float>& x)
     {
-        return vector2f(-x[1], x[0]);
+        return v2<float>(-x[1], x[0]);
     }
 
-    inline vector2f get_edge(std::size_t i) const
+    inline v2<float> get_edge(std::size_t i) const
     {
         return hull[(i + 1) % n] - hull[i];
     }
@@ -120,7 +120,7 @@ private:
         const float zero_deg = 1.f - 0.0001f;
 
         // Move along colinear edges
-        vector2f t = current.u;
+        v2<float> t = current.u;
         while ((ba = dot(t, normalized(get_edge(bottom)))) >= zero_deg)
             bottom = (bottom + 1) % n;
 
@@ -180,21 +180,21 @@ private:
 
     inline float compute_current_size()
     {
-        const vector2f& u(current.u);
+        const v2<float>& u(current.u);
         // phi is defined by the matrix:
         // u[0] -u[1]
         // u[1]  u[0]
 
-        const vector2f& l(hull[left]);
-        const vector2f& b(hull[bottom]);
+        const v2<float>& l(hull[left]);
+        const v2<float>& b(hull[bottom]);
 
         current.min.reset(l[0] * u[0] + l[1] * u[1], // x component of phi(P[Left])
                           -b[0] * u[1] + b[1] * u[0] // y component of phi(P[Bottom])
                           );
 
         // Likewise for right and top
-        const vector2f& r(hull[right]);
-        const vector2f& t(hull[top]);
+        const v2<float>& r(hull[right]);
+        const v2<float>& t(hull[top]);
 
         current.max.reset(r[0] * u[0] + r[1] * u[1], -t[0] * u[1] + t[1] * u[0]);
 
@@ -245,17 +245,17 @@ private:
     }
 
     // The convex hull
-    const vector2f* hull;
+    const v2<float>* hull;
     std::size_t n;
 
     struct box_type
     {
         // box
-        vector2f min;
-        vector2f max;
+        v2<float> min;
+        v2<float> max;
 
         // rotation
-        vector2f u;
+        v2<float> u;
     };
 
     box_type current;
