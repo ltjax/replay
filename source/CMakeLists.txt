@@ -23,12 +23,12 @@ set(HEADER_FILES
   ${replay_SOURCE_DIR}/include/replay/table.hpp
   ${replay_SOURCE_DIR}/include/replay/transformation.hpp
   ${replay_SOURCE_DIR}/include/replay/vector_math.hpp
-  ${replay_SOURCE_DIR}/include/replay/vector2.hpp
-  ${replay_SOURCE_DIR}/include/replay/vector2.inl
-  ${replay_SOURCE_DIR}/include/replay/vector3.hpp
-  ${replay_SOURCE_DIR}/include/replay/vector3.inl
-  ${replay_SOURCE_DIR}/include/replay/vector4.hpp
-  ${replay_SOURCE_DIR}/include/replay/vector4.inl
+  ${replay_SOURCE_DIR}/include/replay/v2.hpp
+  ${replay_SOURCE_DIR}/include/replay/v2.inl
+  ${replay_SOURCE_DIR}/include/replay/v3.hpp
+  ${replay_SOURCE_DIR}/include/replay/v3.inl
+  ${replay_SOURCE_DIR}/include/replay/v4.hpp
+  ${replay_SOURCE_DIR}/include/replay/v4.inl
   ${replay_SOURCE_DIR}/include/replay/concurrent_queue.hpp
   ${replay_SOURCE_DIR}/include/replay/planar_direction.hpp
   ${replay_SOURCE_DIR}/include/replay/rle_vector.hpp
