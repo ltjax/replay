@@ -29,7 +29,7 @@ Copyright (c) 2010-2019 Marius Elvert
 
 #include <replay/matrix4.hpp>
 #include <replay/quaternion.hpp>
-#include <replay/vector3.hpp>
+#include <replay/v3.hpp>
 
 namespace replay
 {
@@ -66,27 +66,25 @@ public:
 
     /** construct a default identity transformation.
     */
-    affinity()
-    {
-    }
+    affinity() = default;
 
     /** Construct a mapping based on an offset.
     */
-    explicit affinity(const v3<float>& position)
+    explicit affinity(v3<float> const& position)
     : position(position)
     {
     }
 
     /** Construct a mapping based on an orientation.
     */
-    explicit affinity(const quaternion& orientation)
+    explicit affinity(quaternion const& orientation)
     : orientation(orientation)
     {
     }
 
     /** Construct a mapping based on an orientation and an offset.
     */
-    affinity(const quaternion& orientation, const v3<float>& position)
+    affinity(quaternion const& orientation,  v3<float> const& position)
     : orientation(orientation)
     , position(position)
     {
@@ -95,7 +93,7 @@ public:
     /** Constructor for user-defined conversions.
         \see convertible_tag
     */
-    template <class T> affinity(const T& other, typename convertible_tag<T, affinity>::type empty = 0)
+    template <class T> affinity(T const& other, typename convertible_tag<T, affinity>::type empty = 0)
     {
         *this = convert(other);
     }
@@ -103,7 +101,7 @@ public:
     /** Concaternate two mappings a and b.
         the effect is as if b and a were executed in that order.
     */
-    affinity operator*(const affinity& rhs) const
+    affinity operator*(affinity const& rhs) const
     {
         return affinity(orientation * rhs.orientation, transform(orientation, rhs.position) + position);
     }
@@ -111,7 +109,7 @@ public:
     /** Inplace concaternate two mappings a and b.
         the effect is as if b and a were executed in that order.
     */
-    affinity& operator*=(const affinity& rhs)
+    affinity& operator*=(affinity const& rhs)
     {
         this->position = transform(orientation, rhs.position) + position;
         this->orientation *= rhs.orientation;
@@ -120,7 +118,7 @@ public:
 
     /** Transform a position vector by this mapping.
     */
-    const v3<float> operator*(const v3<float>& rhs) const
+    v3<float> operator*(v3<float> const& rhs) const
     {
         return transform(orientation, rhs) + position;
     }
@@ -128,21 +126,21 @@ public:
 
 /** Check two affinities for equality.
 */
-inline bool operator==(const affinity& lhs, const affinity& rhs)
+inline bool operator==(affinity const& lhs, affinity const& rhs)
 {
     return lhs.position == rhs.position && lhs.orientation == rhs.orientation;
 }
 
 /** Check two affinities for inequality.
 */
-inline bool operator!=(const affinity& lhs, const affinity& rhs)
+inline bool operator!=(affinity const& lhs, affinity const& rhs)
 {
     return !(lhs == rhs);
 }
 
 /** Get this mapping as a homogenous 4x4 matrix.
 */
-inline const matrix4 to_matrix(const affinity& rhs)
+inline matrix4 to_matrix(affinity const& rhs)
 {
     return matrix4(rhs.orientation, rhs.position);
 }
@@ -151,7 +149,7 @@ inline const matrix4 to_matrix(const affinity& rhs)
     \param rhs The original mapping of which to find the inverse.
     \return The inverse of the mapping.
 */
-inline const affinity inverse(const affinity& rhs)
+inline affinity inverse(affinity const& rhs)
 {
     const quaternion rho(replay::inverse(rhs.orientation));
     return affinity(rho, -transform(rho, rhs.position));
@@ -165,7 +163,7 @@ inline const affinity inverse(const affinity& rhs)
     \note Uses \ref quaternion::nlerp internally.
     \note This is not a linear operator.
 */
-inline const affinity blend(const affinity& lhs, const affinity& rhs, float alpha)
+inline affinity blend(affinity const& lhs, affinity const& rhs, float alpha)
 {
 
     return affinity(nlerp(lhs.orientation, rhs.orientation, alpha),
