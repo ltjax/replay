@@ -24,7 +24,6 @@ Copyright (c) 2010-2019 Marius Elvert
 
 */
 
-#include <algorithm>
 #include <replay/byte_rgba.hpp>
 
 replay::byte_rgba& replay::byte_rgba::operator+=(byte_rgba const& rhs)
