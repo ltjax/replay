@@ -40,7 +40,7 @@
       </ArrayItems>
     </Expand>
   </Type>
-  <Type Name="replay::vector2&lt;*&gt;">
+  <Type Name="replay::v2&lt;*&gt;">
     <DisplayString>{{{data[0]}, {data[1]}}}</DisplayString>
     <Expand>
       <ArrayItems>
@@ -49,7 +49,7 @@
       </ArrayItems>
     </Expand>
   </Type>
-  <Type Name="replay::vector3&lt;*&gt;">
+  <Type Name="replay::v3&lt;*&gt;">
     <DisplayString>{{{data[0]}, {data[1]}, {data[2]}}}</DisplayString>
     <Expand>
       <ArrayItems>
@@ -58,7 +58,7 @@
       </ArrayItems>
     </Expand>
   </Type>
-  <Type Name="replay::vector4&lt;*&gt;">
+  <Type Name="replay::v4&lt;*&gt;">
     <DisplayString>{{{data[0]}, {data[1]}, {data[2]}, {data[3]}}}</DisplayString>
     <Expand>
       <ArrayItems>
