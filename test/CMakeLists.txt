@@ -12,8 +12,8 @@ add_executable(${TARGET_NAME}
   pixbuf.t.cpp
   byte_rgba.t.cpp
   vector_math.t.cpp
-  vector2.t.cpp
-  vector3.t.cpp
+  "v2.t.cpp"
+  "v3.t.cpp"
   "v4.t.cpp"
 )
 

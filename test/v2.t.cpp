@@ -3,7 +3,7 @@
 
 using namespace replay;
 
-TEST_CASE("vector2: Can read values from single-parameter ctor")
+TEST_CASE("v2_can_read_from_single-parameter_ctor", "[v2]")
 {
     v2<float> v{ 4.32f };
     REQUIRE(v[0] == 4.32f);
@@ -11,7 +11,7 @@ TEST_CASE("vector2: Can read values from single-parameter ctor")
 }
 
 
-TEST_CASE("vector2: Can read values from multi-parameter ctor")
+TEST_CASE("v2_can_read_from_multi-parameter_ctor", "[v2]")
 {
     v2<float> v{7.1f, 13.9f};
     REQUIRE(v[0] == 7.1f);
