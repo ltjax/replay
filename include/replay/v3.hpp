@@ -28,6 +28,7 @@ Copyright (c) 2010-2022 Marius Elvert
 
 #include <replay/common.hpp>
 #include <replay/v2.hpp>
+#include <utility>
 
 namespace replay
 {
@@ -143,11 +144,40 @@ public:
     {
         return v3<T>(static_cast<T>(src[0]), static_cast<T>(src[1]), static_cast<T>(src[2]));
     }
+    
+    template <typename index_type> constexpr value_type& get(index_type index)
+    {
+        return data[index];
+    }
 
+    template <typename index_type> constexpr value_type const& get(index_type index) const
+    {
+        return data[index];
+    }
+
+    template <std::size_t index> value_type& get()
+    {
+        return data[index];
+    }
+
+    template <std::size_t index> value_type const& get() const
+    {
+        return data[index];
+    }
 private:
     /** the actual data.
      */
     T data[3];
+};
+
+template <typename T> struct std::tuple_size<::replay::v3<T>>
+{
+    static constexpr size_t value = 3;
+};
+
+template <typename T, size_t index> struct std::tuple_element<index, ::replay::v3<T>>
+{
+    using type = T;
 };
 
 /** Cross product.

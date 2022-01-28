@@ -1,10 +1,9 @@
 #pragma once
-
 /*
 replay
 Software Library
 
-Copyright (c) 2010-2021 Marius Elvert
+Copyright (c) 2010-2022 Marius Elvert
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +26,7 @@ Copyright (c) 2010-2021 Marius Elvert
 */
 
 #include <replay/common.hpp>
+#include <utility>
 
 namespace replay
 {
@@ -125,10 +125,40 @@ public:
         return { static_cast<T>(src[0]), static_cast<T>(src[1]) };
     }
 
+    template <typename index_type> constexpr value_type& get(index_type index)
+    {
+        return data[index];
+    }
+
+    template <typename index_type> constexpr value_type const& get(index_type index) const
+    {
+        return data[index];
+    }
+
+    template <std::size_t index> value_type& get()
+    {
+        return data[index];
+    }
+
+    template <std::size_t index> value_type const& get() const
+    {
+        return data[index];
+    }
+
 private:
     /** the actual data.
     */
     T data[2];
+};
+
+template <typename T> struct std::tuple_size<::replay::v2<T>>
+{
+    static constexpr size_t value = 2;
+};
+
+template <typename T, size_t index> struct std::tuple_element<index, ::replay::v2<T>>
+{
+    using type = T;
 };
 
 /** Construct the vector that is pointing away from the input 90 degrees to the left.
