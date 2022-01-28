@@ -8,7 +8,7 @@ class ReplayConan(ConanFile):
     license = "MIT"
     author = "Marius Elvert marius.elvert@googlemail.com"
     url = "https://github.com/ltjax/replay"
-    description = "Lean library to observe file changes in a specific directory path."
+    description = "lightweight game development utility library."
     topics = ("games", "math")
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False], "use_stb": [True, False], "use_libpng": [True, False]}
