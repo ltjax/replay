@@ -1,11 +1,10 @@
-#ifndef replay_v4_hpp
-#define replay_v4_hpp
+#pragma once
 
 /*
 replay
 Software Library
 
-Copyright (c) 2010-2021 Marius Elvert
+Copyright (c) 2010-2022 Marius Elvert
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -41,7 +40,7 @@ template <class T> class v4
 public:
     /** Element type.
      */
-    typedef T value_type;
+    using value_type = T;
 
     /** Get a pointer to the internal array.
      */
@@ -95,22 +94,22 @@ public:
     */
     constexpr v4& reset(value_type x, value_type y, value_type z, value_type w);
 
-    v4& operator+=(v4 const& rhs);
-    v4& operator-=(v4 const& rhs);
-    v4& operator*=(T value);
-    v4& operator/=(T value);
-    v4 operator-() const;
+    constexpr v4& operator+=(v4 const& rhs);
+    constexpr v4& operator-=(v4 const& rhs);
+    constexpr v4& operator*=(T value);
+    constexpr v4& operator/=(T value);
+    constexpr v4 operator-() const;
 
-    bool operator==(v4 const& operand) const;
-    bool operator!=(v4 const& operand) const;
+    constexpr bool operator==(v4 const& operand) const;
+    constexpr bool operator!=(v4 const& operand) const;
 
     /** In-place negate.
         Negates each component of this vector.
     */
-    v4& negate();
+    constexpr v4& negate();
 
-    T sum() const;
-    T squared() const;
+    constexpr T sum() const;
+    constexpr T squared() const;
 
     /** Non-initializing constructor.
         Leaves all elements uninitialized.
@@ -185,13 +184,20 @@ private:
     \relates v4
     \ingroup Math
 */
-template <class type> inline type dot(v4<type> const& lhs, v4<type> const& rhs);
+template <class T> constexpr T dot(v4<T> const& lhs, v4<T> const& rhs)
+{
+    return lhs[0] * rhs[0] + lhs[1] * rhs[1] + lhs[2] * rhs[2] + lhs[3] * rhs[3];
+}
 
 /** Component wise multiplication of two 4D vectors.
     \relates v4
     \ingroup Math
 */
-template <class type> inline v4<type> comp(v4<type> const& lhs, v4<type> const& rhs);
+template <class T> constexpr v4<T> comp(v4<T> const& lhs, v4<T> const& rhs)
+{
+    return {lhs[0] * rhs[0], lhs[1] * rhs[1], lhs[2] * rhs[2], lhs[3] * rhs[3]};
+}
+
 
 /** Scalar product.
     \relates v4
@@ -244,7 +250,144 @@ template <class T> inline v3<T> perspective_divide(v4<T> v)
 }
 
 } // namespace replay
+/** In-place addition.
+*/
+template <class type> constexpr replay::v4<type>& replay::v4<type>::operator+=(v4<type> const& rhs)
+{
+    data[0] += rhs.data[0];
+    data[1] += rhs.data[1];
+    data[2] += rhs.data[2];
+    data[3] += rhs.data[3];
 
-#include "v4.inl"
+    return *this;
+}
 
-#endif // replay_v4_hpp
+/** In-place substraction.
+*/
+template <class type> constexpr replay::v4<type>& replay::v4<type>::operator-=(v4<type> const& rhs)
+{
+    data[0] -= rhs.data[0];
+    data[1] -= rhs.data[1];
+    data[2] -= rhs.data[2];
+    data[3] -= rhs.data[3];
+
+    return *this;
+}
+
+/** In-place scalar multiplication.
+*/
+template <class T> constexpr replay::v4<T>& replay::v4<T>::operator*=(T value)
+{
+    data[0] *= value;
+    data[1] *= value;
+    data[2] *= value;
+    data[3] *= value;
+
+    return *this;
+}
+
+/** In-place scalar division.
+*/
+template <class T> constexpr replay::v4<T>& replay::v4<T>::operator/=(T value)
+{
+    data[0] /= value;
+    data[1] /= value;
+    data[2] /= value;
+    data[3] /= value;
+
+    return *this;
+}
+
+template <class type> constexpr bool replay::v4<type>::operator==(v4<type> const& operand) const
+{
+    return data[0] == operand.data[0] && data[1] == operand.data[1] && data[2] == operand.data[2] && data[3] == operand.data[3];
+}
+
+template <class type> constexpr bool replay::v4<type>::operator!=(v4<type> const& operand) const
+{
+    return data[0] != operand.data[0] || data[1] != operand.data[1] || data[2] != operand.data[2] || data[3] != operand.data[3];
+}
+
+template <class type> constexpr replay::v4<type>& replay::v4<type>::reset(value_type value)
+{
+    data[0] = value;
+    data[1] = value;
+    data[2] = value;
+    data[3] = value;
+
+    return *this;
+}
+
+template <class type>
+constexpr replay::v4<type>& replay::v4<type>::reset(v3<type> const& xyz, const value_type w)
+{
+    data[0] = xyz[0];
+    data[1] = xyz[1];
+    data[2] = xyz[2];
+    data[3] = w;
+
+    return *this;
+}
+
+template <class type>
+constexpr replay::v4<type>& replay::v4<type>::reset(v2<type> const& xy, v2<type> const& zw)
+{
+    data[0] = xy[0];
+    data[1] = xy[1];
+    data[2] = zw[0];
+    data[3] = zw[1];
+
+    return *this;
+}
+
+template <class type>
+constexpr replay::v4<type>&
+replay::v4<type>::reset(v2<type> const& xy, value_type z, value_type w)
+{
+    data[0] = xy[0];
+    data[1] = xy[1];
+    data[2] = z;
+    data[3] = w;
+
+    return *this;
+}
+
+template <class type>
+constexpr replay::v4<type>&
+replay::v4<type>::reset(const value_type x, const value_type y, const value_type z, const value_type w)
+{
+    data[0] = x;
+    data[1] = y;
+    data[2] = z;
+    data[3] = w;
+
+    return *this;
+}
+
+template <class type> constexpr replay::v4<type>& replay::v4<type>::negate()
+{
+    data[0] = -data[0];
+    data[1] = -data[1];
+    data[2] = -data[2];
+    data[3] = -data[3];
+
+    return *this;
+}
+
+/** Compute the sum of all elements. */
+template <class type> constexpr type replay::v4<type>::sum() const
+{
+    return data[0] + data[1] + data[2] + data[3];
+}
+
+/** Square this vector using the dot product. */
+template <class type> constexpr type replay::v4<type>::squared() const
+{
+    return data[0] * data[0] + data[1] * data[1] + data[2] * data[2] + data[3] * data[3];
+}
+
+/**Negated.*/
+template <class type> constexpr replay::v4<type> replay::v4<type>::operator-() const
+{
+    return v4<type>(-data[0], -data[1], -data[2], -data[3]);
+}

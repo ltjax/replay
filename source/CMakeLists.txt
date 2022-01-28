@@ -28,7 +28,6 @@ set(HEADER_FILES
   ${replay_SOURCE_DIR}/include/replay/v3.hpp
   ${replay_SOURCE_DIR}/include/replay/v3.inl
   ${replay_SOURCE_DIR}/include/replay/v4.hpp
-  ${replay_SOURCE_DIR}/include/replay/v4.inl
   ${replay_SOURCE_DIR}/include/replay/concurrent_queue.hpp
   ${replay_SOURCE_DIR}/include/replay/planar_direction.hpp
   ${replay_SOURCE_DIR}/include/replay/rle_vector.hpp
