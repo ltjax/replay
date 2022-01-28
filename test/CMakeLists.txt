@@ -9,11 +9,12 @@ add_executable(${TARGET_NAME}
   planar_direction.t.cpp
   rle_vector.t.cpp
   table.t.cpp
-  vector2.t.cpp
-  vector3.t.cpp
   pixbuf.t.cpp
   byte_rgba.t.cpp
   vector_math.t.cpp
+  vector2.t.cpp
+  vector3.t.cpp
+  "v4.t.cpp"
 )
 
 target_link_libraries(${TARGET_NAME}
