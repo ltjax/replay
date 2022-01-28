@@ -18,3 +18,12 @@ TEST_CASE("Can read values from single-parameter ctor", "[v4]")
     REQUIRE(v == v4<float>{4.32f, 4.32f, 4.32f, 4.32f});
 }
 
+TEST_CASE("Can use structured binding", "[v4]")
+{
+    v4<float> v{9.f, 8.f, 7.f, 6.f};
+    auto [x, y, z, w] = v;
+    REQUIRE(x == 9.f);
+    REQUIRE(y == 8.f);
+    REQUIRE(z == 7.f);
+    REQUIRE(w == 6.f);
+}

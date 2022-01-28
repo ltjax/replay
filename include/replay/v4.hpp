@@ -28,6 +28,7 @@ Copyright (c) 2010-2022 Marius Elvert
 
 #include <replay/v2.hpp>
 #include <replay/v3.hpp>
+#include <utility>
 
 namespace replay
 {
@@ -174,10 +175,40 @@ public:
         return { static_cast<T>(src[0]), static_cast<T>(src[1]), static_cast<T>(src[2]), static_cast<T>(src[3]) };
     }
 
+    template <typename index_type> constexpr value_type& get(index_type index)
+    {
+        return data[index];
+    }
+
+    template <typename index_type> constexpr value_type const& get(index_type index) const
+    {
+        return data[index];
+    }
+
+    template <std::size_t index> value_type& get()
+    {
+        return data[index];
+    }
+
+    template <std::size_t index> value_type const& get() const
+    {
+        return data[index];
+    }
+
 private:
     /** The actual data.
      */
     T data[4];
+};
+
+template <typename T> struct std::tuple_size<::replay::v4<T>>
+{
+    static constexpr size_t value = 4;
+};
+
+template <typename T, size_t index> struct std::tuple_element<index, ::replay::v4<T>>
+{
+    using type = T;
 };
 
 /** Scalar dot product of two 4D vectors.
@@ -195,9 +226,8 @@ template <class T> constexpr T dot(v4<T> const& lhs, v4<T> const& rhs)
 */
 template <class T> constexpr v4<T> comp(v4<T> const& lhs, v4<T> const& rhs)
 {
-    return {lhs[0] * rhs[0], lhs[1] * rhs[1], lhs[2] * rhs[2], lhs[3] * rhs[3]};
+    return { lhs[0] * rhs[0], lhs[1] * rhs[1], lhs[2] * rhs[2], lhs[3] * rhs[3] };
 }
-
 
 /** Scalar product.
     \relates v4
@@ -251,7 +281,7 @@ template <class T> inline v3<T> perspective_divide(v4<T> v)
 
 } // namespace replay
 /** In-place addition.
-*/
+ */
 template <class type> constexpr replay::v4<type>& replay::v4<type>::operator+=(v4<type> const& rhs)
 {
     data[0] += rhs.data[0];
@@ -263,7 +293,7 @@ template <class type> constexpr replay::v4<type>& replay::v4<type>::operator+=(v
 }
 
 /** In-place substraction.
-*/
+ */
 template <class type> constexpr replay::v4<type>& replay::v4<type>::operator-=(v4<type> const& rhs)
 {
     data[0] -= rhs.data[0];
@@ -275,7 +305,7 @@ template <class type> constexpr replay::v4<type>& replay::v4<type>::operator-=(v
 }
 
 /** In-place scalar multiplication.
-*/
+ */
 template <class T> constexpr replay::v4<T>& replay::v4<T>::operator*=(T value)
 {
     data[0] *= value;
@@ -287,7 +317,7 @@ template <class T> constexpr replay::v4<T>& replay::v4<T>::operator*=(T value)
 }
 
 /** In-place scalar division.
-*/
+ */
 template <class T> constexpr replay::v4<T>& replay::v4<T>::operator/=(T value)
 {
     data[0] /= value;
@@ -300,12 +330,14 @@ template <class T> constexpr replay::v4<T>& replay::v4<T>::operator/=(T value)
 
 template <class type> constexpr bool replay::v4<type>::operator==(v4<type> const& operand) const
 {
-    return data[0] == operand.data[0] && data[1] == operand.data[1] && data[2] == operand.data[2] && data[3] == operand.data[3];
+    return data[0] == operand.data[0] && data[1] == operand.data[1] && data[2] == operand.data[2] &&
+           data[3] == operand.data[3];
 }
 
 template <class type> constexpr bool replay::v4<type>::operator!=(v4<type> const& operand) const
 {
-    return data[0] != operand.data[0] || data[1] != operand.data[1] || data[2] != operand.data[2] || data[3] != operand.data[3];
+    return data[0] != operand.data[0] || data[1] != operand.data[1] || data[2] != operand.data[2] ||
+           data[3] != operand.data[3];
 }
 
 template <class type> constexpr replay::v4<type>& replay::v4<type>::reset(value_type value)
@@ -318,8 +350,7 @@ template <class type> constexpr replay::v4<type>& replay::v4<type>::reset(value_
     return *this;
 }
 
-template <class type>
-constexpr replay::v4<type>& replay::v4<type>::reset(v3<type> const& xyz, const value_type w)
+template <class type> constexpr replay::v4<type>& replay::v4<type>::reset(v3<type> const& xyz, const value_type w)
 {
     data[0] = xyz[0];
     data[1] = xyz[1];
@@ -329,8 +360,7 @@ constexpr replay::v4<type>& replay::v4<type>::reset(v3<type> const& xyz, const v
     return *this;
 }
 
-template <class type>
-constexpr replay::v4<type>& replay::v4<type>::reset(v2<type> const& xy, v2<type> const& zw)
+template <class type> constexpr replay::v4<type>& replay::v4<type>::reset(v2<type> const& xy, v2<type> const& zw)
 {
     data[0] = xy[0];
     data[1] = xy[1];
@@ -341,8 +371,7 @@ constexpr replay::v4<type>& replay::v4<type>::reset(v2<type> const& xy, v2<type>
 }
 
 template <class type>
-constexpr replay::v4<type>&
-replay::v4<type>::reset(v2<type> const& xy, value_type z, value_type w)
+constexpr replay::v4<type>& replay::v4<type>::reset(v2<type> const& xy, value_type z, value_type w)
 {
     data[0] = xy[0];
     data[1] = xy[1];
