@@ -1,11 +1,10 @@
-#ifndef replay_v3_hpp
-#define replay_v3_hpp
+#pragma once
 
 /*
 replay
 Software Library
 
-Copyright (c) 2010-2021 Marius Elvert
+Copyright (c) 2010-2022 Marius Elvert
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -229,6 +228,134 @@ template <class type> inline v3<type> operator/(type lhs, v3<type> const& rhs)
 
 } // namespace replay
 
-#include "v3.inl"
 
-#endif // replay_v3_hpp
+/** Set this objects components.
+    \param x The first component.
+    \param y The second component.
+    \param z The third component.
+*/
+template <class type>
+inline constexpr replay::v3<type>& replay::v3<type>::reset(value_type x, value_type y, value_type z)
+{
+    data[0] = x;
+    data[1] = y;
+    data[2] = z;
+
+    return *this;
+}
+
+/** Set all components.
+    \param value Value to set the vector to.
+*/
+template <class type> inline constexpr replay::v3<type>& replay::v3<type>::reset(value_type value)
+{
+    data[0] = value;
+    data[1] = value;
+    data[2] = value;
+
+    return *this;
+}
+
+/** Negation.
+*/
+template <class type> inline replay::v3<type> replay::v3<type>::operator-() const
+{
+    return replay::v3<type>(-data[0], -data[1], -data[2]);
+}
+
+/** In-place addition.
+*/
+template <class type>
+inline replay::v3<type>& replay::v3<type>::operator+=(const replay::v3<type>& operand)
+{
+    data[0] += operand.data[0];
+    data[1] += operand.data[1];
+    data[2] += operand.data[2];
+
+    return *this;
+}
+
+/** In-place subtraction.
+*/
+template <class type>
+inline replay::v3<type>& replay::v3<type>::operator-=(const replay::v3<type>& operand)
+{
+    data[0] -= operand.data[0];
+    data[1] -= operand.data[1];
+    data[2] -= operand.data[2];
+
+    return *this;
+}
+
+/** In-place scalar multiplication.
+*/
+template <class type> inline replay::v3<type>& replay::v3<type>::operator*=(const type& operand)
+{
+    data[0] *= operand;
+    data[1] *= operand;
+    data[2] *= operand;
+
+    return *this;
+}
+
+/** In-place scalar division.
+*/
+template <class type> inline replay::v3<type>& replay::v3<type>::operator/=(const type& operand)
+{
+    data[0] /= operand;
+    data[1] /= operand;
+    data[2] /= operand;
+
+    return *this;
+}
+
+/** Test for equality.
+*/
+template <class type> inline bool replay::v3<type>::operator==(v3<type> const& operand) const
+{
+    return data[0] == operand[0] && data[1] == operand[1] && data[2] == operand[2];
+}
+
+/** Test for unequality.
+*/
+template <class type> inline bool replay::v3<type>::operator!=(v3<type> const& operand) const
+{
+    return data[0] != operand[0] || data[1] != operand[1] || data[2] != operand[2];
+}
+
+template <class type> inline replay::v3<type>& replay::v3<type>::negate()
+{
+    data[0] = -data[0];
+    data[1] = -data[1];
+    data[2] = -data[2];
+
+    return *this;
+}
+
+/** Square. Square this vector using the dot product. */
+template <class type> inline type replay::v3<type>::squared() const
+{
+    return data[0] * data[0] + data[1] * data[1] + data[2] * data[2];
+}
+
+/** Sum. Return a sum of all elements. */
+template <class type> inline type replay::v3<type>::sum() const
+{
+    return data[0] + data[1] + data[2];
+}
+
+template <class type> inline replay::v3<type> replay::cross(v3<type> const& lhs, v3<type> const& rhs)
+{
+    return replay::v3<type>(lhs[1] * rhs[2] - lhs[2] * rhs[1], lhs[2] * rhs[0] - lhs[0] * rhs[2],
+                                 lhs[0] * rhs[1] - lhs[1] * rhs[0]);
+}
+
+template <class type> inline type replay::dot(v3<type> const& lhs, v3<type> const& rhs)
+{
+    return lhs[0] * rhs[0] + lhs[1] * rhs[1] + lhs[2] * rhs[2];
+}
+
+template <class type> inline replay::v3<type> replay::comp(v3<type> const& lhs, v3<type> const& rhs)
+{
+    return v3<type>(lhs[0] * rhs[0], lhs[1] * rhs[1], lhs[2] * rhs[2]);
+}
