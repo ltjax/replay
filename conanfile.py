@@ -4,7 +4,7 @@ from conans.errors import ConanInvalidConfiguration
 
 class ReplayConan(ConanFile):
     name = "replay"
-    version = "2.8"
+    version = "2.9"
     license = "MIT"
     author = "Marius Elvert marius.elvert@googlemail.com"
     url = "https://github.com/ltjax/replay"
@@ -40,9 +40,9 @@ class ReplayConan(ConanFile):
 
     def requirements(self):
         if self.options.use_stb:
-            self.requires("stb/20190512@conan/stable")
+            self.requires("stb/20200203")
         if self.options.use_libpng:
-            self.requires("libpng/1.6.37@bincrafters/stable")
+            self.requires("libpng/1.6.37")
 
     def build(self):
         self._configured_cmake().build()
