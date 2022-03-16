@@ -201,16 +201,6 @@ private:
     T data[4];
 };
 
-template <typename T> struct std::tuple_size<::replay::v4<T>>
-{
-    static constexpr size_t value = 4;
-};
-
-template <typename T, size_t index> struct std::tuple_element<index, ::replay::v4<T>>
-{
-    using type = T;
-};
-
 /** Scalar dot product of two 4D vectors.
     \relates v4
     \ingroup Math
@@ -420,3 +410,13 @@ template <class type> constexpr replay::v4<type> replay::v4<type>::operator-() c
 {
     return v4<type>(-data[0], -data[1], -data[2], -data[3]);
 }
+
+template <typename T> struct std::tuple_size<::replay::v4<T>>
+{
+    static constexpr size_t value = 4;
+};
+
+template <typename T, size_t index> struct std::tuple_element<index, ::replay::v4<T>>
+{
+    using type = T;
+};

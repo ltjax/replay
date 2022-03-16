@@ -170,16 +170,6 @@ private:
     T data[3];
 };
 
-template <typename T> struct std::tuple_size<::replay::v3<T>>
-{
-    static constexpr size_t value = 3;
-};
-
-template <typename T, size_t index> struct std::tuple_element<index, ::replay::v3<T>>
-{
-    using type = T;
-};
-
 /** Cross product.
     Also referred to as vector-product, this operator returns a vector that
     is perpendicular to both input vectors.
@@ -389,3 +379,13 @@ template <class type> inline replay::v3<type> replay::comp(v3<type> const& lhs, 
 {
     return v3<type>(lhs[0] * rhs[0], lhs[1] * rhs[1], lhs[2] * rhs[2]);
 }
+
+template <typename T> struct std::tuple_size<::replay::v3<T>>
+{
+    static constexpr size_t value = 3;
+};
+
+template <typename T, size_t index> struct std::tuple_element<index, ::replay::v3<T>>
+{
+    using type = T;
+};

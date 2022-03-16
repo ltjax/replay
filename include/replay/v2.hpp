@@ -151,16 +151,6 @@ private:
     T data[2];
 };
 
-template <typename T> struct std::tuple_size<::replay::v2<T>>
-{
-    static constexpr size_t value = 2;
-};
-
-template <typename T, size_t index> struct std::tuple_element<index, ::replay::v2<T>>
-{
-    using type = T;
-};
-
 /** Construct the vector that is pointing away from the input 90 degrees to the left.
     \relates v2
     \ingroup Math
@@ -350,3 +340,13 @@ template <class type> inline typename replay::v2<type>::value_type replay::v2<ty
 {
     return data[0] + data[1];
 }
+
+template <typename T> struct std::tuple_size<::replay::v2<T>>
+{
+    static constexpr size_t value = 2;
+};
+
+template <typename T, size_t index> struct std::tuple_element<index, ::replay::v2<T>>
+{
+    using type = T;
+};
