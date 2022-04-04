@@ -205,11 +205,25 @@ replay::matrix4 replay::matrix4::identity()
     return from_scale({ 1.f, 1.f, 1.f });
 }
 
-/** Set a scale matrix.
+/** Create a scale matrix.
  */
 replay::matrix4 replay::matrix4::from_scale(v3<float> const& scale)
 {
-    return { scale[0], 0.f, 0.f, 0.f, 0.f, scale[1], 0.f, 0.f, 0.f, 0.f, scale[2], 0.f, 0.f, 0.f, 0.f, 1.f };
+    return from_scale_and_translation(scale, v3<float>{ 0.f });
+}
+
+/** Create a translation matrix.
+ */
+replay::matrix4 replay::matrix4::from_translation(v3<float> const& translation)
+{
+    return from_scale_and_translation(v3<float>{ 1.f }, translation);
+}
+
+/** Create a scale & translation matrix.
+ */
+replay::matrix4 replay::matrix4::from_scale_and_translation(v3<float> const& scale, v3<float> const& translation)
+{
+    return { scale[0], 0.f, 0.f, translation[0], 0.f, scale[1], 0.f, translation[1], 0.f, 0.f, scale[2], translation[2], 0.f, 0.f, 0.f, 1.f };
 }
 
 /** Scale the given transformation.
@@ -266,13 +280,6 @@ replay::matrix4& replay::matrix4::translate(v3<float> const& rhs)
 replay::matrix4& replay::matrix4::translate(const float x, const float y, const float z)
 {
     return translate(v3<float>(x, y, z));
-}
-
-/** Set the translation.
- */
-replay::matrix4 replay::matrix4::from_translation(v3<float> const& t)
-{
-    return {1.f, 0.f, 0.f, t[0], 0.f, 1.f, 0.f, t[1], 0.f, 0.f, 1.f, t[2], 0.f, 0.f, 0.f, 1.f};
 }
 
 /** Set a rotational matrix.

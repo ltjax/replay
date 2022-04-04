@@ -136,6 +136,7 @@ public:
     static matrix4 from_rotation(float angle, v3<float> const& axis);
     static matrix4 from_scale(v3<float> const& scale);
     static matrix4 from_translation(v3<float> const& translation);
+    static matrix4 from_scale_and_translation(v3<float> const& scale, v3<float> const& translation);
 
     void set_column(unsigned int i, v4<float> const& column);
     void set_row(unsigned int i, v4<float> const& row);
