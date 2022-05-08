@@ -1,31 +1,4 @@
-/*
-replay
-Software Library
-
-Copyright (c) 2010-2019 Marius Elvert
-
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
-
- The above copyright notice and this permission notice shall be included in
- all copies or substantial portions of the Software.
-
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- THE SOFTWARE.
-
-*/
-
-#ifndef replay_quaternion_hpp
-#define replay_quaternion_hpp
+#pragma once
 
 #include <replay/v3.hpp>
 #include <tuple>
@@ -33,10 +6,11 @@ Copyright (c) 2010-2019 Marius Elvert
 namespace replay
 {
 
-/** A quaternion is a 4-dimensional vector extended with a multiplication operation.
-    A unit-length quaternion can be intuitively mapped to an axis-angle 3-dimensional rotation,
-    although this mapping is ambiguous (a negative of a quaternion represents the same rotation).
-    \ingroup Math
+/** 4-dimensional vector extended with a multiplication operation.
+   Multiplication is defined by viewing it as an imaginary number: w+xi+yj+zk, with i²=j²=k²=-1 and ij=k,jk=i,ki=j (aka
+   Hamilton convention). A unit-length quaternion can be intuitively mapped to an axis-angle 3-dimensional rotation,
+   although this mapping is ambiguous (a negative of a quaternion represents the same rotation).
+   \ingroup Math
 */
 class quaternion
 {
@@ -57,7 +31,7 @@ public:
         \returns A reference to this object.
         \see convert_to_axis_angle, rotate
     */
-    quaternion& set_rotation(float angle, const v3<float>& v);
+    quaternion& set_rotation(float angle, v3<float> const& axis);
 
     /** Set all individual components.
         \returns A reference to this object.
@@ -71,7 +45,7 @@ public:
     /** Create a rotational quaternion.
         \see set_rotation, rotate, convert_to_axis_angle
     */
-    quaternion(float angle, const v3<float>& v);
+    quaternion(float angle, v3<float> const& axis);
 
     /** Create a quaternion by setting all individual components.
      */
@@ -87,23 +61,23 @@ public:
 
     /** Multiply two quaternions.
      */
-    const quaternion operator*(const quaternion& rhs) const;
+    quaternion operator*(const quaternion& rhs) const;
 
     /** Add two quaternions.
      */
-    const quaternion operator+(const quaternion& rhs) const;
+    quaternion operator+(const quaternion& rhs) const;
 
     /** Subtract two quaternions.
      */
-    const quaternion operator-(const quaternion& rhs) const;
+    quaternion operator-(const quaternion& rhs) const;
 
     /** Scalar multiplication.
      */
-    const quaternion operator*(float v) const;
+    quaternion operator*(float v) const;
 
     /** Scalar division.
      */
-    const quaternion operator/(float v) const;
+    quaternion operator/(float v) const;
 
     /** Multiplicative assign of another quaternion.
         \returns A reference to this object.
@@ -133,12 +107,12 @@ public:
         This is equivalent to the inner product with itself, or the product with its conjugate.
         \see inner_product, conjugate, conjugated
     */
-    const float squared() const;
+    float squared() const;
 
     /** Euclidean 2-Norm.
         This is the square-root of this
     */
-    const float magnitude() const;
+    float magnitude() const;
 
     /** Negate all imaginary numbers.
         \returns A reference to this object.
@@ -159,15 +133,15 @@ public:
 
     /** Get the x vector after transformation by this rotation.
      */
-    const v3<float> get_transformed_x() const;
+    v3<float> get_transformed_x() const;
 
     /** Get the y vector after transformation by this rotation.
      */
-    const v3<float> get_transformed_y() const;
+    v3<float> get_transformed_y() const;
 
     /** Get the z vector after transformation by this rotation.
      */
-    const v3<float> get_transformed_z() const;
+    v3<float> get_transformed_z() const;
 };
 
 /** Compare two quaternions for equality.
@@ -189,16 +163,16 @@ inline bool operator!=(quaternion const& lhs, quaternion const& rhs)
     \returns The inverse to the given quaternion.
     \note Results are undefined for the zero quaternion.
 */
-const quaternion inverse(const quaternion& obj);
+quaternion inverse(quaternion const& rhs);
 
 /** Inner/Dot product.
     This is equivalent to a dot product with 4-dimensional vectors.
 */
-const float dot(const quaternion& lhs, const quaternion& rhs);
+float dot(quaternion const& lhs, quaternion const& rhs);
 
 /** Quaternion spherical interpolation.
  */
-const quaternion slerp(const quaternion& lhs, const quaternion& rhs, float alpha);
+quaternion slerp(quaternion const& lhs, quaternion const& rhs, float alpha);
 
 /** Quaternion linear interpolation.
     Computes are renormalized linear combination of the two given quaternions.
@@ -208,12 +182,12 @@ const quaternion slerp(const quaternion& lhs, const quaternion& rhs, float alpha
     \param[in] x The weight factor from \f$[0..1]\f$.
     \returns The interpolated and renormalized rotational quaternion.
 */
-const quaternion nlerp(const quaternion& lhs, const quaternion& rhs, float alpha);
+quaternion nlerp(quaternion const& lhs, quaternion const& rhs, float alpha);
 
 /** Create a short arc rotation from rotation lhs to rotation rhs.
     If the dot product of the two reference rotations is negative, this will negate the result.
 */
-const quaternion short_rotation(const quaternion& lhs, const quaternion& rhs);
+quaternion short_rotation(quaternion const& lhs, quaternion const& rhs);
 
 /** Multiply two quaternions.
  */
@@ -236,7 +210,7 @@ std::tuple<v3<float>, float> to_axis_angle(const quaternion& obj);
 
 /** Transform a vector by a quaternion.
  */
-v3<float> transform(const quaternion& lhs, const v3<float>& rhs);
+v3<float> transform(quaternion const& lhs, v3<float> const& rhs);
 
 /** Concaternate a rotation to a given quaternion.
     This is equivalent to creating a new quaternion with the given axis/angle pair, inplace multiplying it from the
@@ -245,11 +219,10 @@ v3<float> transform(const quaternion& lhs, const v3<float>& rhs);
     \param[in] angle The angle to rotate, in radians.
     \param[in] axis The axis to rotate around. Has to be unit-length.
 */
-void rotate(quaternion& obj, const float angle, const v3<float>& axis);
+void rotate(quaternion& obj, float angle, v3<float> const& axis);
 
 /** Find the shortest arc rotation that maps vector a to vector b.
  */
-const quaternion shortest_arc(const v3<float>& a, const v3<float>& b);
-}
+const quaternion shortest_arc(v3<float> const& a, v3<float> const& b);
 
-#endif // replay_quaternion_hpp
+} // namespace replay

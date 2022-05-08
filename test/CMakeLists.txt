@@ -15,6 +15,7 @@ add_executable(${TARGET_NAME}
   "v2.t.cpp"
   "v3.t.cpp"
   "v4.t.cpp"
+  "quaternion.t.cpp"
 )
 
 target_link_libraries(${TARGET_NAME}
