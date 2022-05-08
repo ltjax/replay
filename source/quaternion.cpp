@@ -116,12 +116,12 @@ replay::quaternion& replay::quaternion::conjugate()
     return *this;
 }
 
-const replay::quaternion replay::quaternion::conjugated() const
+replay::quaternion replay::quaternion::conjugated() const
 {
     return quaternion(w, -x, -y, -z);
 }
 
-const replay::quaternion replay::quaternion::negated() const
+replay::quaternion replay::quaternion::negated() const
 {
     return quaternion(-w, -x, -y, -z);
 }
@@ -189,7 +189,7 @@ float replay::dot(const quaternion& a, const quaternion& b)
     return a.w * b.w + a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
-const replay::quaternion replay::shortest_arc(const v3<float>& a, const v3<float>& b)
+replay::quaternion replay::shortest_arc(const v3<float>& a, const v3<float>& b)
 {
     // Compute the cosine of the angle between the two vectors
     const float cos = dot(a, b);

@@ -96,7 +96,7 @@ public:
 
     /** Negated.
      */
-    const quaternion negated() const;
+    quaternion negated() const;
 
     /** Negate.
         \returns A reference to this object.
@@ -123,7 +123,7 @@ public:
     /** Return a quaternion with all imaginary components negated.
         \see conjugate
     */
-    const quaternion conjugated() const;
+    quaternion conjugated() const;
 
     /** Make this quaterion unit-length.
         \returns A reference to this object.
@@ -191,7 +191,7 @@ quaternion short_rotation(quaternion const& lhs, quaternion const& rhs);
 
 /** Multiply two quaternions.
  */
-inline const quaternion multiply(const quaternion& lhs, const quaternion& rhs)
+inline quaternion multiply(quaternion const& lhs, quaternion const& rhs)
 {
     return quaternion(lhs.w * rhs.w - lhs.x * rhs.x - lhs.y * rhs.y - lhs.z * rhs.z,
                       lhs.w * rhs.x + lhs.x * rhs.w + lhs.y * rhs.z - lhs.z * rhs.y,
@@ -223,6 +223,6 @@ void rotate(quaternion& obj, float angle, v3<float> const& axis);
 
 /** Find the shortest arc rotation that maps vector a to vector b.
  */
-const quaternion shortest_arc(v3<float> const& a, v3<float> const& b);
+quaternion shortest_arc(v3<float> const& a, v3<float> const& b);
 
 } // namespace replay
