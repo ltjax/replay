@@ -1,6 +1,6 @@
-#include <replay/planar_direction.hpp>
 #include <boost/math/constants/constants.hpp>
 #include <replay/matrix2.hpp>
+#include <replay/planar_direction.hpp>
 #include <replay/vector_math.hpp>
 
 using namespace replay;
@@ -13,6 +13,11 @@ planar_direction planar_direction::move(planar_direction from, planar_direction 
         return to;
 
     return planar_direction{ from.angle() + math::clamp_absolute(relative_move.angle(), max_angle_delta) };
+}
+
+planar_direction planar_direction::move(planar_direction from, planar_direction to, planar_direction max_angle_delta)
+{
+    return move(from, to, max_angle_delta.angle());
 }
 
 planar_direction planar_direction::normalized() const
