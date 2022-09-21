@@ -29,8 +29,8 @@ Copyright (c) 2010-2019 Marius Elvert
 
 #include <cstddef>
 #include <replay/common.hpp>
-#include <replay/vector3.hpp>
-#include <replay/vector4.hpp>
+#include <replay/v3.hpp>
+#include <replay/v4.hpp>
 
 namespace replay
 {
@@ -136,6 +136,7 @@ public:
     static matrix4 from_rotation(float angle, v3<float> const& axis);
     static matrix4 from_scale(v3<float> const& scale);
     static matrix4 from_translation(v3<float> const& translation);
+    static matrix4 from_scale_and_translation(v3<float> const& scale, v3<float> const& translation);
 
     void set_column(unsigned int i, v4<float> const& column);
     void set_row(unsigned int i, v4<float> const& row);

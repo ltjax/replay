@@ -1,3 +1,6 @@
+#ifndef replay_matrix2_hpp
+#define replay_matrix2_hpp
+
 /*
 replay
 Software Library
@@ -24,11 +27,8 @@ Copyright (c) 2010-2019 Marius Elvert
 
 */
 
-#ifndef replay_matrix2_hpp
-#define replay_matrix2_hpp
-
 #include <optional>
-#include <replay/vector2.hpp>
+#include <replay/v2.hpp>
 
 namespace replay
 {
@@ -56,7 +56,7 @@ public:
 
     /** Create a matrix from two column vectors.
     */
-    matrix2(const vector2f& a, const vector2f& b);
+    matrix2(v2<float> const& a, v2<float> const& b);
 
     /** Create a matrix from four values.
     */
@@ -86,7 +86,7 @@ public:
 
     /** Set the matrix to a scale transformation.
     */
-    static matrix2 make_scale(const vector2f& scale);
+    static matrix2 make_scale(v2<float> const& scale);
 
     /** Get a matrix element by two indices.
     */
@@ -111,11 +111,11 @@ public:
 
     /** Get a matrix column by its index.
     */
-    vector2f column(std::size_t i) const;
+    v2<float> column(std::size_t i) const;
 
     /** Get a matrix row by its index.
     */
-    vector2f row(std::size_t i) const;
+    v2<float> row(std::size_t i) const;
 
     /** Inplace multiplication by a scalar.
     */
@@ -127,7 +127,7 @@ public:
 
     /** Right-multiply a (column) vector by this matrix.
     */
-    vector2f operator*(vector2f const& v) const;
+    v2<float> operator*(v2<float> const& v) const;
 
     /** Multiply two matrices.
     */
@@ -186,20 +186,20 @@ inline matrix2 transpose(matrix2 const& rhs)
 /** Left-multiply a (row) vector by this matrix.
     This is equivalent to right-multiply with the transpose matrix.
 */
-inline vector2f operator*(vector2f const& lhs, const matrix2& rhs)
+inline v2<float> operator*(v2<float> const& lhs, const matrix2& rhs)
 {
-    return vector2f(lhs[0] * rhs[0] + lhs[1] * rhs[1], lhs[0] * rhs[2] + lhs[1] * rhs[3]);
+    return v2<float>(lhs[0] * rhs[0] + lhs[1] * rhs[1], lhs[0] * rhs[2] + lhs[1] * rhs[3]);
 }
 
-inline vector2f matrix2::column(std::size_t i) const
+inline v2<float> matrix2::column(std::size_t i) const
 {
     i *= 2;
-    return vector2f(data[i], data[i + 1]);
+    return v2<float>(data[i], data[i + 1]);
 }
 
-inline vector2f matrix2::row(std::size_t i) const
+inline v2<float> matrix2::row(std::size_t i) const
 {
-    return vector2f(data[i], data[i + 2]);
+    return v2<float>(data[i], data[i + 2]);
 }
 }
 

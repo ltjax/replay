@@ -1,29 +1,3 @@
-/*
-replay
-Software Library
-
-Copyright (c) 2010-2019 Marius Elvert
-
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
-
- The above copyright notice and this permission notice shall be included in
- all copies or substantial portions of the Software.
-
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- THE SOFTWARE.
-
-*/
-
 #include <cmath>
 #include <replay/quaternion.hpp>
 #include <replay/vector_math.hpp>
@@ -43,7 +17,7 @@ replay::quaternion& replay::quaternion::set_identity()
     return set(1.f, 0.f, 0.f, 0.f);
 }
 
-replay::quaternion& replay::quaternion::set_rotation(float angle, const vector3f& axis)
+replay::quaternion& replay::quaternion::set_rotation(float angle, const v3<float>& axis)
 {
     angle *= 0.5f;
 
@@ -65,7 +39,7 @@ replay::quaternion::quaternion()
 {
 }
 
-replay::quaternion::quaternion(const float angle, const vector3f& axis)
+replay::quaternion::quaternion(const float angle, const v3<float>& axis)
 {
     set_rotation(angle, axis);
 }
@@ -78,7 +52,7 @@ replay::quaternion::quaternion(const float w, const float x, const float y, cons
 {
 }
 
-const replay::quaternion replay::quaternion::operator*(const quaternion& operand) const
+replay::quaternion replay::quaternion::operator*(const quaternion& operand) const
 {
     return multiply(*this, operand);
 }
@@ -88,22 +62,22 @@ replay::quaternion& replay::quaternion::operator*=(const quaternion& operand)
     return (*this = multiply(*this, operand));
 }
 
-const replay::quaternion replay::quaternion::operator*(const float rhs) const
+replay::quaternion replay::quaternion::operator*(const float rhs) const
 {
     return quaternion(w * rhs, x * rhs, y * rhs, z * rhs);
 }
 
-const replay::quaternion replay::quaternion::operator+(const quaternion& q) const
+replay::quaternion replay::quaternion::operator+(const quaternion& q) const
 {
     return quaternion(w + q.w, x + q.x, y + q.y, z + q.z);
 }
 
-const replay::quaternion replay::quaternion::operator-(const quaternion& q) const
+replay::quaternion replay::quaternion::operator-(const quaternion& q) const
 {
     return quaternion(w - q.w, x - q.x, y - q.y, z - q.z);
 }
 
-const replay::quaternion replay::quaternion::operator/(const float value) const
+replay::quaternion replay::quaternion::operator/(const float value) const
 {
     return ((*this) * (1.f / value));
 }
@@ -123,12 +97,12 @@ replay::quaternion& replay::quaternion::operator/=(const float value)
     return ((*this) *= (1.f / value));
 }
 
-const float replay::quaternion::squared() const
+float replay::quaternion::squared() const
 {
     return w * w + x * x + y * y + z * z;
 }
 
-const float replay::quaternion::magnitude() const
+float replay::quaternion::magnitude() const
 {
     return std::sqrt(squared());
 }
@@ -142,12 +116,12 @@ replay::quaternion& replay::quaternion::conjugate()
     return *this;
 }
 
-const replay::quaternion replay::quaternion::conjugated() const
+replay::quaternion replay::quaternion::conjugated() const
 {
     return quaternion(w, -x, -y, -z);
 }
 
-const replay::quaternion replay::quaternion::negated() const
+replay::quaternion replay::quaternion::negated() const
 {
     return quaternion(-w, -x, -y, -z);
 }
@@ -171,7 +145,7 @@ replay::quaternion& replay::quaternion::normalize()
     return *this;
 }
 
-void replay::rotate(quaternion& q, const float angle, const vector3f& axis)
+void replay::rotate(quaternion& q, const float angle, const v3<float>& axis)
 {
     const quaternion delta(angle, axis);
 
@@ -179,7 +153,7 @@ void replay::rotate(quaternion& q, const float angle, const vector3f& axis)
     q.normalize();
 }
 
-std::tuple<replay::vector3f, float> replay::to_axis_angle(const quaternion& obj)
+std::tuple<replay::v3<float>, float> replay::to_axis_angle(const quaternion& obj)
 {
     const float angle = 2.f * std::acos(math::clamp_absolute(obj.w, 1.f));
 
@@ -192,55 +166,64 @@ std::tuple<replay::vector3f, float> replay::to_axis_angle(const quaternion& obj)
     else
         factor = 1.f / factor;
 
-    return std::make_tuple(replay::vector3f(obj.x * factor, obj.y * factor, obj.z * factor), angle);
+    return std::make_tuple(replay::v3<float>(obj.x * factor, obj.y * factor, obj.z * factor), angle);
 }
 
-const replay::vector3f replay::quaternion::get_transformed_x() const
+replay::v3<float> replay::quaternion::get_transformed_x() const
 {
-    return vector3f(1.f - 2.f * (y * y + z * z), 2.f * (x * y + w * z), 2.f * (x * z - w * y));
+    return v3<float>(1.f - 2.f * (y * y + z * z), 2.f * (x * y + w * z), 2.f * (x * z - w * y));
 }
 
-const replay::vector3f replay::quaternion::get_transformed_y() const
+replay::v3<float> replay::quaternion::get_transformed_y() const
 {
-    return vector3f(2.f * (x * y - w * z), 1.f - 2.f * (x * x + z * z), 2.f * (y * z + w * x));
+    return v3<float>(2.f * (x * y - w * z), 1.f - 2.f * (x * x + z * z), 2.f * (y * z + w * x));
 }
 
-const replay::vector3f replay::quaternion::get_transformed_z() const
+replay::v3<float> replay::quaternion::get_transformed_z() const
 {
-    return vector3f(2.f * (x * z + w * y), 2.f * (y * z - w * x), 1.f - 2.f * (x * x + y * y));
+    return v3<float>(2.f * (x * z + w * y), 2.f * (y * z - w * x), 1.f - 2.f * (x * x + y * y));
 }
 
-const float replay::dot(const quaternion& a, const quaternion& b)
+float replay::dot(const quaternion& a, const quaternion& b)
 {
     return a.w * b.w + a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
-const replay::quaternion replay::shortest_arc(const vector3f& a, const vector3f& b)
+replay::quaternion replay::shortest_arc(const v3<float>& a, const v3<float>& b)
 {
     // Compute the cosine of the angle between the two vectors
     const float cos = dot(a, b);
 
     // Return an identity if the angle is zero
     if (math::fuzzy_equals(cos, 1.f))
+    {
         return quaternion();
+    }
+
+    // Construct a half-circle rotation around any axis
+    if (math::fuzzy_equals(cos, -1.f))
+    {
+        auto axis = normalized(math::construct_perpendicular(a));
+        return quaternion(0.0, axis[0], axis[1], axis[2]);
+    }
 
     // Otherwise rotate around the perpendicular vector
-    const vector3f axis = normalized(cross(a, b));
+    const v3<float> axis = normalized(cross(a, b));
 
     return quaternion(std::acos(cos), axis);
 }
 
-replay::vector3f replay::transform(const quaternion& q, const vector3f& v)
+replay::v3<float> replay::transform(const quaternion& q, const v3<float>& v)
 {
-    return vector3f((1.f - 2.f * (q.y * q.y + q.z * q.z)) * v[0] + 2.f * (q.x * q.y - q.z * q.w) * v[1] +
-                        2.f * (q.x * q.z + q.y * q.w) * v[2],
-                    2.f * (q.x * q.y + q.z * q.w) * v[0] + (1.f - 2.f * (q.x * q.x + q.z * q.z)) * v[1] +
-                        2.f * (q.y * q.z - q.x * q.w) * v[2],
-                    2.f * (q.x * q.z - q.y * q.w) * v[0] + 2.f * (q.y * q.z + q.x * q.w) * v[1] +
-                        (1.f - 2.f * (q.x * q.x + q.y * q.y)) * v[2]);
+    return v3<float>((1.f - 2.f * (q.y * q.y + q.z * q.z)) * v[0] + 2.f * (q.x * q.y - q.z * q.w) * v[1] +
+                         2.f * (q.x * q.z + q.y * q.w) * v[2],
+                     2.f * (q.x * q.y + q.z * q.w) * v[0] + (1.f - 2.f * (q.x * q.x + q.z * q.z)) * v[1] +
+                         2.f * (q.y * q.z - q.x * q.w) * v[2],
+                     2.f * (q.x * q.z - q.y * q.w) * v[0] + 2.f * (q.y * q.z + q.x * q.w) * v[1] +
+                         (1.f - 2.f * (q.x * q.x + q.y * q.y)) * v[2]);
 }
 
-const replay::quaternion replay::nlerp(const replay::quaternion& a, const replay::quaternion& b, const float x)
+replay::quaternion replay::nlerp(replay::quaternion const& a, replay::quaternion const& b, float x)
 {
     quaternion result;
 
@@ -254,7 +237,7 @@ const replay::quaternion replay::nlerp(const replay::quaternion& a, const replay
     return result;
 }
 
-const replay::quaternion replay::slerp(const replay::quaternion& a, const replay::quaternion& b, const float x)
+replay::quaternion replay::slerp(replay::quaternion const& a, replay::quaternion const& b, float x)
 {
     const float angle = dot(a, b);
 
@@ -290,7 +273,7 @@ const replay::quaternion replay::slerp(const replay::quaternion& a, const replay
     }
 }
 
-const replay::quaternion replay::short_rotation(const quaternion& a, const quaternion& b)
+replay::quaternion replay::short_rotation(quaternion const& a, quaternion const& b)
 {
     quaternion result(b * inverse(a));
 
@@ -300,7 +283,7 @@ const replay::quaternion replay::short_rotation(const quaternion& a, const quate
     return result;
 }
 
-const replay::quaternion replay::inverse(const quaternion& a)
+replay::quaternion replay::inverse(quaternion const& a)
 {
     return a.conjugated() / a.squared();
 }

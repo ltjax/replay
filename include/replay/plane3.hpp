@@ -28,7 +28,7 @@ Copyright (c) 2010-2019 Marius Elvert
 #define replay_plane3_hpp
 
 #include <replay/math.hpp>
-#include <replay/vector3.hpp>
+#include <replay/v3.hpp>
 
 namespace replay
 {
@@ -44,7 +44,7 @@ class plane3
 public:
     /** Normal of the plane.
     */
-    vector3f normal;
+    v3<float> normal;
 
     /** Distance of the plane to the origin.
     */
@@ -52,15 +52,15 @@ public:
 
     /** Set the plane via normal and distance.
     */
-    plane3& set(const vector3f& normal, const float d);
+    plane3& set(v3<float> const& normal, float d);
 
     /** Set the plane by setting all components individually.
     */
-    plane3& set(const float a, const float b, const float c, const float d);
+    plane3& set(float a, float b, float c, float d);
 
     /** Set this plane to another plane.
     */
-    plane3& set(const plane3& plane);
+    plane3& set(plane3 const& plane);
 
     /** Multiply the equation by -1.
     */
@@ -80,15 +80,15 @@ public:
 
     /** Create the plane by normal and distance to the origin.
     */
-    plane3(const vector3f& normal, const float d);
+    plane3(v3<float> const& normal, float d);
 
     /** Create the plane by setting the individual components.
     */
-    plane3(const float a, const float b, const float c, const float d);
+    plane3(float a, float b, float c, float d);
 
     /** Multiply the equation by a factor.
     */
-    void scale(const float factor);
+    void scale(float factor);
 
     /** Get a flipped plane.
     */
@@ -96,11 +96,11 @@ public:
 
     /** Construct a plane from a point and a normal.
     */
-    static plane3 construct_from_pointnormal(const vector3f& normal, const vector3f& point);
+    static plane3 construct_from_pointnormal(v3<float> const& normal, v3<float> const& point);
 
     /** Construct a plane from 3 CCW ordered points.
     */
-    static plane3 construct_from_points(const vector3f& p0, const vector3f& p1, const vector3f& p2);
+    static plane3 construct_from_points(v3<float> const& p0, v3<float> const& p1, v3<float> const& p2);
 
     /** Exception class.
     */
@@ -110,7 +110,7 @@ public:
 
     /** Convert the equation into hessian normal form.
     */
-    void hnf(const float epsilon = math::default_epsilon);
+    void hnf(float epsilon = math::default_epsilon);
 };
 
 bool operator==(plane3 const& lhs, plane3 const& rhs);

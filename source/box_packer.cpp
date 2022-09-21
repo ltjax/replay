@@ -25,7 +25,7 @@ Copyright (c) 2010-2019 Marius Elvert
 */
 
 #include <replay/box_packer.hpp>
-#include <replay/vector2.hpp>
+#include <replay/v2.hpp>
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 

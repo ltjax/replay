@@ -30,7 +30,7 @@ Copyright (c) 2010-2019 Marius Elvert
 #include <algorithm>
 #include <array>
 #include <replay/plane3.hpp>
-#include <replay/vector3.hpp>
+#include <replay/v3.hpp>
 
 namespace replay
 {
@@ -39,7 +39,7 @@ namespace replay
     Represents the intersection of intervals on the 3 principal axes.
     \ingroup Math
 */
-class aabb : private std::array<vector3f, 2>
+class aabb : private std::array<v3<float>, 2>
 {
 public:
     /** Classification relative to a plane.
@@ -53,8 +53,8 @@ public:
     };
     aabb();
     explicit aabb(float half_extends);
-    explicit aabb(vector3f const& point);
-    aabb(vector3f const& min, vector3f const& max);
+    explicit aabb(v3<float> const& point);
+    aabb(v3<float> const& min, v3<float> const& max);
 
     /** Constructor for user-defined conversions.
         \see convertible_tag
@@ -66,7 +66,7 @@ public:
     }
 
     aabb& clear();
-    aabb& move(vector3f const& delta);
+    aabb& move(v3<float> const& delta);
 
     /** Check if this bounding box is empty, i.e. does not contain any points.
      */
@@ -75,7 +75,7 @@ public:
     /** Enlarge the box to contain the given point.
         \param point The point to be inserted.
     */
-    aabb& insert(vector3f const& point)
+    aabb& insert(v3<float> const& point)
     {
         for (unsigned int i = 0; i < 3; ++i)
         {
@@ -88,61 +88,61 @@ public:
         return *this;
     }
 
-    aabb& insert(vector3f const* points, unsigned int count);
-    aabb& insert(vector3f const* points, const unsigned short* indices, unsigned int count);
-    aabb& insert(vector3f const* points, const unsigned int* indices, unsigned int count);
+    aabb& insert(v3<float> const* points, unsigned int count);
+    aabb& insert(v3<float> const* points, const unsigned short* indices, unsigned int count);
+    aabb& insert(v3<float> const* points, const unsigned int* indices, unsigned int count);
     aabb& insert(const aabb& rhs);
     aabb const inserted(aabb rhs) const;
 
-    vector3f& compute_arvo_vector(vector3f const& point, vector3f& result) const;
+    v3<float>& compute_arvo_vector(v3<float> const& point, v3<float>& result) const;
 
     /** Compute the shortest vector from the point to the box.
      */
-    inline vector3f compute_arvo_vector(vector3f const& point) const
+    inline v3<float> compute_arvo_vector(v3<float> const& point) const
     {
-        vector3f temp;
+        v3<float> temp;
         return compute_arvo_vector(point, temp);
     }
 
-    vector3f& compute_center(vector3f& result) const;
+    v3<float>& compute_center(v3<float>& result) const;
 
     /** Compute the center of the aabb.
      */
-    inline vector3f compute_center() const
+    inline v3<float> compute_center() const
     {
-        vector3f temp;
+        v3<float> temp;
         return compute_center(temp);
     }
 
-    vector3f& corner(std::size_t i, vector3f& result) const;
+    v3<float>& corner(std::size_t i, v3<float>& result) const;
 
     /** Compute a corner of the aabb.
      */
-    inline vector3f corner(std::size_t i) const;
+    inline v3<float> corner(std::size_t i) const;
 
-    aabb& compute_subinterval(unsigned int index, vector3f const& pivot, aabb& result) const;
+    aabb& compute_subinterval(unsigned int index, v3<float> const& pivot, aabb& result) const;
 
-    float square_distance(vector3f const& other) const;
-    float distance(vector3f const& other) const;
+    float square_distance(v3<float> const& other) const;
+    float distance(v3<float> const& other) const;
 
-    bool contains(vector3f const& point) const;
+    bool contains(v3<float> const& point) const;
 
-    std::array<float, 2> project(vector3f const& x) const;
+    std::array<float, 2> project(v3<float> const& x) const;
     classify_result classify(plane3 const& x) const;
 
-    aabb& expand(vector3f const& x);
-    aabb const expanded(vector3f const& x) const;
+    aabb& expand(v3<float> const& x);
+    aabb const expanded(v3<float> const& x) const;
 
     /** Get the minimum in all three dimensions.
      */
-    vector3f& min()
+    v3<float>& min()
     {
         return front();
     }
 
     /** Get the minimum in all three dimensions.
      */
-    vector3f const& min() const
+    v3<float> const& min() const
     {
         return front();
     }
@@ -163,14 +163,14 @@ public:
 
     /** Get the maximum in all three dimensions.
      */
-    vector3f& max()
+    v3<float>& max()
     {
         return back();
     }
 
     /** Get the maximum in all three dimensions.
      */
-    vector3f const& max() const
+    v3<float> const& max() const
     {
         return back();
     }
@@ -219,9 +219,9 @@ inline replay::aabb const replay::aabb::intersected(replay::aabb rhs) const
     return rhs.intersect(*this);
 }
 
-inline replay::vector3f replay::aabb::corner(std::size_t i) const
+inline replay::v3<float> replay::aabb::corner(std::size_t i) const
 {
-    vector3f temp((replay::uninitialized_tag()));
+    v3<float> temp((replay::uninitialized_tag()));
     return corner(i, temp);
 }
 

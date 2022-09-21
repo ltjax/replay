@@ -35,7 +35,7 @@ replay::matrix2::matrix2(float diagonal)
     data[3] = diagonal;
 }
 
-replay::matrix2::matrix2(const vector2f& a, const vector2f& b)
+replay::matrix2::matrix2(const v2<float>& a, const v2<float>& b)
 {
     data[0] = a[0];
     data[1] = a[1];
@@ -74,14 +74,14 @@ replay::matrix2 replay::matrix2::make_rotation(float angle)
     return matrix2(cos, -sin, sin, cos);
 }
 
-replay::matrix2 replay::matrix2::make_scale(const vector2f& scale)
+replay::matrix2 replay::matrix2::make_scale(const v2<float>& scale)
 {
     return matrix2(scale[0], 0.f, 0.f, scale[1]);
 }
 
-replay::vector2f replay::matrix2::operator*(vector2f const& v) const
+replay::v2<float> replay::matrix2::operator*(v2<float> const& v) const
 {
-    return vector2f(data[0] * v[0] + data[2] * v[1], data[1] * v[0] + data[3] * v[1]);
+    return v2<float>(data[0] * v[0] + data[2] * v[1], data[1] * v[0] + data[3] * v[1]);
 }
 
 replay::matrix2 replay::matrix2::operator*(matrix2 const& other) const

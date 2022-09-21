@@ -29,7 +29,7 @@ Copyright (c) 2010-2019 Marius Elvert
 
 #include <limits>
 #include <replay/interval.hpp>
-#include <replay/vector3.hpp>
+#include <replay/v3.hpp>
 
 namespace replay
 {
@@ -43,15 +43,15 @@ class linear_component3
 public:
     /** Origin. Point at parameter 0.
     */
-    vector3f origin;
+    v3<float> origin;
     /** Direction. Corresponds to a difference of 1 in the parameter.
     */
-    vector3f direction;
+    v3<float> direction;
 
     /** Get the point: \f$origin + t * direction\f$.
         \param t The parameter to the equation.
     */
-    vector3f get_point(const float t) const
+    v3<float> get_point(const float t) const
     {
         return direction * t + origin;
     }
@@ -66,7 +66,7 @@ public:
 
     /** Set via origin and direction.
     */
-    void set(const vector3f& origin, const vector3f& direction)
+    void set(const v3<float>& origin, const v3<float>& direction)
     {
         this->origin = origin;
         this->direction = direction;
@@ -81,7 +81,7 @@ protected:
 
     /** Create a linear component by origin and direction.
     */
-    linear_component3(const vector3f& origin, const vector3f& direction)
+    linear_component3(const v3<float>& origin, const v3<float>& direction)
     : origin(origin)
     , direction(direction)
     {
@@ -109,7 +109,7 @@ public:
 
     /** Create a line from origin and direction.
     */
-    line3(const vector3f& origin, const vector3f& direction)
+    line3(const v3<float>& origin, const v3<float>& direction)
     : linear_component3(origin, direction)
     {
     }
@@ -117,7 +117,7 @@ public:
     /** Create a line from two points on the line.
         These points must not be colinear.
     */
-    static line3 from_points(const vector3f& a, const vector3f& b)
+    static line3 from_points(const v3<float>& a, const v3<float>& b)
     {
         return line3(a, b - a);
     }
@@ -144,7 +144,7 @@ public:
 
     /** Create a ray from direction and origin.
     */
-    ray3(const vector3f& origin, const vector3f& direction)
+    ray3(const v3<float>& origin, const v3<float>& direction)
     : linear_component3(origin, direction)
     {
     }
@@ -171,7 +171,7 @@ public:
 
     /** Create a segment from origin and difference to the second point.
     */
-    segment3(const vector3f& origin, const vector3f& direction)
+    segment3(const v3<float>& origin, const v3<float>& direction)
     : linear_component3(origin, direction)
     {
     }
@@ -236,8 +236,8 @@ public:
 
     /** Create a line interval from origin, direction and optional interval parameters.
     */
-    line_interval3(const vector3f& origin,
-                   const vector3f& direction,
+    line_interval3(const v3<float>& origin,
+                   const v3<float>& direction,
                    const float min = -std::numeric_limits<float>::max(),
                    const float max = std::numeric_limits<float>::max())
     : linear_component3(origin, direction)
@@ -271,14 +271,14 @@ public:
 
     /** Get the point on the lower interval border.
     */
-    vector3f get_min_point() const
+    v3<float> get_min_point() const
     {
         return direction * interval[0] + origin;
     }
 
     /** Get the point on the upper interval border.
     */
-    vector3f get_max_point() const
+    v3<float> get_max_point() const
     {
         return direction * interval[1] + origin;
     }

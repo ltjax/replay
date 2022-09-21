@@ -1,23 +1,23 @@
 #pragma once
-#include <replay/vector2.hpp>
 #include <cmath>
+#include <replay/v2.hpp>
 
 namespace replay
 {
 class planar_direction
 {
 public:
-    planar_direction()
+    constexpr planar_direction()
     : planar_direction(0.f)
     {
     }
 
-    explicit planar_direction(float angle)
+    constexpr explicit planar_direction(float angle)
     : m_angle(angle)
     {
     }
 
-    float angle() const
+    constexpr float angle() const
     {
         return m_angle;
     }
@@ -35,19 +35,39 @@ public:
     /** Normalize the direction into the (-pi, pi] range. */
     planar_direction normalized() const;
 
-    planar_direction& operator+=(planar_direction const& rhs)
+    constexpr planar_direction& operator+=(planar_direction const& rhs)
     {
         m_angle += rhs.m_angle;
         return *this;
     }
 
-    planar_direction& operator-=(planar_direction const& rhs)
+    constexpr planar_direction& operator-=(planar_direction const& rhs)
     {
         m_angle -= rhs.m_angle;
         return *this;
     }
 
+    constexpr planar_direction& operator*=(float rhs)
+    {
+        m_angle *= rhs;
+        return *this;
+    }
+
+    constexpr planar_direction& operator/=(float rhs)
+    {
+        m_angle /= rhs;
+        return *this;
+    }
+
+    constexpr planar_direction operator-() const
+    {
+        return planar_direction{ -m_angle };
+    }
+
+    constexpr auto operator<=>(planar_direction const& rhs) const = default;
+
     static planar_direction move(planar_direction from, planar_direction to, float max_angle_delta);
+    static planar_direction move(planar_direction from, planar_direction to, planar_direction max_angle_delta);
 
     static planar_direction average(planar_direction from, planar_direction to);
 
@@ -55,24 +75,34 @@ private:
     float m_angle;
 };
 
-inline planar_direction operator-(planar_direction lhs, planar_direction const& rhs)
+constexpr inline planar_direction operator-(planar_direction lhs, planar_direction const& rhs)
 {
     return lhs -= rhs;
 }
 
-inline planar_direction operator+(planar_direction lhs, planar_direction const& rhs)
+constexpr inline planar_direction operator+(planar_direction lhs, planar_direction const& rhs)
 {
     return lhs += rhs;
 }
 
-inline bool operator==(planar_direction const& lhs, planar_direction const& rhs)
+constexpr inline planar_direction operator*(planar_direction lhs, float rhs)
 {
-    return lhs.angle() == rhs.angle();
+    return lhs *= rhs;
 }
 
-inline bool operator!=(planar_direction const& lhs, planar_direction const& rhs)
+constexpr inline planar_direction operator/(planar_direction lhs, float rhs)
 {
-    return !(lhs == rhs);
+    return lhs /= rhs;
+}
+
+constexpr inline planar_direction operator*(float lhs, planar_direction rhs)
+{
+    return rhs * lhs;
+}
+
+constexpr inline planar_direction operator/(float lhs, planar_direction rhs)
+{
+    return rhs / lhs;
 }
 
 inline planar_direction lerp(planar_direction const& lhs, planar_direction const& rhs, float alpha)
@@ -81,4 +111,4 @@ inline planar_direction lerp(planar_direction const& lhs, planar_direction const
     auto angle_difference = (rhs - lhs).normalized();
     return planar_direction(angle_difference.angle() * alpha) + lhs;
 }
-}
+} // namespace replay

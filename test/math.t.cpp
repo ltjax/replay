@@ -10,7 +10,7 @@ namespace
 {
 
 // FIXME: this is somewhat generically useful - lift it to a visible namespace?
-replay::vector3f polar_to_model(float latitude, float longitude)
+replay::v3<float> polar_to_model(float latitude, float longitude)
 {
     latitude = replay::math::convert_to_radians(latitude);
     longitude = replay::math::convert_to_radians(longitude);
@@ -26,7 +26,7 @@ replay::vector3f polar_to_model(float latitude, float longitude)
 template <class IteratorType>
 float distance_to_sphere(const IteratorType point_begin,
                          const IteratorType point_end,
-                         const replay::vector3f& center,
+                         const replay::v3<float>& center,
                          const float square_radius)
 {
     float max_sqr_distance = 0.f;
@@ -72,7 +72,7 @@ TEST_CASE("matrix2_operations")
 TEST_CASE("vector3_integer_operations")
 {
     using namespace replay;
-    typedef vector3<int> vec3;
+    using vec3 = v3<int>;
 
     const vec3 a(-1, -67, 32);
     const vec3 b(7777, 0, -111);
@@ -151,21 +151,21 @@ TEST_CASE("circumcircle")
     using namespace replay;
 
     // Construct a rotational matrix
-    vector3f x = polar_to_model(177.f, -34.f);
-    vector3f y = normalized(math::construct_perpendicular(x));
+    v3<float> x = polar_to_model(177.f, -34.f);
+    v3<float> y = normalized(math::construct_perpendicular(x));
     matrix3 M(x, y, cross(x, y));
 
     // Construct three points on a circle and rotate them
     const float radius = 14.f;
     float angle = math::convert_to_radians(34.f);
-    vector3f a = M * (vector3f(std::cos(angle), std::sin(angle), 0.f) * radius);
+    v3<float> a = M * (v3<float>(std::cos(angle), std::sin(angle), 0.f) * radius);
     angle = math::convert_to_radians(134.f);
-    vector3f b = M * (vector3f(std::cos(angle), std::sin(angle), 0.f) * radius);
+    v3<float> b = M * (v3<float>(std::cos(angle), std::sin(angle), 0.f) * radius);
     angle = math::convert_to_radians(270.f);
-    vector3f c = M * (vector3f(std::cos(angle), std::sin(angle), 0.f) * radius);
+    v3<float> c = M * (v3<float>(std::cos(angle), std::sin(angle), 0.f) * radius);
 
     // Move the circle
-    const vector3f center(45.f, 32.f, -37.f);
+    const v3<float> center(45.f, 32.f, -37.f);
     a += center;
     b += center;
     c += center;
@@ -176,8 +176,8 @@ TEST_CASE("circumcircle")
     REQUIRE(s.push(b.ptr()));
     REQUIRE(s.push(c.ptr()));
 
-    vector3f equisphere_center(vector3f::cast(s.get_center()));
-    vector3f center_delta = center - equisphere_center;
+    v3<float> equisphere_center(v3<float>::cast(s.get_center()));
+    v3<float> center_delta = center - equisphere_center;
     REQUIRE(center_delta.squared() < 0.001f);
     REQUIRE(std::sqrt(s.get_squared_radius()) == Approx(radius).margin(0.001f));
 }
@@ -186,7 +186,7 @@ TEST_CASE("circumcircle")
 TEST_CASE("minimal_ball")
 {
     using namespace replay;
-    typedef vector3f vec3;
+    typedef v3<float> vec3;
     using range_type = std::uniform_real_distribution<float>;
 
     // setup random number generators
@@ -200,13 +200,13 @@ TEST_CASE("minimal_ball")
 
     for (std::size_t i = 0; i < 32; ++i)
     {
-        vector3f t = polar_to_model(random_latitude(), random_longitude());
+        v3<float> t = polar_to_model(random_latitude(), random_longitude());
         float s = random_scale();
         points.push_back(t * s);
     }
 
     // run the solver
-    replay::minimal_ball<float, replay::vector3f, 3> ball(points, 1e-15f);
+    replay::minimal_ball<float, replay::v3<float>, 3> ball(points, 1e-15f);
 
     // check correctness
     REQUIRE(ball.square_radius() == Approx(1.f).margin(0.001f));
@@ -230,11 +230,11 @@ TEST_CASE("minimal_sphere")
     auto random_longitude = [&] { return range_type(-90.f, 90.f)(rng); };
     auto random_scale = [&] { return range_type(0.0f, 1.0f)(rng); };
 
-    std::vector<vector3f> p(64);
+    std::vector<v3<float>> p(64);
 
     for (std::size_t i = 0; i < 16; ++i)
     {
-        const vector3f center(random_coord(), random_coord(), random_coord());
+        const v3<float> center(random_coord(), random_coord(), random_coord());
         const float radius = random_radius();
 
         std::size_t boundary_n = 2 + rng() % 3;

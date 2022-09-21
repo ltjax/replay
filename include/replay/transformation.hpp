@@ -46,7 +46,7 @@ public:
 
     /** Offset part of this transformation.
     */
-    vector3f position;
+    v3<float> position;
 
     /** Sign for multiplication. has to be either 1 or -1.
         If the value is neither of the above, it is handled
@@ -73,7 +73,7 @@ public:
 
     /** Construct a transformation based on an offset.
     */
-    explicit transformation(const vector3f& position)
+    explicit transformation(const v3<float>& position)
     : position(position)
     , sign(1.f)
     {
@@ -89,7 +89,7 @@ public:
 
     /** Construct a transformation based on an orientation and an offset.
     */
-    transformation(const quaternion& orientation, const vector3f& position)
+    transformation(const quaternion& orientation, const v3<float>& position)
     : orientation(orientation)
     , position(position)
     , sign(1.f)
@@ -98,7 +98,7 @@ public:
 
     /** Construct a transformation based on an orientation, a sign, and an offset.
     */
-    transformation(const quaternion& orientation, const vector3f& position, float sign)
+    transformation(const quaternion& orientation, const v3<float>& position, float sign)
     : orientation(orientation)
     , position(position)
     , sign(sign)

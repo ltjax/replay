@@ -52,7 +52,7 @@ replay::matrix3& replay::matrix3::multiply(const matrix3& a, const matrix3& b, m
 /** Multiply a vector by a matrix.
     \note 9 mults, 6 adds
 */
-replay::vector3f& replay::matrix3::multiply(const matrix3& a, const vector3f& v, vector3f& result)
+replay::v3<float>& replay::matrix3::multiply(const matrix3& a, const v3<float>& v, v3<float>& result)
 {
     result[0] = a.data[0] * v[0] + a.data[3] * v[1] + a.data[6] * v[2];
     result[1] = a.data[1] * v[0] + a.data[4] * v[1] + a.data[7] * v[2];
@@ -92,9 +92,9 @@ replay::matrix3::set(float m11, float m21, float m31, float m12, float m22, floa
 
 /** Multiply a vector by a matrix.
 */
-const replay::vector3f replay::matrix3::operator*(const vector3f& operand) const
+const replay::v3<float> replay::matrix3::operator*(const v3<float>& operand) const
 {
-    return vector3f(data[0] * operand[0] + data[3] * operand[1] + data[6] * operand[2],
+    return v3<float>(data[0] * operand[0] + data[3] * operand[1] + data[6] * operand[2],
                     data[1] * operand[0] + data[4] * operand[1] + data[7] * operand[2],
                     data[2] * operand[0] + data[5] * operand[1] + data[8] * operand[2]);
 }
@@ -102,9 +102,9 @@ const replay::vector3f replay::matrix3::operator*(const vector3f& operand) const
 /**	transposed multiplication.
     transposed( operand ) * this
 */
-const replay::vector3f replay::matrix3::operator|(const vector3f& operand) const
+const replay::v3<float> replay::matrix3::operator|(const v3<float>& operand) const
 {
-    return vector3f(data[0] * operand[0] + data[1] * operand[1] + data[2] * operand[2],
+    return v3<float>(data[0] * operand[0] + data[1] * operand[1] + data[2] * operand[2],
                     data[3] * operand[0] + data[4] * operand[1] + data[5] * operand[2],
                     data[6] * operand[0] + data[7] * operand[1] + data[8] * operand[2]);
 }
@@ -197,7 +197,7 @@ replay::matrix3::matrix3(
 
 /** Column wise init.
 */
-replay::matrix3::matrix3(const vector3f& a, const vector3f& b, const vector3f& c)
+replay::matrix3::matrix3(const v3<float>& a, const v3<float>& b, const v3<float>& c)
 {
     data[0] = a[0];
     data[3] = b[0];
@@ -212,7 +212,7 @@ replay::matrix3::matrix3(const vector3f& a, const vector3f& b, const vector3f& c
 
 /** Column wise set.
 */
-void replay::matrix3::set(const vector3f& a, const vector3f& b, const vector3f& c)
+void replay::matrix3::set(const v3<float>& a, const v3<float>& b, const v3<float>& c)
 {
     data[0] = a[0];
     data[3] = b[0];
@@ -249,7 +249,7 @@ void replay::matrix3::set_identity()
 
 /** Set rotational matrix.
 */
-void replay::matrix3::set_rotation(const float angle, const vector3f& axis)
+void replay::matrix3::set_rotation(const float angle, const v3<float>& axis)
 {
     const quaternion rotation(angle, axis);
 
@@ -303,7 +303,7 @@ void replay::matrix3::set_scale(const float x, const float y, const float z)
 
 /** Set a scale matrix.
 */
-void replay::matrix3::set_scale(const vector3f& v)
+void replay::matrix3::set_scale(const v3<float>& v)
 {
     data[0] = v[0];
     data[3] = 0.0f;
@@ -318,7 +318,7 @@ void replay::matrix3::set_scale(const vector3f& v)
 
 /** Concaternate this matrix with a rotational matrix.
 */
-void replay::matrix3::rotate(matrix3& m, const float angle, const vector3f& axis)
+void replay::matrix3::rotate(matrix3& m, const float angle, const v3<float>& axis)
 {
     matrix3 temp((replay::uninitialized_tag()));
 
@@ -340,7 +340,7 @@ void replay::matrix3::scale(matrix3& m, const float x, const float y, const floa
 
 /** Concaternate this matrix with a scale matrix.
 */
-void replay::matrix3::scale(matrix3& m, vector3f const& v)
+void replay::matrix3::scale(matrix3& m, v3<float> const& v)
 {
     matrix3 temp((replay::uninitialized_tag()));
 

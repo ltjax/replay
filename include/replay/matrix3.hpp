@@ -1,3 +1,6 @@
+#ifndef replay_matrix3_hpp
+#define replay_matrix3_hpp
+
 /*
 replay
 Software Library
@@ -24,10 +27,7 @@ Copyright (c) 2010-2019 Marius Elvert
 
 */
 
-#ifndef replay_matrix3_hpp
-#define replay_matrix3_hpp
-
-#include <replay/vector3.hpp>
+#include <replay/v3.hpp>
 
 namespace replay
 {
@@ -46,7 +46,7 @@ public:
 
     matrix3(float m11, float m21, float m31, float m12, float m22, float m32, float m13, float m23, float m33);
 
-    matrix3(const vector3f& a, const vector3f& b, const vector3f& c);
+    matrix3(v3<float> const& a, v3<float> const& b, v3<float> const& c);
 
     explicit matrix3(const quaternion& q);
 
@@ -102,13 +102,13 @@ public:
     }
 
     void set_identity();
-    void set_rotation(const float angle, const vector3f& axis);
+    void set_rotation(const float angle, v3<float> const& axis);
     matrix3& set_rotation_x(const float angle);
     matrix3& set_rotation_y(const float angle);
     matrix3& set_rotation_z(const float angle);
     void set_scale(const float x, const float y, const float z);
-    void set_scale(const vector3f& v);
-    void set(const vector3f& a, const vector3f& b, const vector3f& c);
+    void set_scale(v3<float> const& v);
+    void set(v3<float> const& a, v3<float> const& b, v3<float> const& c);
     matrix3& set(float m11, float m21, float m31, float m12, float m22, float m32, float m13, float m23, float m33);
 
     float determinant() const;
@@ -123,8 +123,8 @@ public:
     const matrix3 operator*(const float f) const;
     const matrix3 operator+(const matrix3& m) const;
 
-    const vector3f operator*(const vector3f& v) const;
-    const vector3f operator|(const vector3f& v) const; // transpose multiplication
+    v3<float> const operator*(v3<float> const& v) const;
+    v3<float> const operator|(v3<float> const& v) const; // transpose multiplication
 
     matrix3& operator=(const quaternion& q);
     matrix3& operator*=(const matrix3& m);
@@ -145,31 +145,31 @@ public:
         return data[c * 3 + r];
     }
 
-    static void rotate(matrix3& m, const float angle, const vector3f& v);
+    static void rotate(matrix3& m, const float angle, v3<float> const& v);
     static void scale(matrix3& m, const float x, const float y, const float z);
-    static void scale(matrix3& m, const vector3f& v);
+    static void scale(matrix3& m, v3<float> const& v);
 
     static matrix3& multiply(const matrix3& a, const matrix3& b, matrix3& result);
-    static vector3f& multiply(const matrix3& a, const vector3f& v, vector3f& result);
+    static v3<float>& multiply(const matrix3& a, v3<float> const& v, v3<float>& result);
 
     /** Get a matrix column.
     */
-    const vector3f get_column(unsigned int index) const
+    v3<float> const get_column(unsigned int index) const
     {
-        return vector3f::cast(data + (index * 3));
+        return v3<float>::cast(data + (index * 3));
     }
 
     /** Get a matrix row.
     */
-    const vector3f get_row(unsigned int index) const
+    v3<float> const get_row(unsigned int index) const
     {
-        return vector3f(data[index], data[index + 3], data[index + 6]);
+        return v3<float>(data[index], data[index + 3], data[index + 6]);
     }
 
     /** Set a row in the matrix.
     */
 
-    void set_row(unsigned int index, const vector3f& v)
+    void set_row(unsigned int index, v3<float> const& v)
     {
         data[index] = v[0];
         data[index + 3] = v[1];
@@ -180,7 +180,7 @@ public:
     */
     void swap_rows(unsigned int a, unsigned int b)
     {
-        vector3f temp = get_row(a);
+        v3<float> temp = get_row(a);
         set_row(a, get_row(b));
         set_row(b, temp);
     }
@@ -204,15 +204,15 @@ public:
     }
 
     /** Get a column via template parameter. */
-    template <unsigned int idx> const vector3f get_column() const
+    template <unsigned int idx> v3<float> const get_column() const
     {
-        return vector3f::cast(data + idx * 3);
+        return v3<float>::cast(data + idx * 3);
     }
 
     /** get the first row. */
-    template <unsigned int idx> const vector3f get_row() const
+    template <unsigned int idx> v3<float> const get_row() const
     {
-        return vector3f(data[idx], data[idx + 3], data[idx + 6]);
+        return v3<float>(data[idx], data[idx + 3], data[idx + 6]);
     }
 
 private:
