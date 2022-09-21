@@ -196,7 +196,16 @@ replay::quaternion replay::shortest_arc(const v3<float>& a, const v3<float>& b)
 
     // Return an identity if the angle is zero
     if (math::fuzzy_equals(cos, 1.f))
+    {
         return quaternion();
+    }
+
+    // Construct a half-circle rotation around any axis
+    if (math::fuzzy_equals(cos, -1.f))
+    {
+        auto axis = normalized(math::construct_perpendicular(a));
+        return quaternion(0.0, axis[0], axis[1], axis[2]);
+    }
 
     // Otherwise rotate around the perpendicular vector
     const v3<float> axis = normalized(cross(a, b));

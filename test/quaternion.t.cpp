@@ -46,3 +46,11 @@ TEST_CASE("quaternion_uses_left_chain_convention", "[quaternion]")
     REQUIRE(v_ == v_transform);
     REQUIRE(v_ == v_matrix);
 }
+
+TEST_CASE("can_handle_shortest_arc_to_antipode", "[quaternion]")
+{
+  v3 a{0.f, 0.f, 1.f};
+  v3 b{0.f, 0.f, -1.f};
+  quaternion q = shortest_arc(a, b);
+  REQUIRE(q.magnitude() == 1.f);
+}
