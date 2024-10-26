@@ -1,6 +1,5 @@
+cmake_minimum_required(VERSION 3.24)
 project(replay)
-
-cmake_minimum_required(VERSION 3.0)
 
 if(NOT DEFINED Replay_USE_CONAN)
   option(Replay_USE_CONAN "Use conan to build replay" ON)
@@ -36,9 +35,10 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${replay_BINARY_DIR}/build)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${replay_BINARY_DIR}/build)
 
 if(Replay_USE_CONAN)
-  include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-  conan_basic_setup(TARGETS)
-  set(Replay_BOOST_TARGETS CONAN_PKG::boost)
+  find_package(Boost REQUIRED CONFIG)
+  find_package(stb REQUIRED CONFIG)
+  find_package(Catch2 REQUIRED CONFIG)
+  set(Replay_BOOST_TARGETS Boost::headers)
 else()
   # Replay is typically included in a host project that already has boost
   if(NOT Boost_FOUND AND NOT DEFINED Replay_BOOST_TARGETS)

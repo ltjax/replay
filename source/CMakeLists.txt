@@ -77,7 +77,7 @@ if(Replay_USE_STBIMAGE)
     PRIVATE -DSTBI_NO_STDIO)
   if(Replay_USE_STBIMAGE_FROM_CONAN)
     target_link_libraries(${TARGET_NAME}
-      PRIVATE CONAN_PKG::stb)
+      PRIVATE stb::stb)
   else()
     target_include_directories(${TARGET_NAME}
       PRIVATE ${Replay_STBIMAGE_PATH})

@@ -24,6 +24,6 @@ target_link_libraries(${TARGET_NAME}
 
 if (Replay_USE_CONAN)
   target_link_libraries(${TARGET_NAME}
-	PUBLIC CONAN_PKG::catch2
+	  PUBLIC Catch2::Catch2
   )
 endif()
