@@ -28,6 +28,7 @@ Copyright (c) 2010-2022 Marius Elvert
 
 #include <replay/common.hpp>
 #include <replay/v2.hpp>
+#include <cstddef>
 #include <utility>
 
 namespace replay
@@ -385,7 +386,7 @@ template <typename T> struct std::tuple_size<::replay::v3<T>>
     static constexpr size_t value = 3;
 };
 
-template <typename T, size_t index> struct std::tuple_element<index, ::replay::v3<T>>
+template <typename T, std::size_t index> struct std::tuple_element<index, ::replay::v3<T>>
 {
     using type = T;
 };
